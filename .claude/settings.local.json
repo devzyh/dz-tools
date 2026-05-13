@@ -3,7 +3,12 @@
     "allow": [
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(npx nuxi@latest init . --force --packageManager pnpm)",
+      "Bash(npx nuxi@latest init . --force --packageManager pnpm --template minimal)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm approve-builds *)",
+      "Bash(timeout 30 pnpm dev)"
     ]
   }
 }

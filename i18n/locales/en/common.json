@@ -1,0 +1,23 @@
+{
+  "nav": {
+    "home": "Home",
+    "links": "Links",
+    "about": "About"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "empty": "No results"
+  },
+  "footer": {
+    "copyright": "All rights reserved"
+  },
+  "error": {
+    "notFound": "Page not found",
+    "goHome": "Go Home",
+    "groupNotFound": "Group not found"
+  },
+  "home": {
+    "title": "Developer Online Tools",
+    "empty": "No tools yet"
+  }
+}
