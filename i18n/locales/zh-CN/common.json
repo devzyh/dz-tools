@@ -19,5 +19,13 @@
   "home": {
     "title": "开发者在线工具",
     "empty": "暂无工具"
+  },
+  "groups": {
+    "converter": { "title": "转换器" },
+    "crypto": { "title": "加解密" },
+    "developer": { "title": "开发工具" },
+    "loghub": { "title": "通天晓" },
+    "text": { "title": "文本" },
+    "web": { "title": "Web" }
   }
 }
