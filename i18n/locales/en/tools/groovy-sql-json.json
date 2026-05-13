@@ -1,0 +1,4 @@
+{
+  "title": "Groovy to SQL",
+  "description": "Convert Groovy entity classes to MySQL CREATE TABLE statements and UI JSON"
+}

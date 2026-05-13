@@ -1,0 +1,4 @@
+{
+  "title": "OLY Encrypt/Decrypt",
+  "description": "OLY text encryption/decryption, AES/ECB mode, key derived via SHA1PRNG"
+}

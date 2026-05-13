@@ -3,18 +3,16 @@ import { site } from '~/config/site'
 import { isTool, isGroup } from '~/tools/types'
 
 const route = useRoute()
-const slug = route.params.slug as string
-const { resolve: resolveEntry, findGroup } = useToolRegistry()
+const slug = (Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug) as string
+const { resolve: resolveEntry, findGroup, getToolComponent } = useToolRegistry()
 
 const entry = resolveEntry(slug)
 
 let ToolComponent: ReturnType<typeof defineAsyncComponent> | null = null
 if (entry && isTool(entry)) {
-  const toolName = entry.slug.charAt(0).toUpperCase() + entry.slug.slice(1)
-  const modules = import.meta.glob('~/tools/*/*.vue', { eager: false })
-  const componentPath = `/tools/${entry.group}/${toolName}Tool.vue`
-  if (modules[componentPath]) {
-    ToolComponent = defineAsyncComponent(modules[componentPath])
+  const loader = getToolComponent(entry.group, entry.slug)
+  if (loader) {
+    ToolComponent = defineAsyncComponent(loader)
   }
 }
 

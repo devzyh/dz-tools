@@ -9,5 +9,6 @@ export function useToolRegistry() {
     resolve: registry.resolve,
     getGroupTools: registry.getGroupTools,
     getAllSlugs: registry.getAllSlugs,
+    getToolComponent: registry.getToolComponent,
   }
 }

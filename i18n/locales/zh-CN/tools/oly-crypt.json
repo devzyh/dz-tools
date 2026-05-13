@@ -1,0 +1,4 @@
+{
+  "title": "OLY加解密",
+  "description": "OLY文本加解密，AES/ECB模式，密钥通过SHA1PRNG派生"
+}

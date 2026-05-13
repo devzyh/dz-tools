@@ -12,6 +12,12 @@ const toolMetaModules = import.meta.glob<{ default: ToolMeta }>(
   { eager: true }
 )
 
+// Scan tool Vue components (second level: tools/{group}/{tool}/*.vue)
+const toolComponentModules = import.meta.glob<{ default: any }>(
+  './**/*.vue',
+  { eager: false }
+)
+
 function resolveGroups(): ResolvedGroup[] {
   const groups: Map<string, ResolvedGroup> = new Map()
 
@@ -81,6 +87,15 @@ function getAllSlugs(): string[] {
   return slugs
 }
 
+function getToolComponent(group: string, toolSlug: string): (() => Promise<any>) | null {
+  const componentKey = Object.keys(toolComponentModules).find(key => {
+    const match = key.match(/\.\/([^/]+)\/([^/]+)\/[^.]+\.vue$/)
+    if (!match) return false
+    return match[1] === group && match[2] === toolSlug
+  })
+  return componentKey ? toolComponentModules[componentKey] : null
+}
+
 export const registry = {
   groups,
   allTools,
@@ -89,4 +104,5 @@ export const registry = {
   resolve,
   getGroupTools,
   getAllSlugs,
+  getToolComponent,
 } as const

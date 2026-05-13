@@ -6,4 +6,5 @@ export default defineToolMeta({
   sort: 1,
   icon: 'Edit',
   showHeader: true,
+  hidden: true,
 })

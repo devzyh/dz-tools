@@ -1,0 +1,4 @@
+{
+  "title": "Cron Expression",
+  "description": "Quartz Cron expression parser and execution time calculator (6-field format only)"
+}

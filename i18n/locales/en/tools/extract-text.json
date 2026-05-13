@@ -1,0 +1,4 @@
+{
+  "title": "Text Extractor",
+  "description": "Extract text content by start and end symbols, with dedup and sort support"
+}
