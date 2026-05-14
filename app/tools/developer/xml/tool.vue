@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus'
-import ace from 'ace-builds'
-import 'ace-builds/src-noconflict/mode-xml'
-import 'ace-builds/src-noconflict/theme-sqlserver'
-import xmlFormat from 'xml-formatter'
+
+let ace: typeof import('ace-builds') | null = null
+let xmlFormat: (xml: string, options: any) => string | undefined
 
 const STORAGE_KEY = 'dz-tools-xml'
 const editorContainer = ref<HTMLDivElement>()
@@ -52,10 +51,16 @@ function clearXml() {
   localStorage.setItem(STORAGE_KEY, '')
 }
 
-onMounted(() => {
-  if (!editorContainer.value) return
+onMounted(async () => {
+  if (!import.meta.client || !editorContainer.value) return
 
-  editor = ace.edit(editorContainer.value)
+  ace = await import('ace-builds')
+  await import('ace-builds/src-noconflict/mode-xml')
+  await import('ace-builds/src-noconflict/theme-sqlserver')
+  const xmlMod = await import('xml-formatter')
+  xmlFormat = xmlMod.default || xmlMod
+
+  editor = ace!.edit(editorContainer.value)
   editor.setTheme('ace/theme/sqlserver')
   editor.setFontSize('14px')
   editor.setOption('wrap', 'free')

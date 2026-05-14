@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, shallowRef } from 'vue'
-import { MergeView } from '@codemirror/merge'
-import { basicSetup } from 'codemirror'
+
+let MergeViewClass: any
+let basicSetup: any
 
 const ORIGINAL = `const greet = (name) => {
   return "Hello, " + name;
@@ -28,9 +29,13 @@ console.log(farewell("World", "tomorrow"));`
 const container = ref<HTMLDivElement>()
 const mv = shallowRef<MergeView>()
 
-onMounted(() => {
-  if (!container.value) return
-  mv.value = new MergeView({
+onMounted(async () => {
+  if (!import.meta.client || !container.value) return
+  const mergeMod = await import('@codemirror/merge')
+  const cmMod = await import('codemirror')
+  MergeViewClass = mergeMod.MergeView
+  basicSetup = cmMod.basicSetup
+  mv.value = new MergeViewClass({
     a: { doc: ORIGINAL, extensions: [basicSetup] },
     b: { doc: MODIFIED, extensions: [basicSetup] },
     parent: container.value,

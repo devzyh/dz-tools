@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import ace from 'ace-builds'
-import 'ace-builds/src-noconflict/mode-xml'
-import 'ace-builds/src-noconflict/theme-sqlserver'
 
+let ace: typeof import('ace-builds') | null = null
 
 const xsltRef = ref<HTMLElement>()
 const sourceRef = ref<HTMLElement>()
@@ -76,7 +74,11 @@ function formatXmlString(xml: string): string {
   return formatted.trim()
 }
 
-onMounted(() => {
+onMounted(async () => {
+  if (!import.meta.client) return
+  ace = await import('ace-builds')
+  await import('ace-builds/src-noconflict/mode-xml')
+  await import('ace-builds/src-noconflict/theme-sqlserver')
   if (xsltRef.value) {
     xsltEditor = createEditor(xsltRef.value)
     xsltEditor.session.setValue(localStorage.getItem(xsltCacheKey) || '')
