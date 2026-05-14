@@ -12,9 +12,9 @@ const error = ref('')
 const IPV4_REG = /^(\d{1,3}\.){3}\d{1,3}$/
 
 onMounted(async () => {
-  curlCmd.value = `curl ${location.protocol}//${location.host}/api/ip`
+  curlCmd.value = `curl ${location.protocol}//${location.host}/ip`
   try {
-    const res = await fetch('/api/ip')
+    const res = await fetch('/ip')
     if (!res.ok) {
       error.value = '服务暂不可用，请稍后再试'
       return
