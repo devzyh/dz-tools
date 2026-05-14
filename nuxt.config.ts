@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
 
   app: {
+    buildAssetsDir: 'assets',
     head: {
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     },
