@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 
 const input = ref('')
 
-const cnPunctuation = '，。、；：？！""''【】《》（）—…～·'
+const cnPunctuation = '，。、；：？！""‘’【】《》（）—…～·'
 const enPunctuation = ',.;:?!\'"()[]{}<>'
 
 const totalChars = computed(() => input.value.length)

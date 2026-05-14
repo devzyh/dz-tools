@@ -8,6 +8,14 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap',
   ],
 
+  site: {
+    url: 'https://devzyh.cn',
+  },
+
+  sitemap: {
+    sources: ['/api/__sitemap__/urls'],
+  },
+
   css: [
     'element-plus/dist/index.css',
     '~/styles/index.scss',
@@ -30,6 +38,11 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'vercel',
+    prerender: {
+      crawlLinks: true,
+      routes: ['/', '/about', '/links'],
+      failOnError: false,
+    },
   },
 
   routeRules: {
