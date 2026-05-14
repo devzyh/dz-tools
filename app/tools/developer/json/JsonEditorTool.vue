@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus'
-import JSONEditor from 'jsoneditor'
-import 'jsoneditor/dist/jsoneditor.css'
 
 const STORAGE_KEY = 'dz-tools-json'
 const editorContainer = ref<HTMLDivElement>()
-let editor: InstanceType<typeof JSONEditor> | null = null
+let editor: any = null
 
-function getEditor(): InstanceType<typeof JSONEditor> {
+function getEditor(): any {
   if (!editor) throw new Error('编辑器未初始化')
   return editor
 }
@@ -78,8 +76,11 @@ function clearJson() {
   localStorage.setItem(STORAGE_KEY, '')
 }
 
-onMounted(() => {
-  if (!editorContainer.value) return
+onMounted(async () => {
+  if (!import.meta.client || !editorContainer.value) return
+
+  const { default: JSONEditor } = await import('jsoneditor')
+  await import('jsoneditor/dist/jsoneditor.css')
 
   editor = new JSONEditor(editorContainer.value, {
     mode: 'code',

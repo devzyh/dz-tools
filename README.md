@@ -1,75 +1,42 @@
-# Nuxt Minimal Starter
+# DZ Tools
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+基于 Nuxt 4 的在线工具箱，提供 Web 开发、文本处理、加解密、格式转换等常用工具。
 
-## Setup
+## 技术栈
 
-Make sure to install dependencies:
+- Nuxt 4 + TypeScript
+- Element Plus + SCSS
+- @nuxtjs/i18n（中/英双语）
+- Nitro Server Routes
+- 部署：通用 Node.js（可通过 `NITRO_PRESET` 环境变量切换）
+
+## 工具列表
+
+| 分组 | 工具 |
+|------|------|
+| Web | IP查询、HTML实体 |
+| 开发工具 | JSON编辑器、XML编辑器、Cron表达式、XSLT测试器、正则测试 |
+| 加解密 | 文本加解密、哈希文本 |
+| 文本 | 文本差异、随机密码、文本提取器、文本连接器、字数统计 |
+| 转换器 | Base64、格式转换、时间戳 |
+| 通天晓 | Groovy转SQL、OLY加解密 |
+
+## 本地开发
 
 ```bash
-# npm
-npm install
-
-# pnpm
+# 安装依赖
 pnpm install
 
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
+# 启动开发服务器
 pnpm dev
 
-# yarn
-yarn dev
+# SSG 静态预渲染
+pnpm generate
 
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
+# 预览构建结果
 pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## 部署
+
+默认输出 Node.js 服务端，页面使用 SSG 预渲染，API 路由按部署平台运行。通过 `NITRO_PRESET` 环境变量可切换到其他平台（如 `vercel`、`netlify`、`docker`）。
