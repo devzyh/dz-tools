@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
-import { site } from '~/config/site'
 
 const route = useRoute()
 const activeIndex = computed(() => {
@@ -125,7 +124,7 @@ function toggleMenu() {
       <a class="nav-link" :class="{ active: activeIndex === '/about' }" @click="handleSelect('/about')">{{ $t('nav.about') }}</a>
     </nav>
     <div class="header-right">
-      <button v-if="site.showLangSwitch" class="lang-switch" @click="switchLocale">{{ locale === 'zh-CN' ? 'EN' : '中' }}</button>
+      <button v-if="useAppConfig().showLangSwitch" class="lang-switch" @click="switchLocale">{{ locale === 'zh-CN' ? 'EN' : '中' }}</button>
       <div class="header-search desktop-search" @mouseleave="showDropdown = false">
         <el-input
           ref="searchInputRef"

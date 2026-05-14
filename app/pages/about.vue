@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { site } from '~/config/site'
+const { title, description } = useAppConfig()
 
 usePageSeo({
-  title: `关于 - ${site.title}`,
-  description: `关于 ${site.title}，${site.description}`,
+  title: `关于 - ${title}`,
+  description: `关于 ${title}，${description}`,
   path: '/about',
 })
 </script>
@@ -12,16 +12,16 @@ usePageSeo({
   <div class="about-page">
     <div class="about-hero">
       <div class="about-icon">
-        <img src="/favicon.svg" :alt="site.title" />
+        <img src="/favicon.svg" :alt="title" />
       </div>
-      <h1 class="about-title">{{ site.title }}</h1>
+      <h1 class="about-title">{{ title }}</h1>
     </div>
 
     <div class="about-sections">
       <div class="about-card">
         <h2 class="section-title">关于项目</h2>
         <p class="section-text">
-          {{ site.title }} {{ site.description }}，提供编码转换、文本处理、格式化等常用功能。
+          {{ title }} {{ description }}，提供编码转换、文本处理、格式化等常用功能。
           纯前端实现，数据不离开浏览器，安全高效。
         </p>
       </div>

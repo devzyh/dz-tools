@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { site } from '~/config/site'
+const appConfig = useAppConfig()
 </script>
 
 <template>
   <footer class="app-footer">
     <div class="footer-divider" />
-    <p class="footer-text">&copy; {{ new Date().getFullYear() }} {{ site.title }}. {{ $t('footer.copyright') }}.</p>
+    <p class="footer-text">&copy; {{ new Date().getFullYear() }} {{ appConfig.title }}. {{ $t('footer.copyright') }}.</p>
   </footer>
 </template>
 

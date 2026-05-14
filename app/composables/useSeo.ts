@@ -1,12 +1,11 @@
-import { site } from '~/config/site'
-
 export function usePageSeo(options: {
   title: string
   description: string
   path: string
   type?: 'website' | 'WebApplication'
 }) {
-  const url = `${site.url}${options.path}`
+  const appConfig = useAppConfig()
+  const url = `${appConfig.url}${options.path}`
 
   useSeoMeta({
     title: options.title,
@@ -27,7 +26,7 @@ export function usePageSeo(options: {
         innerHTML: JSON.stringify({
           '@context': 'https://schema.org',
           '@type': schemaType === 'WebApplication' ? 'WebApplication' : 'WebSite',
-          name: schemaType === 'WebApplication' ? options.title.replace(` - ${site.title}`, '') : site.title,
+          name: schemaType === 'WebApplication' ? options.title.replace(` - ${appConfig.title}`, '') : appConfig.title,
           description: options.description,
           url,
           ...(schemaType === 'WebApplication' ? { applicationCategory: 'DeveloperApplication' } : {}),

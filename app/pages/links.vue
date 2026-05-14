@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { site } from '~/config/site'
+const { title } = useAppConfig()
 
 const linksData = (await import('~/data/links.json')).default
 
 usePageSeo({
-  title: `友情链接 - ${site.title}`,
-  description: `${site.title} 收录的友情链接`,
+  title: `友情链接 - ${title}`,
+  description: `${title} 收录的友情链接`,
   path: '/links',
 })
 

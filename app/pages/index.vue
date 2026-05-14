@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { site } from '~/config/site'
+const { title, description } = useAppConfig()
 
 const { allGroups } = useToolRegistry()
 
 usePageSeo({
-  title: `${site.title} - 开发者在线工具`,
-  description: site.description,
+  title: `${title} - 开发者在线工具`,
+  description,
   path: '/',
 })
 </script>

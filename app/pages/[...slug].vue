@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { site } from '~/config/site'
 import { isTool, isGroup } from '~/tools/types'
 
 const route = useRoute()
+const appConfig = useAppConfig()
 const slug = (Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug) as string
 const { resolve: resolveEntry, findGroup, getToolComponent } = useToolRegistry()
 
@@ -20,7 +20,7 @@ if (entry) {
   const title = isTool(entry) ? entry.meta.title : (entry as any).meta.title
   const description = isTool(entry) ? entry.meta.description : (entry as any).meta.description || ''
   usePageSeo({
-    title: `${title} - ${site.title}`,
+    title: `${title} - ${appConfig.title}`,
     description,
     path: `/${slug}`,
     type: isTool(entry) ? 'WebApplication' : 'website',
