@@ -160,7 +160,6 @@ function toggleMenu() {
       <a class="nav-link" :class="{ active: activeIndex === '/' }" @click="handleSelect('/')">{{ $t('nav.home') }}</a>
       <a class="nav-link" :class="{ active: activeIndex === '/links' }" @click="handleSelect('/links')">{{ $t('nav.links') }}</a>
       <a class="nav-link" :class="{ active: activeIndex === '/about' }" @click="handleSelect('/about')">{{ $t('nav.about') }}</a>
-      <button class="lang-switch" @click="switchLocale">{{ locale === 'zh-CN' ? 'English' : '中文' }}</button>
       <div class="mobile-search" @mouseleave="showDropdown = false">
         <el-input
           v-model="query"
@@ -224,17 +223,18 @@ function toggleMenu() {
 
 .lang-switch {
   background: none;
-  border: 1px solid var(--el-border-color);
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 12px;
-  color: var(--el-text-color-regular);
+  border: none;
+  padding: 4px 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--el-text-color-secondary);
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
 
   &:hover {
     color: var(--el-color-primary);
-    border-color: var(--el-color-primary);
+    background: var(--el-fill-color-light);
   }
 }
 
