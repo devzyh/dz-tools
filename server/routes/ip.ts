@@ -8,5 +8,5 @@ export default defineEventHandler((event) => {
   if (typeof realIp === 'string' && realIp) {
     return realIp
   }
-  return event.node.req.socket.remoteAddress || 'unknown'
+  return 'unknown'
 })
