@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { encode, decode } from 'he'
+import he from 'he'
 import { ElMessage } from 'element-plus'
+
+const { encode, decode } = he
 
 const input = ref('')
 const output = ref('')
@@ -27,7 +29,9 @@ function copy() {
     ElMessage.warning('没有可复制的内容')
     return
   }
-  navigator.clipboard.writeText(output.value)
+  if (import.meta.client) {
+    navigator.clipboard.writeText(output.value)
+  }
   ElMessage.success('已复制')
 }
 </script>
