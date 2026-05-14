@@ -38,3 +38,7 @@ pnpm preview        # 预览构建结果
 - 浏览器 Only 的库（如 `jsoneditor`）必须用动态 `import()` 在 `onMounted` + `import.meta.client` 内加载，禁止顶层静态 import
 - 浏览器 API（`navigator.clipboard`、`localStorage` 等）需用 `import.meta.client` 守卫
 - CommonJS 模块（如 `he`）需使用默认导入 + 解构：`import he from 'he'`
+
+## 提交规范
+* 根据改动类型选择 type：feat / fix / style / refactor / docs / chore 
+* 用中文写 message 和 subject，不超过 50 字
