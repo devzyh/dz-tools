@@ -47,7 +47,7 @@ function resolveGroups(): ResolvedGroup[] {
     }
 
     const groupEntry = groups.get(group)
-    if (groupEntry && !groupEntry.meta.hidden) {
+    if (groupEntry) {
       groupEntry.tools.push(tool)
     }
   }
