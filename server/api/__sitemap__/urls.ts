@@ -6,7 +6,7 @@ interface Meta {
   [key: string]: unknown
 }
 
-export default defineEventHandler(async () => {
+export default defineCachedEventHandler(async () => {
   const staticUrls = ['/', '/about', '/links']
   const toolsDir = resolve(process.cwd(), 'app/tools')
   const dynamicUrls: string[] = []

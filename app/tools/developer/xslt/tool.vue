@@ -77,8 +77,10 @@ function formatXmlString(xml: string): string {
 onMounted(async () => {
   if (!import.meta.client) return
   ace = await import('ace-builds')
-  await import('ace-builds/src-noconflict/mode-xml')
-  await import('ace-builds/src-noconflict/theme-sqlserver')
+  await Promise.all([
+    import('ace-builds/src-noconflict/mode-xml'),
+    import('ace-builds/src-noconflict/theme-sqlserver'),
+  ])
   if (xsltRef.value) {
     xsltEditor = createEditor(xsltRef.value)
     xsltEditor.session.setValue(localStorage.getItem(xsltCacheKey) || '')

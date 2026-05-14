@@ -54,13 +54,17 @@ function clearXml() {
 onMounted(async () => {
   if (!import.meta.client || !editorContainer.value) return
 
-  ace = await import('ace-builds')
-  await import('ace-builds/src-noconflict/mode-xml')
-  await import('ace-builds/src-noconflict/theme-sqlserver')
-  const xmlMod = await import('xml-formatter')
+  const [aceMod, xmlMod] = await Promise.all([
+    import('ace-builds'),
+    import('xml-formatter'),
+    import('ace-builds/src-noconflict/mode-xml'),
+    import('ace-builds/src-noconflict/theme-sqlserver'),
+  ])
+  ace = aceMod
   xmlFormat = xmlMod.default || xmlMod
 
-  editor = ace!.edit(editorContainer.value)
+  const container = editorContainer.value!
+  editor = ace.edit(container)
   editor.setTheme('ace/theme/sqlserver')
   editor.setFontSize('14px')
   editor.setOption('wrap', 'free')
