@@ -16,11 +16,11 @@ export function usePageSeo(options: {
     ogUrl: url,
     twitterCard: 'summary',
     description: options.description,
-    canonical: url,
   })
 
   const schemaType = options.type || 'website'
   useHead({
+    link: [{ rel: 'canonical', href: url }],
     script: [
       {
         type: 'application/ld+json',
