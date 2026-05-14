@@ -9,7 +9,7 @@ const curlCmd = ref('')
 const copiedTarget = ref<'ip' | 'curl' | null>(null)
 const error = ref('')
 
-const IPV4_REG = /^(\d{1,3}\.){3}\d{1,3}$/
+const IP_REG = /^([0-9a-fA-F.:]+)$/
 
 onMounted(async () => {
   curlCmd.value = `curl ${location.protocol}//${location.host}/ip`
@@ -20,7 +20,7 @@ onMounted(async () => {
       return
     }
     const text = (await res.text()).trim()
-    if (!IPV4_REG.test(text)) {
+    if (!text || text === 'unknown') {
       error.value = '未能获取到有效的 IP 地址'
       return
     }
