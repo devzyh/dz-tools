@@ -26,6 +26,7 @@ export function usePageSeo(options: {
   const schemaType = options.type || 'website'
   useHead({
     link: [{ rel: 'canonical', href: url }],
+    meta: [{ name: 'keywords', content: appConfig.keywords }],
     script: [
       {
         type: 'application/ld+json',
