@@ -1,7 +1,7 @@
 import { defineGroupMeta } from '~/tools/types'
 
 export default defineGroupMeta({
-  title: 'groups.developer.title',
+  title: '开发工具',
   description: null,
   sort: 2,
 })

@@ -2,8 +2,6 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const { t } = useI18n()
-
 const input = ref('')
 const output = ref('')
 
@@ -11,7 +9,7 @@ function encode() {
   try {
     output.value = btoa(unescape(encodeURIComponent(input.value)))
   } catch {
-    ElMessage.error(t('tools.base64.encodeError'))
+    ElMessage.error('编码失败')
   }
 }
 
@@ -19,13 +17,13 @@ function decode() {
   try {
     output.value = decodeURIComponent(escape(atob(input.value)))
   } catch {
-    ElMessage.error(t('tools.base64.decodeError'))
+    ElMessage.error('解码失败，输入内容不是有效的 Base64')
   }
 }
 
 function copy() {
   navigator.clipboard.writeText(output.value)
-  ElMessage.success(t('tools.base64.copied'))
+  ElMessage.success('已复制')
 }
 </script>
 
@@ -35,19 +33,19 @@ function copy() {
       v-model="input"
       type="textarea"
       :rows="5"
-      :placeholder="$t('tools.base64.inputPlaceholder')"
+      :placeholder="'请输入需要编码或解码的内容'"
     />
     <div class="tool-actions">
-      <el-button type="success" @click="encode">{{ $t('tools.base64.encode') }}</el-button>
-      <el-button type="warning" @click="decode">{{ $t('tools.base64.decode') }}</el-button>
-      <el-button @click="copy">{{ $t('tools.base64.copy') }}</el-button>
+      <el-button type="success" @click="encode">Base64编码</el-button>
+      <el-button type="warning" @click="decode">Base64解码</el-button>
+      <el-button @click="copy">复制</el-button>
     </div>
     <el-input
       v-model="output"
       type="textarea"
       :rows="5"
       readonly
-      :placeholder="$t('tools.base64.resultPlaceholder')"
+      :placeholder="'处理结果将在这里显示'"
     />
   </div>
 </template>

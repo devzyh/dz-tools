@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const { t } = useI18n()
+
 
 const input = ref('')
 const output = ref('')
@@ -12,25 +12,25 @@ const joinSymbol = ref(',')
 
 function join() {
   if (!input.value.trim()) {
-    ElMessage.warning(t('tools.join-text.pleaseInput'))
+    ElMessage.warning('请输入文本内容')
     return
   }
   const lines = input.value.split('\n').map(l => l.trim()).filter(Boolean)
   if (lines.length === 0) {
-    ElMessage.warning(t('tools.join-text.noValidContent'))
+    ElMessage.warning('没有有效内容')
     return
   }
   output.value = lines.map(l => `${wrapStart.value}${l}${wrapEnd.value}`).join(joinSymbol.value)
-  ElMessage.success(t('tools.join-text.joined', { count: lines.length }))
+  ElMessage.success(`已连接 ${lines.length} 项`)
 }
 
 function copy() {
   if (!output.value) {
-    ElMessage.warning(t('tools.join-text.noContent'))
+    ElMessage.warning('没有可复制的内容')
     return
   }
   navigator.clipboard.writeText(output.value)
-  ElMessage.success(t('tools.join-text.copied'))
+  ElMessage.success('已复制')
 }
 </script>
 
@@ -38,41 +38,41 @@ function copy() {
   <div class="join-text-tool">
     <div class="config-card">
       <div class="config-row">
-        <span class="config-label">{{ $t('tools.join-text.delimiters') }}</span>
+        <span class="config-label">前缀&后缀</span>
         <div class="symbol-inputs">
-          <el-input v-model="wrapStart" :placeholder="$t('tools.join-text.prefix')" style="width: 80px" />
+          <el-input v-model="wrapStart" :placeholder="'前缀'" style="width: 80px" />
           <span class="symbol-sep">…</span>
-          <el-input v-model="wrapEnd" :placeholder="$t('tools.join-text.suffix')" style="width: 80px" />
+          <el-input v-model="wrapEnd" :placeholder="'后缀'" style="width: 80px" />
         </div>
       </div>
       <div class="config-row">
-        <span class="config-label">{{ $t('tools.join-text.connector') }}</span>
+        <span class="config-label">连接符号</span>
         <el-input v-model="joinSymbol" style="width: 120px" />
       </div>
     </div>
 
     <div class="action-bar">
-      <el-button type="primary" @click="join">{{ $t('tools.join-text.join') }}</el-button>
-      <el-button @click="copy">{{ $t('tools.join-text.copy') }}</el-button>
+      <el-button type="primary" @click="join">连接</el-button>
+      <el-button @click="copy">复制</el-button>
     </div>
 
     <el-input
       v-model="input"
       type="textarea"
       :rows="10"
-      :placeholder="$t('tools.join-text.inputPlaceholder')"
+      :placeholder="'请输入多行文本，每行将作为一个元素'"
     />
 
     <div class="result-card">
       <div class="result-header">
-        <span class="config-label">{{ $t('tools.join-text.result') }}</span>
+        <span class="config-label">连接结果</span>
       </div>
       <el-input
         v-model="output"
         type="textarea"
         :autosize="{ minRows: 4, maxRows: 20 }"
         readonly
-        :placeholder="$t('tools.join-text.resultPlaceholder')"
+        :placeholder="'连接结果将在这里显示'"
         class="result-textarea"
       />
     </div>

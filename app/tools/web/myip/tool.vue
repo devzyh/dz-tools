@@ -3,8 +3,6 @@ import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 
-const { t } = useI18n()
-
 const ip = ref('')
 const loading = ref(true)
 const curlCmd = ref('')
@@ -18,17 +16,17 @@ onMounted(async () => {
   try {
     const res = await fetch('/ip')
     if (!res.ok) {
-      error.value = t('tools.myip.serviceUnavailable')
+      error.value = '服务暂不可用，请稍后再试'
       return
     }
     const text = (await res.text()).trim()
     if (!IPV4_REG.test(text)) {
-      error.value = t('tools.myip.invalidIp')
+      error.value = '未能获取到有效的 IP 地址'
       return
     }
     ip.value = text
   } catch {
-    error.value = t('tools.myip.networkError')
+    error.value = '网络连接失败，请检查网络后刷新重试'
   } finally {
     loading.value = false
   }
@@ -38,14 +36,14 @@ function copy() {
   if (!ip.value) return
   navigator.clipboard.writeText(ip.value)
   copiedTarget.value = 'ip'
-  ElMessage.success(t('tools.myip.ipCopied'))
+  ElMessage.success('IP 地址已复制')
 }
 
 function copyCurl() {
   if (!curlCmd.value) return
   navigator.clipboard.writeText(curlCmd.value)
   copiedTarget.value = 'curl'
-  ElMessage.success(t('tools.myip.curlCopied'))
+  ElMessage.success('命令已复制')
 }
 </script>
 
@@ -53,19 +51,19 @@ function copyCurl() {
   <div class="ip-tool">
     <div v-if="loading" class="ip-loading">
       <el-icon class="is-loading" :size="20"><Loading /></el-icon>
-      <span>{{ $t('tools.myip.querying') }}</span>
+      <span>正在查询公网 IP...</span>
     </div>
     <template v-else-if="ip">
       <div class="ip-card" @click="copy">
         <span class="ip-text">{{ ip }}</span>
-        <span class="copy-hint">{{ copiedTarget === 'ip' ? $t('tools.myip.copied') : $t('tools.myip.copyIp') }}</span>
+        <span class="copy-hint">{{ copiedTarget === 'ip' ? '已复制' : '复制 IP' }}</span>
       </div>
     </template>
     <div v-if="curlCmd" class="curl-section">
-      <p class="curl-tip">{{ $t('tools.myip.curlTip') }}</p>
+      <p class="curl-tip">直接复制下方的 CURL 命令执行 IP 查询</p>
       <div class="curl-card" @click="copyCurl">
         <code class="curl-cmd">{{ curlCmd }}</code>
-        <span class="curl-hint">{{ copiedTarget === 'curl' ? $t('tools.myip.copied') : $t('tools.myip.clickToCopy') }}</span>
+        <span class="curl-hint">{{ copiedTarget === 'curl' ? '已复制' : '点击复制' }}</span>
       </div>
     </div>
     <div v-else-if="error" class="ip-error">

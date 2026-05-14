@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Tool logic
+// 工具逻辑
 </script>
 
 <template>

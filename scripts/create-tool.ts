@@ -5,7 +5,6 @@ import { createInterface } from 'node:readline'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const toolsDir = resolve(__dirname, '../app/tools')
-const i18nDir = resolve(__dirname, '../i18n/locales')
 
 const rl = createInterface({ input: process.stdin, output: process.stdout })
 
@@ -15,12 +14,12 @@ function question(prompt: string): Promise<string> {
 
 function close() { rl.close() }
 
-function metaTemplate(name: string, sort: number) {
+function metaTemplate(title: string, description: string, sort: number) {
   return `import { defineToolMeta } from '~/tools/types'
 
 export default defineToolMeta({
-  title: 'tools.${name}.title',
-  description: 'tools.${name}.description',
+  title: '${title}',
+  description: '${description}',
   sort: ${sort},
   icon: 'Edit',
   showHeader: true,
@@ -30,7 +29,7 @@ export default defineToolMeta({
 
 function componentTemplate() {
   return `<script setup lang="ts">
-// Tool logic
+// 工具逻辑
 </script>
 
 <template>
@@ -55,10 +54,6 @@ function componentTemplate() {
 }
 </style>
 `
-}
-
-function i18nTemplate(title: string) {
-  return JSON.stringify({ title, description: '' }, null, 2) + '\n'
 }
 
 function nextSort(groupDir: string): number {
@@ -90,13 +85,17 @@ async function main() {
       const groupTitle = (await question(`分组显示标题 (回车默认 "${group}"): `)).trim() || group
       mkdirSync(groupDir, { recursive: true })
       writeFileSync(resolve(groupDir, 'meta.ts'),
-        `import { defineGroupMeta } from '~/tools/types'\n\nexport default defineGroupMeta({\n  title: 'groups.${group}.title',\n  description: null,\n  sort: 1,\n})\n`
+        `import { defineGroupMeta } from '~/tools/types'\n\nexport default defineGroupMeta({\n  title: '${groupTitle}',\n  description: null,\n  sort: 1,\n})\n`
       )
       console.log(`已创建分组 ${group}/`)
     } else {
       console.error('操作取消'); close(); process.exit(1)
     }
   }
+
+  const title = (await question('工具标题 (中文): ')).trim()
+  if (!title) { console.error('工具标题不能为空'); close(); process.exit(1) }
+  const description = (await question('工具描述 (中文): ')).trim()
 
   const sort = nextSort(groupDir)
   const toolDir = resolve(groupDir, name)
@@ -106,17 +105,8 @@ async function main() {
   }
 
   mkdirSync(toolDir, { recursive: true })
-  writeFileSync(resolve(toolDir, 'meta.ts'), metaTemplate(name, sort))
-
-  const pascalName = name.charAt(0).toUpperCase() + name.slice(1)
-  writeFileSync(resolve(toolDir, `${pascalName}Tool.vue`), componentTemplate())
-
-  const title = name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-  for (const lang of ['zh-CN', 'en']) {
-    const dir = resolve(i18nDir, lang, 'tools')
-    mkdirSync(dir, { recursive: true })
-    writeFileSync(resolve(dir, `${name}.json`), i18nTemplate(title))
-  }
+  writeFileSync(resolve(toolDir, 'meta.ts'), metaTemplate(title, description, sort))
+  writeFileSync(resolve(toolDir, 'tool.vue'), componentTemplate())
 
   console.log(`已创建工具: tools/${group}/${name}/`)
   close()

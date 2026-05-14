@@ -3,8 +3,6 @@ import { ref } from 'vue'
 import CryptoJS from 'crypto-js'
 import { ElMessage } from 'element-plus'
 
-const { t } = useI18n()
-
 const input = ref('')
 const encoding = ref('hex')
 const uppercase = ref(false)
@@ -48,7 +46,7 @@ function formatHash(hash: CryptoJS.lib.WordArray): string {
 
 function compute() {
   if (!input.value) {
-    ElMessage.warning(t('tools.hash.pleaseInput'))
+    ElMessage.warning('请输入需要计算哈希的文本')
     return
   }
   results.value = algorithms.map(({ label, fn, format }) => ({
@@ -59,7 +57,7 @@ function compute() {
 
 function copy(value: string) {
   navigator.clipboard.writeText(value)
-  ElMessage.success(t('tools.hash.copied'))
+  ElMessage.success('已复制')
 }
 </script>
 
@@ -69,17 +67,17 @@ function copy(value: string) {
       v-model="input"
       type="textarea"
       :rows="5"
-      :placeholder="$t('tools.hash.inputPlaceholder')"
+      :placeholder="'请输入需要计算哈希的文本'"
     />
     <div class="tool-actions">
       <el-select v-model="encoding" style="width: 180px">
-        <el-option :label="$t('tools.hash.hex')" value="hex" />
-        <el-option :label="$t('tools.hash.binary')" value="binary" />
-        <el-option :label="$t('tools.hash.base64')" value="base64" />
-        <el-option :label="$t('tools.hash.urlSafeBase64')" value="urlsafe-base64" />
+        <el-option :label="'十六进制'" value="hex" />
+        <el-option :label="'二进制'" value="binary" />
+        <el-option :label="'Base64'" value="base64" />
+        <el-option :label="'URL安全Base64'" value="urlsafe-base64" />
       </el-select>
-      <el-checkbox v-model="uppercase">{{ $t('tools.hash.uppercase') }}</el-checkbox>
-      <el-button type="primary" @click="compute">{{ $t('tools.hash.compute') }}</el-button>
+      <el-checkbox v-model="uppercase">大写</el-checkbox>
+      <el-button type="primary" @click="compute">计算哈希</el-button>
     </div>
     <div v-if="results.length" class="hash-results">
       <div v-for="item in results" :key="item.label" class="hash-row">

@@ -1,18 +1,18 @@
 import type { ToolMeta, GroupMeta, ResolvedTool, ResolvedGroup, ResolvedEntry } from './types'
 
-// Scan group meta files (first level: tools/{group}/meta.ts)
+// 扫描分组元数据文件（一级：tools/{group}/meta.ts）
 const groupMetaModules = import.meta.glob<{ default: GroupMeta }>(
   './*/meta.ts',
   { eager: true }
 )
 
-// Scan tool meta files (second level: tools/{group}/{tool}/meta.ts)
+// 扫描工具元数据文件（二级：tools/{group}/{tool}/meta.ts）
 const toolMetaModules = import.meta.glob<{ default: ToolMeta }>(
   './*/[^.]*/meta.ts',
   { eager: true }
 )
 
-// Scan tool Vue components (second level: tools/{group}/{tool}/*.vue)
+// 扫描工具 Vue 组件（二级：tools/{group}/{tool}/*.vue）
 const toolComponentModules = import.meta.glob<{ default: any }>(
   './**/*.vue',
   { eager: false }

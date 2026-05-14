@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import he from 'he'
 import { ElMessage } from 'element-plus'
 
-const { t } = useI18n()
 const { encode, decode } = he
 
 const input = ref('')
@@ -11,7 +10,7 @@ const output = ref('')
 
 function convert() {
   if (!input.value.trim()) {
-    ElMessage.warning(t('tools.html.pleaseInput'))
+    ElMessage.warning('请输入需要处理的内容')
     return
   }
   output.value = encode(input.value)
@@ -19,7 +18,7 @@ function convert() {
 
 function reverse() {
   if (!input.value.trim()) {
-    ElMessage.warning(t('tools.html.pleaseInput'))
+    ElMessage.warning('请输入需要处理的内容')
     return
   }
   output.value = decode(input.value)
@@ -27,13 +26,13 @@ function reverse() {
 
 function copy() {
   if (!output.value) {
-    ElMessage.warning(t('tools.html.noContent'))
+    ElMessage.warning('没有可复制的内容')
     return
   }
   if (import.meta.client) {
     navigator.clipboard.writeText(output.value)
   }
-  ElMessage.success(t('tools.html.copied'))
+  ElMessage.success('已复制')
 }
 </script>
 
@@ -43,19 +42,19 @@ function copy() {
       v-model="input"
       type="textarea"
       :rows="6"
-      :placeholder="$t('tools.html.inputPlaceholder')"
+      :placeholder="'请输入需要转义或反转义的内容'"
     />
     <div class="tool-actions">
-      <el-button type="success" @click="convert">{{ $t('tools.html.escape') }}</el-button>
-      <el-button type="warning" @click="reverse">{{ $t('tools.html.unescape') }}</el-button>
-      <el-button @click="copy">{{ $t('tools.html.copy') }}</el-button>
+      <el-button type="success" @click="convert">转义HTML实体</el-button>
+      <el-button type="warning" @click="reverse">反转义HTML实体</el-button>
+      <el-button @click="copy">复制</el-button>
     </div>
     <el-input
       v-model="output"
       type="textarea"
       :rows="6"
       readonly
-      :placeholder="$t('tools.html.resultPlaceholder')"
+      :placeholder="'处理结果将在这里显示'"
     />
   </div>
 </template>

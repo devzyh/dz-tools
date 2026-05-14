@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-const { t } = useI18n()
-
 const input = ref('')
 
 const cnPunctuation = '，。、；：？！""‘’【】《》（）—…～·'
@@ -57,41 +55,41 @@ const paragraphCount = computed(() => {
       v-model="input"
       type="textarea"
       :rows="16"
-      :placeholder="$t('tools.count-text.inputPlaceholder')"
+      :placeholder="'请输入或粘贴文本，实时统计'"
     />
 
     <div class="stats-card">
       <div class="stat-row">
-        <span class="stat-label">{{ $t('tools.count-text.totalChars') }}</span>
-        <span class="stat-value">{{ $t('tools.count-text.unit', { count: totalChars }) }}</span>
+        <span class="stat-label">字符总数</span>
+        <span class="stat-value">{{ totalChars }} 个</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">{{ $t('tools.count-text.digits') }}</span>
-        <span class="stat-value">{{ $t('tools.count-text.unit', { count: digitCount }) }}</span>
+        <span class="stat-label">数字字符总数</span>
+        <span class="stat-value">{{ digitCount }} 个</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">{{ $t('tools.count-text.cnChars') }}</span>
-        <span class="stat-value">{{ $t('tools.count-text.unit', { count: cnCharCount }) }}</span>
+        <span class="stat-label">中文字符总数</span>
+        <span class="stat-value">{{ cnCharCount }} 个</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">{{ $t('tools.count-text.cnPunctuation') }}</span>
-        <span class="stat-value">{{ $t('tools.count-text.unit', { count: cnPuncCount }) }}</span>
+        <span class="stat-label">中文标点总数</span>
+        <span class="stat-value">{{ cnPuncCount }} 个</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">{{ $t('tools.count-text.enChars') }}</span>
-        <span class="stat-value">{{ $t('tools.count-text.unit', { count: enCharCount }) }}</span>
+        <span class="stat-label">英文字符总数</span>
+        <span class="stat-value">{{ enCharCount }} 个</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">{{ $t('tools.count-text.enPunctuation') }}</span>
-        <span class="stat-value">{{ $t('tools.count-text.unit', { count: enPuncCount }) }}</span>
+        <span class="stat-label">英文标点总数</span>
+        <span class="stat-value">{{ enPuncCount }} 个</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">{{ $t('tools.count-text.lines') }}</span>
-        <span class="stat-value">{{ $t('tools.count-text.lineUnit', { count: lineCount }) }}</span>
+        <span class="stat-label">总行数</span>
+        <span class="stat-value">{{ lineCount }} 行</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">{{ $t('tools.count-text.paragraphs') }}</span>
-        <span class="stat-value">{{ $t('tools.count-text.unit', { count: paragraphCount }) }}</span>
+        <span class="stat-label">段落数</span>
+        <span class="stat-value">{{ paragraphCount }} 个</span>
       </div>
     </div>
   </div>

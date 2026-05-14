@@ -4,36 +4,36 @@ import { CronExpressionParser } from 'cron-parser'
 import { ElMessage } from 'element-plus'
 import { WarningFilled, Clock } from '@element-plus/icons-vue'
 
-const { t } = useI18n()
+
 
 const expression = ref('')
 const schedules = ref<{ date: string; day: string }[]>([])
 const error = ref('')
 
 const fieldDesc = computed(() => [
-  { label: t('tools.cron.fieldSecond'), range: '0-59' },
-  { label: t('tools.cron.fieldMinute'), range: '0-59' },
-  { label: t('tools.cron.fieldHour'), range: '0-23' },
-  { label: t('tools.cron.fieldDay'), range: '1-31' },
-  { label: t('tools.cron.fieldMonth'), range: '1-12' },
-  { label: t('tools.cron.fieldWeek'), range: '1-7' },
+  { label: '秒', range: '0-59' },
+  { label: '分', range: '0-59' },
+  { label: '时', range: '0-23' },
+  { label: '日', range: '1-31' },
+  { label: '月', range: '1-12' },
+  { label: '周', range: '1-7' },
 ])
 
 const presets = computed(() => [
-  { label: t('tools.cron.presetEverySecond'), value: '* * * * * ?' },
-  { label: t('tools.cron.presetEveryMinute'), value: '0 * * * * ?' },
-  { label: t('tools.cron.presetEvery5Minutes'), value: '0 */5 * * * ?' },
-  { label: t('tools.cron.presetEveryHour'), value: '0 0 * * * ?' },
-  { label: t('tools.cron.presetDaily1015'), value: '0 15 10 * * ?' },
-  { label: t('tools.cron.presetDaily1200'), value: '0 0 12 * * ?' },
-  { label: t('tools.cron.presetWeekday9'), value: '0 0 9 ? * MON-FRI' },
-  { label: t('tools.cron.presetMonthly1st'), value: '0 0 0 1 * ?' },
-  { label: t('tools.cron.presetMonday'), value: '0 0 0 ? * MON' },
+  { label: '每秒', value: '* * * * * ?' },
+  { label: '每分钟', value: '0 * * * * ?' },
+  { label: '每5分钟', value: '0 */5 * * * ?' },
+  { label: '每小时', value: '0 0 * * * ?' },
+  { label: '每天10:15', value: '0 15 10 * * ?' },
+  { label: '每天12:00', value: '0 0 12 * * ?' },
+  { label: '工作日9点', value: '0 0 9 ? * MON-FRI' },
+  { label: '每月1号0点', value: '0 0 0 1 * ?' },
+  { label: '每周一0点', value: '0 0 0 ? * MON' },
 ])
 
 function parse() {
   if (!expression.value.trim()) {
-    ElMessage.warning(t('tools.cron.pleaseInput'))
+    ElMessage.warning('请输入Cron表达式')
     return
   }
   error.value = ''
@@ -42,13 +42,13 @@ function parse() {
       throwOnError: true,
     } as any)
     const dayNames = [
-      t('tools.cron.daySunday'),
-      t('tools.cron.dayMonday'),
-      t('tools.cron.dayTuesday'),
-      t('tools.cron.dayWednesday'),
-      t('tools.cron.dayThursday'),
-      t('tools.cron.dayFriday'),
-      t('tools.cron.daySaturday'),
+      '周日',
+      '周一',
+      '周二',
+      '周三',
+      '周四',
+      '周五',
+      '周六',
     ]
     schedules.value = interval.take(10).map((d: any) => {
       const date = d.toDate()
@@ -74,7 +74,7 @@ function parse() {
         clearable
         @keyup.enter="parse"
       />
-      <el-button type="primary" @click="parse">{{ $t('tools.cron.parse') }}</el-button>
+      <el-button type="primary" @click="parse">解析</el-button>
     </div>
 
     <div class="cron-fields">
@@ -105,7 +105,7 @@ function parse() {
     <div v-if="schedules.length" class="cron-results">
       <div class="results-header">
         <el-icon><Clock /></el-icon>
-        <span>{{ $t('tools.cron.recentExecutions') }}</span>
+        <span>最近 10 次执行时间</span>
       </div>
       <div
         v-for="(item, index) in schedules"

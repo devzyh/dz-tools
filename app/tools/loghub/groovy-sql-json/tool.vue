@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const { t } = useI18n()
+
 
 const input = ref('')
 const activeTab = ref('sql')
@@ -162,7 +162,7 @@ function groovyTypeToSql(type: string, name: string, comment: string, isIdColumn
 
 function generateSql(defineInfo: DefineInfo | null, fields: GroovyField[]): string {
   if (!defineInfo || !defineInfo.table) {
-    return `-- ${t('tools.groovy-sql-json.noDefineHint')}`
+    return `-- 未找到表定义（static DEFINE），请检查 Groovy 类是否包含 define 配置`
   }
 
   const tableName = defineInfo.table
@@ -204,7 +204,7 @@ function groovyTypeToJsonType(type: string): string {
 
 function generateJson(defineInfo: DefineInfo | null, fields: GroovyField[]): string {
   if (!defineInfo || !defineInfo.table) {
-    return `// ${t('tools.groovy-sql-json.noDefineShort')}`
+    return `// 未找到表定义`
   }
 
   const codeField = fields.find(f => f.name.toLowerCase().includes('code'))
@@ -241,7 +241,7 @@ function generateJson(defineInfo: DefineInfo | null, fields: GroovyField[]): str
 
 function convert() {
   if (!input.value.trim()) {
-    ElMessage.warning(t('tools.groovy-sql-json.pleaseInput'))
+    ElMessage.warning('请输入 Groovy 实体类')
     return
   }
 
@@ -249,32 +249,32 @@ function convert() {
   const uniqueFields = dedupFields(fields)
 
   if (uniqueFields.length === 0) {
-    ElMessage.warning(t('tools.groovy-sql-json.noFields'))
+    ElMessage.warning('未解析到任何字段')
     return
   }
 
   sqlOutput.value = generateSql(defineInfo, uniqueFields)
   jsonOutput.value = generateJson(defineInfo, uniqueFields)
   activeTab.value = 'sql'
-  ElMessage.success(t('tools.groovy-sql-json.parsed', { count: uniqueFields.length }))
+  ElMessage.success(`解析完成，共 ${uniqueFields.length} 个字段`)
 }
 
 function copySql() {
   if (!sqlOutput.value) {
-    ElMessage.warning(t('tools.groovy-sql-json.noContent'))
+    ElMessage.warning('没有可复制的内容')
     return
   }
   navigator.clipboard.writeText(sqlOutput.value)
-  ElMessage.success(t('tools.groovy-sql-json.sqlCopied'))
+  ElMessage.success('SQL 已复制')
 }
 
 function copyJson() {
   if (!jsonOutput.value) {
-    ElMessage.warning(t('tools.groovy-sql-json.noContent'))
+    ElMessage.warning('没有可复制的内容')
     return
   }
   navigator.clipboard.writeText(jsonOutput.value)
-  ElMessage.success(t('tools.groovy-sql-json.jsonCopied'))
+  ElMessage.success('JSON 已复制')
 }
 
 function clear() {
@@ -290,16 +290,16 @@ function clear() {
       v-model="input"
       type="textarea"
       :rows="12"
-      :placeholder="$t('tools.groovy-sql-json.inputPlaceholder')"
+      placeholder="请粘贴 Groovy 实体类代码"
     />
     <div class="tool-actions">
-      <el-button type="primary" @click="convert">{{ $t('tools.groovy-sql-json.convert') }}</el-button>
-      <el-button @click="copySql">{{ $t('tools.groovy-sql-json.copySql') }}</el-button>
-      <el-button @click="copyJson">{{ $t('tools.groovy-sql-json.copyJson') }}</el-button>
-      <el-button @click="clear">{{ $t('tools.groovy-sql-json.clear') }}</el-button>
+      <el-button type="primary" @click="convert">转换</el-button>
+      <el-button @click="copySql">复制SQL</el-button>
+      <el-button @click="copyJson">复制JSON</el-button>
+      <el-button @click="clear">清空</el-button>
     </div>
     <el-tabs v-if="sqlOutput || jsonOutput" v-model="activeTab">
-      <el-tab-pane :label="$t('tools.groovy-sql-json.sqlTab')" name="sql">
+      <el-tab-pane label="MySQL 建表语句" name="sql">
         <el-input
           v-model="sqlOutput"
           type="textarea"
@@ -307,7 +307,7 @@ function clear() {
           readonly
         />
       </el-tab-pane>
-      <el-tab-pane :label="$t('tools.groovy-sql-json.jsonTab')" name="json">
+      <el-tab-pane label="界面 JSON" name="json">
         <el-input
           v-model="jsonOutput"
           type="textarea"

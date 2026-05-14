@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import CryptoJS from 'crypto-js'
 import { ElMessage } from 'element-plus'
 
-const { t } = useI18n()
+
 
 const algorithm = ref('AES')
 const input = ref('')
@@ -28,8 +28,8 @@ function generateKey() {
 }
 
 function encrypt() {
-  if (!input.value.trim()) { ElMessage.warning(t('tools.crypto.pleaseInput')); return }
-  if (!key.value.trim()) { ElMessage.warning(t('tools.crypto.pleaseInputKey')); return }
+  if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
+  if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
   try {
     let encrypted: CryptoJS.lib.CipherParams
     switch (algorithm.value) {
@@ -37,17 +37,17 @@ function encrypt() {
       case 'TripleDES': encrypted = CryptoJS.TripleDES.encrypt(input.value, key.value); break
       case 'Rabbit': encrypted = CryptoJS.Rabbit.encrypt(input.value, key.value); break
       case 'RC4': encrypted = CryptoJS.RC4.encrypt(input.value, key.value); break
-      default: throw new Error(t('tools.crypto.unsupportedAlgo'))
+      default: throw new Error('不支持的算法')
     }
     output.value = encrypted.toString()
   } catch (err) {
-    ElMessage.error(t('tools.crypto.encryptError') + (err as Error).message)
+    ElMessage.error('加密失败：' + (err as Error).message)
   }
 }
 
 function decrypt() {
-  if (!input.value.trim()) { ElMessage.warning(t('tools.crypto.pleaseInput')); return }
-  if (!key.value.trim()) { ElMessage.warning(t('tools.crypto.pleaseInputKey')); return }
+  if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
+  if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
   try {
     let decrypted: CryptoJS.lib.WordArray
     switch (algorithm.value) {
@@ -55,18 +55,18 @@ function decrypt() {
       case 'TripleDES': decrypted = CryptoJS.TripleDES.decrypt(input.value, key.value); break
       case 'Rabbit': decrypted = CryptoJS.Rabbit.decrypt(input.value, key.value); break
       case 'RC4': decrypted = CryptoJS.RC4.decrypt(input.value, key.value); break
-      default: throw new Error(t('tools.crypto.unsupportedAlgo'))
+      default: throw new Error('不支持的算法')
     }
     output.value = decrypted.toString(CryptoJS.enc.Utf8)
   } catch (err) {
-    ElMessage.error(t('tools.crypto.decryptError') + (err as Error).message)
+    ElMessage.error('解密失败：' + (err as Error).message)
   }
 }
 
 function copy() {
-  if (!output.value) { ElMessage.warning(t('tools.crypto.noContent')); return }
+  if (!output.value) { ElMessage.warning('没有可复制的内容'); return }
   navigator.clipboard.writeText(output.value)
-  ElMessage.success(t('tools.crypto.copied'))
+  ElMessage.success('已复制')
 }
 
 generateKey()
@@ -82,27 +82,27 @@ generateKey()
         <el-option label="RC4" value="RC4" />
       </el-select>
       <div class="key-group">
-        <el-input v-model="key" :placeholder="$t('tools.crypto.keyPlaceholder')" />
-        <el-button @click="generateKey">{{ $t('tools.crypto.random') }}</el-button>
+        <el-input v-model="key" :placeholder="'加密/解密密钥'" />
+        <el-button @click="generateKey">随机</el-button>
       </div>
     </div>
     <el-input
       v-model="input"
       type="textarea"
       :rows="5"
-      :placeholder="$t('tools.crypto.inputPlaceholder')"
+      :placeholder="'请输入需要加密或解密的内容'"
     />
     <div class="tool-actions">
-      <el-button type="success" @click="encrypt">{{ $t('tools.crypto.encrypt') }}</el-button>
-      <el-button type="warning" @click="decrypt">{{ $t('tools.crypto.decrypt') }}</el-button>
-      <el-button @click="copy">{{ $t('tools.crypto.copy') }}</el-button>
+      <el-button type="success" @click="encrypt">加密</el-button>
+      <el-button type="warning" @click="decrypt">解密</el-button>
+      <el-button @click="copy">复制</el-button>
     </div>
     <el-input
       v-model="output"
       type="textarea"
       :rows="5"
       readonly
-      :placeholder="$t('tools.crypto.resultPlaceholder')"
+      :placeholder="'处理结果将在这里显示'"
     />
   </div>
 </template>

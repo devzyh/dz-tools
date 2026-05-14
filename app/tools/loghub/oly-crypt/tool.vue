@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import CryptoJS from 'crypto-js'
 import { ElMessage } from 'element-plus'
 
-const { t } = useI18n()
+
 
 const input = ref('')
 const key = ref('')
@@ -77,8 +77,8 @@ function deriveKey(password: string): CryptoJS.lib.WordArray {
 }
 
 function encrypt() {
-  if (!input.value.trim()) { ElMessage.warning(t('tools.oly-crypt.pleaseInput')); return }
-  if (!key.value.trim()) { ElMessage.warning(t('tools.oly-crypt.pleaseInputKey')); return }
+  if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
+  if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
   try {
     const aesKey = deriveKey(key.value)
     const encrypted = CryptoJS.AES.encrypt(input.value, aesKey, {
@@ -87,13 +87,13 @@ function encrypt() {
     })
     output.value = encrypted.ciphertext.toString(CryptoJS.enc.Hex).toUpperCase()
   } catch (err) {
-    ElMessage.error(t('tools.oly-crypt.encryptError') + (err as Error).message)
+    ElMessage.error('加密失败：' + (err as Error).message)
   }
 }
 
 function decrypt() {
-  if (!input.value.trim()) { ElMessage.warning(t('tools.oly-crypt.pleaseInput')); return }
-  if (!key.value.trim()) { ElMessage.warning(t('tools.oly-crypt.pleaseInputKey')); return }
+  if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
+  if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
   try {
     const aesKey = deriveKey(key.value)
     const cipherParams = CryptoJS.lib.CipherParams.create({
@@ -105,12 +105,12 @@ function decrypt() {
     })
     const result = decrypted.toString(CryptoJS.enc.Utf8)
     if (!result) {
-      ElMessage.error(t('tools.oly-crypt.decryptWrong'))
+      ElMessage.error('解密失败，请检查密文和密钥是否正确')
       return
     }
     output.value = result
   } catch (err) {
-    ElMessage.error(t('tools.oly-crypt.decryptError') + (err as Error).message)
+    ElMessage.error('解密失败：' + (err as Error).message)
   }
 }
 
@@ -130,14 +130,14 @@ function swap() {
 }
 
 function copy() {
-  if (!output.value) { ElMessage.warning(t('tools.oly-crypt.noContent')); return }
+  if (!output.value) { ElMessage.warning('没有可复制的内容'); return }
   navigator.clipboard.writeText(output.value)
-  ElMessage.success(t('tools.oly-crypt.copied'))
+  ElMessage.success('已复制')
 }
 
 function copyCode() {
   navigator.clipboard.writeText(javaCode)
-  ElMessage.success(t('tools.oly-crypt.codeCopied'))
+  ElMessage.success('代码已复制')
 }
 </script>
 
@@ -147,29 +147,29 @@ function copyCode() {
       v-model="input"
       type="textarea"
       :rows="5"
-      :placeholder="$t('tools.oly-crypt.inputPlaceholder')"
+      placeholder="请输入需要加密或解密的内容"
     />
     <div class="key-group">
-      <el-input v-model="key" :placeholder="$t('tools.oly-crypt.keyPlaceholder')" />
-      <el-button @click="generateKey">{{ $t('tools.oly-crypt.random') }}</el-button>
+      <el-input v-model="key" placeholder="请输入加密/解密密钥" />
+      <el-button @click="generateKey">随机</el-button>
     </div>
     <div class="tool-actions">
-      <el-button type="success" @click="encrypt">{{ $t('tools.oly-crypt.encrypt') }}</el-button>
-      <el-button type="warning" @click="decrypt">{{ $t('tools.oly-crypt.decrypt') }}</el-button>
-      <el-button @click="swap">{{ $t('tools.oly-crypt.swap') }}</el-button>
-      <el-button @click="copy">{{ $t('tools.oly-crypt.copy') }}</el-button>
+      <el-button type="success" @click="encrypt">加密</el-button>
+      <el-button type="warning" @click="decrypt">解密</el-button>
+      <el-button @click="swap">交换</el-button>
+      <el-button @click="copy">复制</el-button>
     </div>
     <el-input
       v-model="output"
       type="textarea"
       :rows="5"
       readonly
-      :placeholder="$t('tools.oly-crypt.resultPlaceholder')"
+      placeholder="处理结果将在这里显示"
     />
     <div class="code-block">
       <div class="code-header" @click="showCode = !showCode">
-        <span>{{ $t('tools.oly-crypt.javaCode') }}</span>
-        <el-button link size="small" @click.stop="copyCode">{{ $t('tools.oly-crypt.copy') }}</el-button>
+        <span>Java 实现代码</span>
+        <el-button link size="small" @click.stop="copyCode">复制</el-button>
       </div>
       <pre v-show="showCode" class="java-code"><code>{{ javaCode }}</code></pre>
     </div>

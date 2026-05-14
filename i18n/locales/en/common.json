@@ -19,13 +19,5 @@
   "home": {
     "title": "Developer Online Tools",
     "empty": "No tools yet"
-  },
-  "groups": {
-    "converter": { "title": "Converter" },
-    "crypto": { "title": "Crypto" },
-    "developer": { "title": "Developer" },
-    "loghub": { "title": "TongTianXiao" },
-    "text": { "title": "Text" },
-    "web": { "title": "Web" }
   }
 }

@@ -1,7 +1,7 @@
 import { defineGroupMeta } from '~/tools/types'
 
 export default defineGroupMeta({
-  title: 'groups.converter.title',
+  title: '转换器',
   description: null,
   sort: 5,
 })

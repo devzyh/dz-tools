@@ -29,8 +29,8 @@ interface SearchItem {
 
 const allSearchItems = computed(() => [
   ...allTools.map(tool => ({
-    title: t(tool.meta.title),
-    description: t(tool.meta.description),
+    title: tool.meta.title,
+    description: tool.meta.description,
     path: `/${tool.slug}`,
     type: 'tool' as const,
   })),
@@ -57,8 +57,10 @@ const searchInputRef = ref()
 
 const filteredItems = computed(() => {
   if (!query.value.trim()) return []
+  const items = allSearchItems.value
+  if (!Array.isArray(items)) return []
   const q = query.value.toLowerCase()
-  return allSearchItems.filter(item =>
+  return items.filter(item =>
     item.title.toLowerCase().includes(q)
     || (item.description || '').toLowerCase().includes(q)
     || item.path.toLowerCase().includes(q),

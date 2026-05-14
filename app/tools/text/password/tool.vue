@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const { t } = useI18n()
+
 
 const NUMBER_ARR = '0123456789'.split('')
 const LOWER_ARR = 'abcdefghijklmnopqrstuvwxyz'.split('')
@@ -52,7 +52,7 @@ function generateRandomString(pool: string[], length: number): string {
 function generate() {
   const pool = charPool.value
   if (pool.length === 0) {
-    ElMessage.error(t('tools.password.noChars'))
+    ElMessage.error('没有候选字符，请至少选择一种字符类型')
     return
   }
 
@@ -60,16 +60,16 @@ function generate() {
   const len = passwordLength.value
 
   if (count < 1 || count > 1000000) {
-    ElMessage.error(t('tools.password.invalidCount'))
+    ElMessage.error('生成数量范围为 1 - 1,000,000')
     return
   }
   if (len < 1 || len > 1000000) {
-    ElMessage.error(t('tools.password.invalidLength'))
+    ElMessage.error('密码长度范围为 1 - 1,000,000')
     return
   }
 
   if (pool.length ** len < count) {
-    ElMessage.warning(t('tools.password.notEnoughChars'))
+    ElMessage.warning('候选字符不足以生成指定数量的唯一密码')
   }
 
   const set = new Set<string>()
@@ -82,16 +82,16 @@ function generate() {
   }
 
   result.value = [...set].join('\n')
-  ElMessage.success(t('tools.password.generated', { count: set.size }))
+  ElMessage.success(`已生成 ${set.size} 个密码`)
 }
 
 function copyResult() {
   if (!result.value) {
-    ElMessage.warning(t('tools.password.pleaseGenerate'))
+    ElMessage.warning('请先生成密码')
     return
   }
   navigator.clipboard.writeText(result.value)
-  ElMessage.success(t('tools.password.copied'))
+  ElMessage.success('已复制到剪贴板')
 }
 
 function clearResult() {
@@ -103,20 +103,20 @@ function clearResult() {
   <div class="password-tool">
     <div class="config-card">
       <div class="config-row">
-        <span class="config-label">{{ $t('tools.password.charTypes') }}</span>
+        <span class="config-label">使用字符</span>
         <div class="char-checks">
-          <el-checkbox v-model="useNumber">{{ $t('tools.password.digits') }}</el-checkbox>
-          <el-checkbox v-model="useLower">{{ $t('tools.password.lowercase') }}</el-checkbox>
-          <el-checkbox v-model="useUpper">{{ $t('tools.password.uppercase') }}</el-checkbox>
-          <el-checkbox v-model="useSymbol">{{ $t('tools.password.symbols') }}</el-checkbox>
-          <span class="pool-size">{{ $t('tools.password.poolSize', { count: poolSize }) }}</span>
+          <el-checkbox v-model="useNumber">0-9 数字</el-checkbox>
+          <el-checkbox v-model="useLower">a-z 小写</el-checkbox>
+          <el-checkbox v-model="useUpper">A-Z 大写</el-checkbox>
+          <el-checkbox v-model="useSymbol">!@# 符号</el-checkbox>
+          <span class="pool-size">候选字符 {{ poolSize }} 个</span>
         </div>
       </div>
 
       <el-row :gutter="16">
         <el-col :xs="12" :sm="8">
           <div class="config-item">
-            <span class="config-label">{{ $t('tools.password.count') }}</span>
+            <span class="config-label">生成数量</span>
             <el-input-number
               v-model="generateCount"
               :min="1"
@@ -128,7 +128,7 @@ function clearResult() {
         </el-col>
         <el-col :xs="12" :sm="8">
           <div class="config-item">
-            <span class="config-label">{{ $t('tools.password.length') }}</span>
+            <span class="config-label">密码长度</span>
             <el-input-number
               v-model="passwordLength"
               :min="1"
@@ -143,36 +143,36 @@ function clearResult() {
       <el-row :gutter="16">
         <el-col :xs="24" :sm="12">
           <div class="config-item">
-            <span class="config-label">{{ $t('tools.password.includeChars') }}</span>
-            <el-input v-model="includeChars" :placeholder="$t('tools.password.includePlaceholder')" />
+            <span class="config-label">包含字符</span>
+            <el-input v-model="includeChars" placeholder="可选，添加到候选字符池" />
           </div>
         </el-col>
         <el-col :xs="24" :sm="12">
           <div class="config-item">
-            <span class="config-label">{{ $t('tools.password.excludeChars') }}</span>
-            <el-input v-model="excludeChars" :placeholder="$t('tools.password.excludePlaceholder')" />
+            <span class="config-label">排除字符</span>
+            <el-input v-model="excludeChars" placeholder="可选" />
           </div>
         </el-col>
       </el-row>
     </div>
 
     <div class="action-bar">
-      <el-button type="primary" @click="generate">{{ $t('tools.password.generate') }}</el-button>
-      <el-button @click="copyResult">{{ $t('tools.password.copyResult') }}</el-button>
-      <el-button @click="clearResult">{{ $t('tools.password.clear') }}</el-button>
+      <el-button type="primary" @click="generate">生成密码</el-button>
+      <el-button @click="copyResult">复制结果</el-button>
+      <el-button @click="clearResult">清空</el-button>
     </div>
 
     <div class="result-card">
       <div class="result-header">
-        <span class="config-label">{{ $t('tools.password.result') }}</span>
-        <span v-if="result" class="result-count">{{ $t('tools.password.items', { count: result.split('\n').length }) }}</span>
+        <span class="config-label">生成结果</span>
+        <span v-if="result" class="result-count">{{ result.split('\n').length }} 条</span>
       </div>
       <el-input
         v-model="result"
         type="textarea"
         :autosize="{ minRows: 10, maxRows: 20 }"
         readonly
-        :placeholder="$t('tools.password.resultPlaceholder')"
+        placeholder="生成结果将在这里显示"
         class="result-textarea"
       />
     </div>

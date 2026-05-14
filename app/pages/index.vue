@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { site } from '~/config/site'
 
-const { t } = useI18n()
 const { allGroups } = useToolRegistry()
 
 usePageSeo({
-  title: `${site.title} - ${t('home.title')}`,
+  title: `${site.title} - 开发者在线工具`,
   description: site.description,
   path: '/',
 })
@@ -15,23 +14,23 @@ usePageSeo({
   <div class="home-page">
     <div v-for="group in allGroups" :key="group.slug" class="tool-group">
       <div class="group-header">
-        <NuxtLink :to="`/${group.slug}`" class="group-title">{{ $t(group.meta.title) }}</NuxtLink>
-        <span v-if="group.meta.description" class="group-desc">{{ $t(group.meta.description!) }}</span>
+        <NuxtLink :to="`/${group.slug}`" class="group-title">{{ group.meta.title }}</NuxtLink>
+        <span v-if="group.meta.description" class="group-desc">{{ group.meta.description }}</span>
         <span class="group-count">{{ group.tools.length }}</span>
       </div>
       <div class="tool-grid">
         <ToolCard
           v-for="tool in group.tools"
           :key="tool.slug"
-          :title="$t(tool.meta.title)"
-          :description="$t(tool.meta.description)"
+          :title="tool.meta.title"
+          :description="tool.meta.description"
           :href="`/${tool.slug}`"
           :icon="tool.meta.icon"
         />
       </div>
     </div>
 
-    <el-empty v-if="allGroups.length === 0" :description="$t('home.empty')" />
+    <el-empty v-if="allGroups.length === 0" description="暂无工具" />
   </div>
 </template>
 

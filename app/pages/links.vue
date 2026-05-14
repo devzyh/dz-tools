@@ -23,9 +23,46 @@ interface LinkGroup {
 
 const linkGroups = linksData as LinkGroup[]
 
+function hideDefaultIcon(img: HTMLImageElement) {
+  const svg = img.nextElementSibling
+  if (svg) svg.style.display = 'none'
+}
+
+const ICON_TIMEOUT = 15_000
+
+function setupIconTimeout(img: HTMLImageElement) {
+  const timer = setTimeout(() => {
+    if (!img.complete || img.naturalWidth === 0) {
+      img.style.opacity = '0'
+      img.removeAttribute('src')
+    }
+  }, ICON_TIMEOUT)
+  img.addEventListener('load', () => clearTimeout(timer), { once: true })
+  img.addEventListener('error', () => clearTimeout(timer), { once: true })
+}
+
+onMounted(() => {
+  nextTick(() => {
+    document.querySelectorAll<HTMLImageElement>('.links-page .link-icon').forEach((img) => {
+      if (img.complete && img.naturalWidth > 0) {
+        img.style.opacity = '1'
+        hideDefaultIcon(img)
+      } else {
+        setupIconTimeout(img)
+      }
+    })
+  })
+})
+
+function handleImgLoad(e: Event) {
+  const img = e.target as HTMLImageElement
+  img.style.opacity = '1'
+  hideDefaultIcon(img)
+}
+
 function handleImgError(e: Event) {
   const img = e.target as HTMLImageElement
-  img.style.display = 'none'
+  img.style.opacity = '0'
 }
 </script>
 
@@ -51,6 +88,8 @@ function handleImgError(e: Event) {
               :src="link.icon"
               :alt="link.title"
               class="link-icon"
+              fetchpriority="high"
+              @load="handleImgLoad"
               @error="handleImgError"
             />
             <svg class="link-icon-default" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -134,10 +173,12 @@ function handleImgError(e: Event) {
 }
 
 .link-icon {
-  position: relative;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  opacity: 0;
   z-index: 1;
 }
 

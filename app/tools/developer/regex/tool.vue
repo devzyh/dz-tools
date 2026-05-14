@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Select, CloseBold } from '@element-plus/icons-vue'
 
-const { t } = useI18n()
+
 
 const pattern = ref('')
 const testText = ref('')
@@ -52,11 +52,11 @@ const totalGroupCount = computed(() => {
 
 function runTest() {
   if (!pattern.value.trim()) {
-    ElMessage.warning(t('tools.regex.pleaseInputPattern'))
+    ElMessage.warning('请输入正则表达式')
     return
   }
   if (!testText.value) {
-    ElMessage.warning(t('tools.regex.pleaseInputTest'))
+    ElMessage.warning('请输入测试字符串')
     return
   }
 
@@ -95,7 +95,7 @@ function escapeHtml(text: string) {
     <div class="regex-input-row">
       <el-input
         v-model="pattern"
-        :placeholder="$t('tools.regex.patternPlaceholder')"
+        placeholder="输入正则表达式，如 ^[a-zA-Z]+$"
         class="regex-pattern"
         @keyup.enter="runTest"
       >
@@ -107,9 +107,9 @@ function escapeHtml(text: string) {
         </template>
       </el-input>
       <div class="regex-flags">
-        <el-checkbox v-model="flagGlobal" :label="$t('tools.regex.flagGlobal')" />
-        <el-checkbox v-model="flagIgnoreCase" :label="$t('tools.regex.flagIgnoreCase')" />
-        <el-checkbox v-model="flagMultiline" :label="$t('tools.regex.flagMultiline')" />
+        <el-checkbox v-model="flagGlobal" label="全局(g)" />
+        <el-checkbox v-model="flagIgnoreCase" label="忽略大小写(i)" />
+        <el-checkbox v-model="flagMultiline" label="多行(m)" />
       </div>
     </div>
 
@@ -117,38 +117,38 @@ function escapeHtml(text: string) {
       v-model="testText"
       type="textarea"
       :rows="5"
-      :placeholder="$t('tools.regex.testPlaceholder')"
+      placeholder="输入要测试的文本..."
       class="regex-textarea"
       @keyup.enter.ctrl="runTest"
     />
 
     <div class="regex-actions">
-      <el-button type="primary" @click="runTest">{{ $t('tools.regex.run') }}</el-button>
-      <span class="regex-hint">{{ $t('tools.regex.shortcutHint') }}</span>
+      <el-button type="primary" @click="runTest">运行测试</el-button>
+      <span class="regex-hint">Ctrl+Enter 快捷运行</span>
     </div>
 
     <template v-if="hasRun">
       <div v-if="hasError" class="regex-error">
-        <span>{{ $t('tools.regex.regexError') }}{{ errorMsg }}</span>
+        <span>正则表达式错误：{{ errorMsg }}</span>
       </div>
 
       <template v-else>
         <div class="regex-status" :class="matchResults.length ? 'is-matched' : 'is-unmatched'">
           <el-icon v-if="matchResults.length" class="status-icon"><Select /></el-icon>
           <el-icon v-else class="status-icon"><CloseBold /></el-icon>
-          <span>{{ matchResults.length ? $t('tools.regex.foundMatches', { count: matchResults.length }) : $t('tools.regex.noMatches') }}</span>
+          <span>{{ matchResults.length ? `找到 ${matchResults.length} 个匹配项` : '没有找到匹配项' }}</span>
         </div>
 
         <div v-if="matchResults.length" class="regex-section">
-          <div class="section-title">{{ $t('tools.regex.formattedText') }}</div>
+          <div class="section-title">格式化文本</div>
           <div class="regex-formatted" v-html="formattedHtml" />
         </div>
 
         <div v-if="matchResults.length" class="regex-section">
           <div class="section-title">
-            {{ $t('tools.regex.matchDetails') }}
-            <el-tag size="small" effect="plain" class="count-tag">{{ $t('tools.regex.items', { count: matchCount }) }}</el-tag>
-            <el-tag v-if="hasGroups" size="small" type="warning" effect="plain" class="count-tag">{{ $t('tools.regex.captureGroups', { count: totalGroupCount }) }}</el-tag>
+            匹配详情
+            <el-tag size="small" effect="plain" class="count-tag">{{ matchCount }} 项</el-tag>
+            <el-tag v-if="hasGroups" size="small" type="warning" effect="plain" class="count-tag">{{ totalGroupCount }} 个捕获组</el-tag>
           </div>
           <div class="regex-details">
             <div
@@ -158,28 +158,28 @@ function escapeHtml(text: string) {
             >
               <span class="detail-index">#{{ idx + 1 }}</span>
               <span class="detail-match">{{ item.match }}</span>
-              <span class="detail-pos">{{ $t('tools.regex.position') }} {{ item.index }}–{{ item.end }}</span>
+              <span class="detail-pos">位置 {{ item.index }}–{{ item.end }}</span>
             </div>
           </div>
         </div>
 
         <div v-if="hasGroups && matchResults.length" class="regex-section">
-          <div class="section-title">{{ $t('tools.regex.captureGroupTitle') }}</div>
+          <div class="section-title">捕获组</div>
           <div class="regex-details">
             <div
               v-for="(item, idx) in matchResults"
               :key="idx"
               class="group-row"
             >
-              <span class="group-match-label">{{ $t('tools.regex.match') }} #{{ idx + 1 }}</span>
+              <span class="group-match-label">匹配 #{{ idx + 1 }}</span>
               <div class="group-items">
                 <span
                   v-for="(g, gi) in item.groups.slice(1)"
                   :key="gi"
                   class="group-item"
                 >
-                  <el-tag size="small" effect="plain">{{ $t('tools.regex.groupLabel', { count: gi + 1 }) }}</el-tag>
-                  {{ g !== undefined ? g : $t('tools.regex.undefined') }}
+                  <el-tag size="small" effect="plain">组 {{ gi + 1 }}</el-tag>
+                  {{ g !== undefined ? g : '未定义' }}
                 </span>
               </div>
             </div>
@@ -189,18 +189,18 @@ function escapeHtml(text: string) {
     </template>
 
     <div class="regex-reference">
-      <div class="section-title">{{ $t('tools.regex.reference') }}</div>
+      <div class="section-title">常用参考</div>
       <div class="ref-grid">
         <div class="ref-card">
-          <div class="ref-card-title">{{ $t('tools.regex.metaChars') }}</div>
+          <div class="ref-card-title">元字符</div>
           <table class="ref-table">
             <tr v-for="item in [
-              ['.', $t('tools.regex.metaAnyChar')],
-              ['^', $t('tools.regex.metaStart')],
-              ['$', $t('tools.regex.metaEnd')],
-              ['*', $t('tools.regex.metaZeroOrMore')],
-              ['+', $t('tools.regex.metaOneOrMore')],
-              ['?', $t('tools.regex.metaZeroOrOne')],
+              ['.', '任意字符（除换行）'],
+              ['^', '字符串开始'],
+              ['$', '字符串结束'],
+              ['*', '0次或多次'],
+              ['+', '1次或多次'],
+              ['?', '0次或1次'],
             ]" :key="item[0]">
               <td><code>{{ item[0] }}</code></td>
               <td>{{ item[1] }}</td>
@@ -208,15 +208,15 @@ function escapeHtml(text: string) {
           </table>
         </div>
         <div class="ref-card">
-          <div class="ref-card-title">{{ $t('tools.regex.charClasses') }}</div>
+          <div class="ref-card-title">字符类</div>
           <table class="ref-table">
             <tr v-for="item in [
-              ['\\d', $t('tools.regex.classDigit')],
-              ['\\D', $t('tools.regex.classNonDigit')],
-              ['\\w', $t('tools.regex.classWord')],
-              ['\\W', $t('tools.regex.classNonWord')],
-              ['\\s', $t('tools.regex.classSpace')],
-              ['\\S', $t('tools.regex.classNonSpace')],
+              ['\\d', '数字 [0-9]'],
+              ['\\D', '非数字'],
+              ['\\w', '单词字符'],
+              ['\\W', '非单词字符'],
+              ['\\s', '空白字符'],
+              ['\\S', '非空白字符'],
             ]" :key="item[0]">
               <td><code>{{ item[0] }}</code></td>
               <td>{{ item[1] }}</td>
@@ -224,15 +224,15 @@ function escapeHtml(text: string) {
           </table>
         </div>
         <div class="ref-card">
-          <div class="ref-card-title">{{ $t('tools.regex.quantifiers') }}</div>
+          <div class="ref-card-title">量词</div>
           <table class="ref-table">
             <tr v-for="item in [
-              ['{n}', $t('tools.regex.quantExact')],
-              ['{n,}', $t('tools.regex.quantMin')],
-              ['{n,m}', $t('tools.regex.quantRange')],
-              ['(?=...)',$t('tools.regex.quantLookahead')],
-              ['(?!...)',$t('tools.regex.quantNegLookahead')],
-              ['(?:...)',$t('tools.regex.quantNonCapture')],
+              ['{n}', '恰好n次'],
+              ['{n,}', '至少n次'],
+              ['{n,m}', 'n到m次'],
+              ['(?=...)','前瞻断言'],
+              ['(?!...)','负前瞻'],
+              ['(?:...)','非捕获组'],
             ]" :key="item[0]">
               <td><code>{{ item[0] }}</code></td>
               <td>{{ item[1] }}</td>

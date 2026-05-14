@@ -29,8 +29,8 @@ export default defineNuxtConfig({
       redirectOn: 'root',
     },
     locales: [
-      { code: 'zh-CN', name: '中文', files: ['zh-CN/common.json', 'zh-CN/tools.json'] },
-      { code: 'en', name: 'English', files: ['en/common.json', 'en/tools.json'] },
+      { code: 'zh-CN', name: '中文', files: ['zh-CN/common.json'] },
+      { code: 'en', name: 'English', files: ['en/common.json'] },
     ],
     defaultLocale: 'zh-CN',
     langDir: 'locales/',

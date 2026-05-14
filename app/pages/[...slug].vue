@@ -17,9 +17,8 @@ if (entry && isTool(entry)) {
 }
 
 if (entry) {
-  const { t } = useI18n()
-  const title = isTool(entry) ? t(entry.meta.title) : t((entry as any).meta.title)
-  const description = isTool(entry) ? t(entry.meta.description) : t((entry as any).meta.description || '')
+  const title = isTool(entry) ? entry.meta.title : (entry as any).meta.title
+  const description = isTool(entry) ? entry.meta.description : (entry as any).meta.description || ''
   usePageSeo({
     title: `${title} - ${site.title}`,
     description,
@@ -34,15 +33,15 @@ if (entry) {
     <!-- Tool page -->
     <template v-if="entry && isTool(entry)">
       <nav class="tool-breadcrumb">
-        <NuxtLink to="/">{{ $t('nav.home') }}</NuxtLink>
+        <NuxtLink to="/">首页</NuxtLink>
         <span class="separator">/</span>
-        <NuxtLink :to="`/${entry.group}`">{{ $t(findGroup(entry.group)?.meta.title!) }}</NuxtLink>
+        <NuxtLink :to="`/${entry.group}`">{{ findGroup(entry.group)?.meta.title }}</NuxtLink>
         <span class="separator">/</span>
-        <span class="current">{{ $t(entry.meta.title) }}</span>
+        <span class="current">{{ entry.meta.title }}</span>
       </nav>
       <template v-if="entry.meta.showHeader !== false">
-        <h1 class="tool-title">{{ $t(entry.meta.title) }}</h1>
-        <p class="tool-desc">{{ $t(entry.meta.description) }}</p>
+        <h1 class="tool-title">{{ entry.meta.title }}</h1>
+        <p class="tool-desc">{{ entry.meta.description }}</p>
       </template>
       <div class="tool-content">
         <component :is="ToolComponent" v-if="ToolComponent" />
@@ -52,16 +51,16 @@ if (entry) {
     <!-- Group overview page -->
     <template v-else-if="entry && isGroup(entry)">
       <div class="group-header">
-        <h2 class="group-title">{{ $t(entry.meta.title) }}</h2>
-        <span v-if="entry.meta.description" class="group-desc">{{ $t(entry.meta.description!) }}</span>
+        <h2 class="group-title">{{ entry.meta.title }}</h2>
+        <span v-if="entry.meta.description" class="group-desc">{{ entry.meta.description }}</span>
         <span class="group-count">{{ entry.tools.length }}</span>
       </div>
       <div class="tool-grid">
         <ToolCard
           v-for="tool in entry.tools"
           :key="tool.slug"
-          :title="$t(tool.meta.title)"
-          :description="$t(tool.meta.description)"
+          :title="tool.meta.title"
+          :description="tool.meta.description"
           :href="`/${tool.slug}`"
           :icon="tool.meta.icon"
         />
@@ -71,9 +70,9 @@ if (entry) {
     <!-- 404 -->
     <template v-else>
       <ClientOnly>
-        <el-result icon="warning" :title="$t('error.notFound')">
+        <el-result icon="warning" title="页面不存在">
           <template #extra>
-            <el-button type="primary" @click="clearError({ redirect: '/' })">{{ $t('error.goHome') }}</el-button>
+            <el-button type="primary" @click="clearError({ redirect: '/' })">返回首页</el-button>
           </template>
         </el-result>
       </ClientOnly>
