@@ -1,2 +1,4 @@
-User-Agent: *
-Disallow:
+User-agent: *
+Allow: /
+Disallow: /loghub/
+Sitemap: https://devzyh.cn/sitemap.xml
