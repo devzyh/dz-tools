@@ -7,13 +7,19 @@ export function usePageSeo(options: {
   const appConfig = useAppConfig()
   const url = `${appConfig.url}${options.path}`
 
+  const ogImage = `${appConfig.url}/favicon.svg`
+
   useSeoMeta({
     title: options.title,
     ogTitle: options.title,
     ogDescription: options.description,
     ogType: 'website',
     ogUrl: url,
+    ogImage,
     twitterCard: 'summary',
+    twitterTitle: options.title,
+    twitterDescription: options.description,
+    twitterImage: ogImage,
     description: options.description,
   })
 
