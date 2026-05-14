@@ -3,6 +3,8 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import ace from 'ace-builds'
 import 'ace-builds/src-noconflict/mode-xml'
 import 'ace-builds/src-noconflict/theme-sqlserver'
+
+const { t } = useI18n()
 const xsltRef = ref<HTMLElement>()
 const sourceRef = ref<HTMLElement>()
 const resultRef = ref<HTMLElement>()
@@ -30,7 +32,7 @@ function convertXslt() {
   try {
     resultEditor.setValue(xsltTransform(xsltEditor.getValue(), sourceEditor.getValue()))
   } catch (err) {
-    resultEditor.setValue('错误信息：' + (err as Error).message)
+    resultEditor.setValue(t('tools.xslt.errorMsg') + (err as Error).message)
   }
 }
 
@@ -39,11 +41,11 @@ function xsltTransform(xslt: string, source: string): string {
 
   const xmlDoc = parser.parseFromString(source, 'text/xml')
   const xmlError = xmlDoc.querySelector('parsererror')
-  if (xmlError) throw new Error('XML解析错误: ' + xmlError.textContent)
+  if (xmlError) throw new Error(t('tools.xslt.xmlParseError') + xmlError.textContent)
 
   const xsltDoc = parser.parseFromString(xslt, 'text/xml')
   const xsltError = xsltDoc.querySelector('parsererror')
-  if (xsltError) throw new Error('XSLT解析错误: ' + xsltError.textContent)
+  if (xsltError) throw new Error(t('tools.xslt.xsltParseError') + xsltError.textContent)
 
   const processor = new XSLTProcessor()
   processor.importStylesheet(xsltDoc)
@@ -104,20 +106,20 @@ onBeforeUnmount(() => {
 <template>
   <div class="xslt-tool">
     <div class="tool-actions">
-      <el-button type="primary" @click="convertXslt">渲染XML</el-button>
-      <el-button type="warning" @click="formatXml">美化XML</el-button>
+      <el-button type="primary" @click="convertXslt">{{ $t('tools.xslt.render') }}</el-button>
+      <el-button type="warning" @click="formatXml">{{ $t('tools.xslt.format') }}</el-button>
     </div>
     <div class="editor-section">
-      <div class="section-label">XSLT代码</div>
+      <div class="section-label">{{ $t('tools.xslt.xsltCode') }}</div>
       <div ref="xsltRef" class="editor-panel" />
     </div>
     <div class="editor-row">
       <div class="editor-half">
-        <div class="section-label">XML数据</div>
+        <div class="section-label">{{ $t('tools.xslt.xmlData') }}</div>
         <div ref="sourceRef" class="editor-panel" />
       </div>
       <div class="editor-half">
-        <div class="section-label">转换结果</div>
+        <div class="section-label">{{ $t('tools.xslt.result') }}</div>
         <div ref="resultRef" class="editor-panel" />
       </div>
     </div>

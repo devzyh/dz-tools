@@ -1,8 +1,8 @@
 import { defineToolMeta } from '~/tools/types'
 
 export default defineToolMeta({
-  title: 'XSLT测试器',
-  description: 'XML数据样式表功能测试',
+  title: 'tools.xslt.title',
+  description: 'tools.xslt.description',
   sort: 3,
   icon: 'SetUp',
   showHeader: false,

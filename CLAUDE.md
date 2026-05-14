@@ -1,11 +1,17 @@
 # DZ Tools
 
-* 基于 Nuxt 4 的在线工具箱，支持多语言，支持部署在 Vercel。
+基于 Nuxt 4 的在线工具箱，支持多语言，支持部署在Docker 或 Vercel等服务商。
 
 ## 沟通方式
+
 - **语言**：默认中文，代码、命令、变量名用英文。
 - **结构**：结论先行，再给理由，不要先铺垫背景。
 - **模糊需求**：遇到模糊需求，先给最合理的方案，再问要不要调整。
+
+## 编码规范
+
+- **简单优先**：用最简单的代码解决问题，如果你写了200行代码解决了问题但是你发现50行就可以，重写。
+- **Git 提交**：需带类型前缀，全中文描述，字数限 50 字内。
 
 ## 技术栈
 
@@ -15,7 +21,7 @@
 - @nuxtjs/sitemap
 - Nitro Server Routes
 
-## 开发命令
+## 核心命令
 
 ```bash
 pnpm dev            # 启动开发服务器
@@ -24,7 +30,7 @@ pnpm generate       # SSG 静态预渲染
 pnpm preview        # 预览构建结果
 ```
 
-## 架构
+## 项目架构
 
 - **Hybrid 渲染**：页面 SSG 预渲染 + API Serverless
 - **源码目录**：`app/`，`~` 别名解析到 `app/`
@@ -38,7 +44,3 @@ pnpm preview        # 预览构建结果
 - 浏览器 Only 的库（如 `jsoneditor`）必须用动态 `import()` 在 `onMounted` + `import.meta.client` 内加载，禁止顶层静态 import
 - 浏览器 API（`navigator.clipboard`、`localStorage` 等）需用 `import.meta.client` 守卫
 - CommonJS 模块（如 `he`）需使用默认导入 + 解构：`import he from 'he'`
-
-## 提交规范
-* 根据改动类型选择 type：feat / fix / style / refactor / docs / chore 
-* 用中文写 message 和 subject，不超过 50 字

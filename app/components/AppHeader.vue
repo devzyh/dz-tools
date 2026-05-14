@@ -14,6 +14,12 @@ const activeIndex = computed(() => {
 const { allTools } = useToolRegistry()
 const linksData = (await import('~/data/links.json')).default
 
+const { locale, setLocale, t } = useI18n()
+const switchLocale = () => {
+  const next = locale.value === 'zh-CN' ? 'en' : 'zh-CN'
+  setLocale(next)
+}
+
 interface SearchItem {
   title: string
   description: string
@@ -21,10 +27,10 @@ interface SearchItem {
   type: 'tool' | 'link'
 }
 
-const allSearchItems: SearchItem[] = [
+const allSearchItems = computed(() => [
   ...allTools.map(tool => ({
-    title: tool.title,
-    description: tool.description,
+    title: t(tool.meta.title),
+    description: t(tool.meta.description),
     path: `/${tool.slug}`,
     type: 'tool' as const,
   })),
@@ -36,7 +42,7 @@ const allSearchItems: SearchItem[] = [
       type: 'link' as const,
     })),
   ),
-]
+])
 
 function handleSelect(path: string) {
   navigateTo(path)
@@ -116,6 +122,7 @@ function toggleMenu() {
       <a class="nav-link" :class="{ active: activeIndex === '/about' }" @click="handleSelect('/about')">{{ $t('nav.about') }}</a>
     </nav>
     <div class="header-right">
+      <button class="lang-switch" @click="switchLocale">{{ locale === 'zh-CN' ? 'EN' : '中' }}</button>
       <div class="header-search desktop-search" @mouseleave="showDropdown = false">
         <el-input
           ref="searchInputRef"
@@ -151,6 +158,7 @@ function toggleMenu() {
       <a class="nav-link" :class="{ active: activeIndex === '/' }" @click="handleSelect('/')">{{ $t('nav.home') }}</a>
       <a class="nav-link" :class="{ active: activeIndex === '/links' }" @click="handleSelect('/links')">{{ $t('nav.links') }}</a>
       <a class="nav-link" :class="{ active: activeIndex === '/about' }" @click="handleSelect('/about')">{{ $t('nav.about') }}</a>
+      <button class="lang-switch" @click="switchLocale">{{ locale === 'zh-CN' ? 'English' : '中文' }}</button>
       <div class="mobile-search" @mouseleave="showDropdown = false">
         <el-input
           v-model="query"
@@ -210,6 +218,22 @@ function toggleMenu() {
   align-items: center;
   margin-left: auto;
   gap: 12px;
+}
+
+.lang-switch {
+  background: none;
+  border: 1px solid var(--el-border-color);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--el-text-color-regular);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+
+  &:hover {
+    color: var(--el-color-primary);
+    border-color: var(--el-color-primary);
+  }
 }
 
 .header-search {

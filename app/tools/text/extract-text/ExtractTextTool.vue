@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
+const { t } = useI18n()
+
 const input = ref('')
 const output = ref('')
 const startSymbol = ref('[')
@@ -11,11 +13,11 @@ const sortOrder = ref<'asc' | 'desc' | 'none'>('asc')
 
 function extract() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入文本内容')
+    ElMessage.warning(t('tools.extract-text.pleaseInput'))
     return
   }
   if (!startSymbol.value || !endSymbol.value) {
-    ElMessage.warning('起止符号不能为空')
+    ElMessage.warning(t('tools.extract-text.emptyDelimiter'))
     return
   }
 
@@ -25,7 +27,7 @@ function extract() {
   const matches = input.value.match(regex)
 
   if (!matches || matches.length === 0) {
-    ElMessage.warning(`未找到 ${startSymbol.value}...${endSymbol.value} 包含的内容`)
+    ElMessage.warning(t('tools.extract-text.notFound', { start: startSymbol.value, end: endSymbol.value }))
     output.value = ''
     return
   }
@@ -43,16 +45,16 @@ function extract() {
   }
 
   output.value = results.join('\n')
-  ElMessage.success(`共提取 ${matches.length} 项`)
+  ElMessage.success(t('tools.extract-text.extracted', { count: matches.length }))
 }
 
 function copy() {
   if (!output.value) {
-    ElMessage.warning('没有可复制的内容')
+    ElMessage.warning(t('tools.extract-text.noContent'))
     return
   }
   navigator.clipboard.writeText(output.value)
-  ElMessage.success('已复制')
+  ElMessage.success(t('tools.extract-text.copied'))
 }
 </script>
 
@@ -60,21 +62,21 @@ function copy() {
   <div class="extract-text-tool">
     <div class="config-card">
       <div class="config-row">
-        <span class="config-label">前缀&后缀</span>
+        <span class="config-label">{{ $t('tools.extract-text.delimiters') }}</span>
         <div class="symbol-inputs">
-          <el-input v-model="startSymbol" placeholder="前缀" style="width: 80px" />
+          <el-input v-model="startSymbol" :placeholder="$t('tools.extract-text.prefix')" style="width: 80px" />
           <span class="symbol-sep">…</span>
-          <el-input v-model="endSymbol" placeholder="后缀" style="width: 80px" />
+          <el-input v-model="endSymbol" :placeholder="$t('tools.extract-text.suffix')" style="width: 80px" />
         </div>
       </div>
       <div class="config-row">
-        <span class="config-label">输出选项</span>
+        <span class="config-label">{{ $t('tools.extract-text.outputOptions') }}</span>
         <div class="option-checks">
-          <el-checkbox v-model="enableDedup">去重</el-checkbox>
+          <el-checkbox v-model="enableDedup">{{ $t('tools.extract-text.dedup') }}</el-checkbox>
           <el-radio-group v-model="sortOrder">
-            <el-radio-button value="asc">升序</el-radio-button>
-            <el-radio-button value="desc">降序</el-radio-button>
-            <el-radio-button value="none">不排序</el-radio-button>
+            <el-radio-button value="asc">{{ $t('tools.extract-text.asc') }}</el-radio-button>
+            <el-radio-button value="desc">{{ $t('tools.extract-text.desc') }}</el-radio-button>
+            <el-radio-button value="none">{{ $t('tools.extract-text.noSort') }}</el-radio-button>
           </el-radio-group>
         </div>
       </div>
@@ -84,25 +86,25 @@ function copy() {
       v-model="input"
       type="textarea"
       :rows="10"
-      placeholder="请粘贴需要提取内容的文本"
+      :placeholder="$t('tools.extract-text.inputPlaceholder')"
     />
 
     <div class="action-bar">
-      <el-button type="primary" @click="extract">提取</el-button>
-      <el-button @click="copy">复制</el-button>
+      <el-button type="primary" @click="extract">{{ $t('tools.extract-text.extract') }}</el-button>
+      <el-button @click="copy">{{ $t('tools.extract-text.copy') }}</el-button>
     </div>
 
     <div class="result-card">
       <div class="result-header">
-        <span class="config-label">提取结果</span>
-        <span v-if="output" class="result-count">{{ output.split('\n').length }} 条</span>
+        <span class="config-label">{{ $t('tools.extract-text.result') }}</span>
+        <span v-if="output" class="result-count">{{ $t('tools.extract-text.items', { count: output.split('\n').length }) }}</span>
       </div>
       <el-input
         v-model="output"
         type="textarea"
         :autosize="{ minRows: 8, maxRows: 20 }"
         readonly
-        placeholder="提取结果将在这里显示"
+        :placeholder="$t('tools.extract-text.resultPlaceholder')"
         class="result-textarea"
       />
     </div>

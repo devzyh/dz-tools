@@ -2,6 +2,9 @@
 import {ref, onMounted, onUnmounted} from 'vue'
 import {ElMessage} from 'element-plus'
 import {CopyDocument} from '@element-plus/icons-vue'
+import {useI18n} from 'vue-i18n'
+
+const {t} = useI18n()
 
 const now = ref(Math.floor(Date.now() / 1000))
 let timer: ReturnType<typeof setInterval>
@@ -43,12 +46,12 @@ function parseTs(raw: string) {
 
 function tsToDate() {
   if (!tsInput.value.trim()) {
-    ElMessage.warning('请输入时间戳')
+    ElMessage.warning(t('tools.timestamp.pleaseInputTs'))
     return
   }
   const d = parseTs(tsInput.value)
   if (!d || isNaN(d.getTime())) {
-    ElMessage.error('时间戳无效')
+    ElMessage.error(t('tools.timestamp.invalidTs'))
     return
   }
   tsResult.value = formatDate(d)
@@ -56,12 +59,12 @@ function tsToDate() {
 
 function dateToTs() {
   if (!dateInput.value) {
-    ElMessage.warning('请选择日期时间')
+    ElMessage.warning(t('tools.timestamp.pleaseSelectDate'))
     return
   }
   const d = new Date(dateInput.value)
   if (isNaN(d.getTime())) {
-    ElMessage.error('日期时间无效')
+    ElMessage.error(t('tools.timestamp.invalidDate'))
     return
   }
   dateResult.value = String(Math.floor(d.getTime() / 1000))
@@ -70,30 +73,30 @@ function dateToTs() {
 
 function copy(val: string) {
   navigator.clipboard.writeText(val)
-  ElMessage.success('已复制')
+  ElMessage.success(t('tools.timestamp.copied'))
 }
 </script>
 
 <template>
   <div class="timestamp-tool">
     <div class="ts-current" @click="copy(String(now))">
-      <div class="ts-current-label">当前 Unix 时间戳 (秒)</div>
+      <div class="ts-current-label">{{ $t('tools.timestamp.currentTimestamp') }}</div>
       <div class="ts-current-s">{{ now }}</div>
     </div>
 
     <div class="ts-card">
       <div class="ts-card-head">
-        <span class="ts-card-title">时间戳 → 日期时间</span>
+        <span class="ts-card-title">{{ $t('tools.timestamp.tsToDateTitle') }}</span>
       </div>
       <div class="ts-card-row">
         <el-input
             v-model="tsInput"
-            placeholder="输入时间戳（10位秒 / 13位毫秒，自动识别）"
+            :placeholder="$t('tools.timestamp.tsInputPlaceholder')"
             class="ts-card-input"
             clearable
             @keyup.enter="tsToDate"
         />
-        <el-button type="primary" @click="tsToDate">转换</el-button>
+        <el-button type="primary" @click="tsToDate">{{ $t('tools.timestamp.convert') }}</el-button>
       </div>
       <div v-if="tsResult" class="ts-card-output" @click="copy(tsResult)">
         <span class="ts-card-output-text">{{ tsResult }}</span>
@@ -105,31 +108,31 @@ function copy(val: string) {
 
     <div class="ts-card">
       <div class="ts-card-head">
-        <span class="ts-card-title">日期时间 → 时间戳</span>
+        <span class="ts-card-title">{{ $t('tools.timestamp.dateToTsTitle') }}</span>
       </div>
       <div class="ts-card-row">
         <el-date-picker
             v-model="dateInput"
             type="datetime"
-            placeholder="选择或输入日期时间"
+            :placeholder="$t('tools.timestamp.dateInputPlaceholder')"
             class="ts-card-picker"
             format="YYYY-MM-DD HH:mm:ss"
             value-format="YYYY-MM-DD HH:mm:ss"
             clearable
             @change="dateToTs"
         />
-        <el-button type="primary" @click="dateToTs">转换</el-button>
+        <el-button type="primary" @click="dateToTs">{{ $t('tools.timestamp.convert') }}</el-button>
       </div>
       <div v-if="dateResult" class="ts-card-output-group">
         <div class="ts-card-output" @click="copy(dateResult)">
-          <span class="ts-card-output-tag">秒(s)</span>
+          <span class="ts-card-output-tag">{{ $t('tools.timestamp.seconds') }}</span>
           <span class="ts-card-output-text">{{ dateResult }}</span>
           <el-icon class="ts-card-output-copy">
             <CopyDocument/>
           </el-icon>
         </div>
         <div class="ts-card-output" @click="copy(dateResultMs)">
-          <span class="ts-card-output-tag">毫秒(ms)</span>
+          <span class="ts-card-output-tag">{{ $t('tools.timestamp.milliseconds') }}</span>
           <span class="ts-card-output-text">{{ dateResultMs }}</span>
           <el-icon class="ts-card-output-copy">
             <CopyDocument/>

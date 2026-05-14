@@ -2,6 +2,8 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus'
 
+const { t } = useI18n()
+
 const STORAGE_KEY = 'dz-tools-json'
 const editorContainer = ref<HTMLDivElement>()
 let editor: any = null
@@ -15,7 +17,7 @@ function formatJson() {
   try {
     getEditor().format()
   } catch {
-    ElMessage.error('JSON 格式不正确，无法美化')
+    ElMessage.error(t('tools.json.formatError'))
   }
 }
 
@@ -23,7 +25,7 @@ function compactJson() {
   try {
     getEditor().compact()
   } catch {
-    ElMessage.error('JSON 格式不正确，无法压缩')
+    ElMessage.error(t('tools.json.compactError'))
   }
 }
 
@@ -31,7 +33,7 @@ function sortJson() {
   try {
     getEditor()._showSortModal()
   } catch {
-    ElMessage.error('排序功能不可用')
+    ElMessage.error(t('tools.json.sortUnavailable'))
   }
 }
 
@@ -39,7 +41,7 @@ function transformJson() {
   try {
     getEditor()._showTransformModal()
   } catch {
-    ElMessage.error('筛选功能不可用')
+    ElMessage.error(t('tools.json.filterUnavailable'))
   }
 }
 
@@ -49,7 +51,7 @@ function escapeJson() {
     text = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
     getEditor().setText(text)
   } catch {
-    ElMessage.error('转义失败')
+    ElMessage.error(t('tools.json.escapeError'))
   }
 }
 
@@ -59,7 +61,7 @@ function unescapeJson() {
     text = text.replace(/\\\\/g, '\\').replace(/\\"/g, '"')
     getEditor().setText(text)
   } catch {
-    ElMessage.error('修复失败')
+    ElMessage.error(t('tools.json.fixError'))
   }
 }
 
@@ -67,7 +69,7 @@ function decodeJson() {
   try {
     getEditor().setText(decodeURIComponent(getEditor().getText()))
   } catch {
-    ElMessage.error('解码失败，内容不是有效的 URI 编码')
+    ElMessage.error(t('tools.json.decodeError'))
   }
 }
 
@@ -111,18 +113,18 @@ onBeforeUnmount(() => {
   <div class="json-editor-tool">
     <div class="json-toolbar">
       <el-button-group>
-        <el-button type="primary" @click="formatJson">美化</el-button>
-        <el-button type="primary" @click="compactJson">压缩</el-button>
-        <el-button type="primary" @click="sortJson">排序</el-button>
-        <el-button type="primary" @click="transformJson">筛选</el-button>
+        <el-button type="primary" @click="formatJson">{{ $t('tools.json.format') }}</el-button>
+        <el-button type="primary" @click="compactJson">{{ $t('tools.json.compact') }}</el-button>
+        <el-button type="primary" @click="sortJson">{{ $t('tools.json.sort') }}</el-button>
+        <el-button type="primary" @click="transformJson">{{ $t('tools.json.filter') }}</el-button>
       </el-button-group>
       <el-button-group>
-        <el-button type="success" @click="escapeJson">转义</el-button>
-        <el-button type="success" @click="unescapeJson">修复</el-button>
-        <el-button type="success" @click="decodeJson">解码</el-button>
+        <el-button type="success" @click="escapeJson">{{ $t('tools.json.escape') }}</el-button>
+        <el-button type="success" @click="unescapeJson">{{ $t('tools.json.fix') }}</el-button>
+        <el-button type="success" @click="decodeJson">{{ $t('tools.json.decode') }}</el-button>
       </el-button-group>
       <el-button-group>
-        <el-button type="danger" @click="clearJson">清空</el-button>
+        <el-button type="danger" @click="clearJson">{{ $t('tools.json.clear') }}</el-button>
       </el-button-group>
     </div>
     <div ref="editorContainer" class="json-editor-container" />

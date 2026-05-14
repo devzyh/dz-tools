@@ -1,8 +1,8 @@
 import { defineToolMeta } from '~/tools/types'
 
 export default defineToolMeta({
-  title: '字数统计',
-  description: '统计文本的字符、行数、段落等信息',
+  title: 'tools.count-text.title',
+  description: 'tools.count-text.description',
   sort: 5,
   icon: 'DataAnalysis',
 })

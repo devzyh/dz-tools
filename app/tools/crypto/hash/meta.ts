@@ -1,8 +1,8 @@
 import { defineToolMeta } from '~/tools/types'
 
 export default defineToolMeta({
-  title: '哈希文本',
-  description: '计算文本常用哈希算法结果',
+  title: 'tools.hash.title',
+  description: 'tools.hash.description',
   sort: 2,
   icon: 'Lock',
 })

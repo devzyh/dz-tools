@@ -3,6 +3,8 @@ import { ref } from 'vue'
 import jsYaml from 'js-yaml'
 import { ElMessage } from 'element-plus'
 
+const { t } = useI18n()
+
 const input = ref('')
 const output = ref('')
 type Format = 'json' | 'xml' | 'yaml'
@@ -12,14 +14,14 @@ const targetFormat = ref<Format>('yaml')
 
 function convert() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入需要转换的内容')
+    ElMessage.warning(t('tools.convert.pleaseInput'))
     return
   }
   try {
     const obj = parse(input.value, sourceFormat.value)
     output.value = stringify(obj, targetFormat.value)
   } catch (err) {
-    ElMessage.error('转换失败：' + (err as Error).message)
+    ElMessage.error(t('tools.convert.convertError') + (err as Error).message)
   }
 }
 
@@ -32,7 +34,7 @@ function parse(text: string, format: Format): any {
     case 'xml':
       return xmlToJson(text)
     default:
-      throw new Error('不支持的源格式')
+      throw new Error(t('tools.convert.unsupportedSourceFormat'))
   }
 }
 
@@ -45,7 +47,7 @@ function stringify(obj: any, format: Format): string {
     case 'xml':
       return jsonToXml(obj)
     default:
-      throw new Error('不支持的目标格式')
+      throw new Error(t('tools.convert.unsupportedTargetFormat'))
   }
 }
 
@@ -53,7 +55,7 @@ function xmlToJson(xml: string): any {
   const parser = new DOMParser()
   const doc = parser.parseFromString(xml, 'text/xml')
   const error = doc.querySelector('parsererror')
-  if (error) throw new Error('XML 解析错误：' + error.textContent)
+  if (error) throw new Error(t('tools.convert.xmlParseError') + error.textContent)
   return xmlNodeToJson(doc.documentElement)
 }
 
@@ -115,9 +117,9 @@ function swap() {
 }
 
 function copy() {
-  if (!output.value) { ElMessage.warning('没有可复制的内容'); return }
+  if (!output.value) { ElMessage.warning(t('tools.convert.noContent')); return }
   navigator.clipboard.writeText(output.value)
-  ElMessage.success('已复制')
+  ElMessage.success(t('tools.convert.copied'))
 }
 </script>
 
@@ -136,22 +138,22 @@ function copy() {
         <el-radio-button value="yaml">YAML</el-radio-button>
       </el-radio-group>
       <div class="toolbar-spacer" />
-      <el-button type="primary" @click="convert">转换</el-button>
-      <el-button @click="swap">互换</el-button>
-      <el-button @click="copy">复制</el-button>
+      <el-button type="primary" @click="convert">{{ $t('tools.convert.convert') }}</el-button>
+      <el-button @click="swap">{{ $t('tools.convert.swap') }}</el-button>
+      <el-button @click="copy">{{ $t('tools.convert.copy') }}</el-button>
     </div>
     <div class="convert-panels">
       <el-input
         v-model="input"
         type="textarea"
-        placeholder="请输入要转换的内容"
+        :placeholder="$t('tools.convert.inputPlaceholder')"
         class="convert-textarea"
       />
       <el-input
         v-model="output"
         type="textarea"
         readonly
-        placeholder="转换结果将显示在这里"
+        :placeholder="$t('tools.convert.resultPlaceholder')"
         class="convert-textarea"
       />
     </div>
