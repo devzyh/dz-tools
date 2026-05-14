@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import CryptoJS from 'crypto-js'
 import { ElMessage } from 'element-plus'
 
 
@@ -70,17 +69,13 @@ public class LoghubOlyCryptService {
     }
 }`
 
-function deriveKey(password: string): CryptoJS.lib.WordArray {
-  const state = CryptoJS.SHA1(password)
-  const output = CryptoJS.SHA1(state)
-  return CryptoJS.lib.WordArray.create(output.words.slice(0, 4))
-}
-
-function encrypt() {
+async function encrypt() {
   if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
   if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
   try {
-    const aesKey = deriveKey(key.value)
+    const CryptoJS = (await import('crypto-js')).default
+    const state = CryptoJS.SHA1(key.value)
+    const aesKey = CryptoJS.lib.WordArray.create(CryptoJS.SHA1(state).words.slice(0, 4))
     const encrypted = CryptoJS.AES.encrypt(input.value, aesKey, {
       mode: CryptoJS.mode.ECB,
       padding: CryptoJS.pad.Pkcs7,
@@ -91,11 +86,13 @@ function encrypt() {
   }
 }
 
-function decrypt() {
+async function decrypt() {
   if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
   if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
   try {
-    const aesKey = deriveKey(key.value)
+    const CryptoJS = (await import('crypto-js')).default
+    const state = CryptoJS.SHA1(key.value)
+    const aesKey = CryptoJS.lib.WordArray.create(CryptoJS.SHA1(state).words.slice(0, 4))
     const cipherParams = CryptoJS.lib.CipherParams.create({
       ciphertext: CryptoJS.enc.Hex.parse(input.value),
     })

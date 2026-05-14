@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import CryptoJS from 'crypto-js'
 import { ElMessage } from 'element-plus'
-
-
 
 const algorithm = ref('AES')
 const input = ref('')
@@ -27,11 +24,12 @@ function generateKey() {
   key.value = result
 }
 
-function encrypt() {
+async function encrypt() {
   if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
   if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
   try {
-    let encrypted: CryptoJS.lib.CipherParams
+    const CryptoJS = (await import('crypto-js')).default
+    let encrypted: ReturnType<typeof CryptoJS.AES.encrypt>
     switch (algorithm.value) {
       case 'AES': encrypted = CryptoJS.AES.encrypt(input.value, key.value); break
       case 'TripleDES': encrypted = CryptoJS.TripleDES.encrypt(input.value, key.value); break
@@ -45,11 +43,12 @@ function encrypt() {
   }
 }
 
-function decrypt() {
+async function decrypt() {
   if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
   if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
   try {
-    let decrypted: CryptoJS.lib.WordArray
+    const CryptoJS = (await import('crypto-js')).default
+    let decrypted: ReturnType<typeof CryptoJS.AES.decrypt>
     switch (algorithm.value) {
       case 'AES': decrypted = CryptoJS.AES.decrypt(input.value, key.value); break
       case 'TripleDES': decrypted = CryptoJS.TripleDES.decrypt(input.value, key.value); break

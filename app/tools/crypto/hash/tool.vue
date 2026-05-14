@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import CryptoJS from 'crypto-js'
 import { ElMessage } from 'element-plus'
 
 const input = ref('')
@@ -14,41 +13,42 @@ interface HashResult {
 
 const results = ref<HashResult[]>([])
 
-const algorithms: { label: string; key: string; fn: (msg: string) => CryptoJS.lib.WordArray; format?: (hash: string) => string }[] = [
-  { label: 'MD5', key: 'md5', fn: (msg) => CryptoJS.MD5(msg) },
-  { label: 'MD5(16位)', key: 'md5_16', fn: (msg) => CryptoJS.MD5(msg), format: (h) => h.substring(8, 24) },
-  { label: 'SHA-1', key: 'sha1', fn: (msg) => CryptoJS.SHA1(msg) },
-  { label: 'SHA-224', key: 'sha224', fn: (msg) => CryptoJS.SHA224(msg) },
-  { label: 'SHA-256', key: 'sha256', fn: (msg) => CryptoJS.SHA256(msg) },
-  { label: 'SHA-384', key: 'sha384', fn: (msg) => CryptoJS.SHA384(msg) },
-  { label: 'SHA-512', key: 'sha512', fn: (msg) => CryptoJS.SHA512(msg) },
-  { label: 'SHA-3', key: 'sha3', fn: (msg) => CryptoJS.SHA3(msg) },
-  { label: 'RIPEMD-160', key: 'ripemd160', fn: (msg) => CryptoJS.RIPEMD160(msg) },
-]
-
-function formatHash(hash: CryptoJS.lib.WordArray): string {
-  let result: string
-  switch (encoding.value) {
-    case 'binary':
-      result = hash.toString(CryptoJS.enc.Binary).match(/.{1,8}/g)?.join(' ') || ''
-      break
-    case 'base64':
-      result = hash.toString(CryptoJS.enc.Base64)
-      break
-    case 'urlsafe-base64':
-      result = hash.toString(CryptoJS.enc.Base64).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-      break
-    default:
-      result = hash.toString(CryptoJS.enc.Hex)
-  }
-  return uppercase.value ? result.toUpperCase() : result
-}
-
-function compute() {
+async function compute() {
   if (!input.value) {
     ElMessage.warning('请输入需要计算哈希的文本')
     return
   }
+  const CryptoJS = (await import('crypto-js')).default
+  const algorithms = [
+    { label: 'MD5', fn: (msg: string) => CryptoJS.MD5(msg) },
+    { label: 'MD5(16位)', fn: (msg: string) => CryptoJS.MD5(msg), format: (h: string) => h.substring(8, 24) },
+    { label: 'SHA-1', fn: (msg: string) => CryptoJS.SHA1(msg) },
+    { label: 'SHA-224', fn: (msg: string) => CryptoJS.SHA224(msg) },
+    { label: 'SHA-256', fn: (msg: string) => CryptoJS.SHA256(msg) },
+    { label: 'SHA-384', fn: (msg: string) => CryptoJS.SHA384(msg) },
+    { label: 'SHA-512', fn: (msg: string) => CryptoJS.SHA512(msg) },
+    { label: 'SHA-3', fn: (msg: string) => CryptoJS.SHA3(msg) },
+    { label: 'RIPEMD-160', fn: (msg: string) => CryptoJS.RIPEMD160(msg) },
+  ]
+
+  function formatHash(hash: ReturnType<typeof CryptoJS.MD5>): string {
+    let result: string
+    switch (encoding.value) {
+      case 'binary':
+        result = hash.toString(CryptoJS.enc.Binary).match(/.{1,8}/g)?.join(' ') || ''
+        break
+      case 'base64':
+        result = hash.toString(CryptoJS.enc.Base64)
+        break
+      case 'urlsafe-base64':
+        result = hash.toString(CryptoJS.enc.Base64).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+        break
+      default:
+        result = hash.toString(CryptoJS.enc.Hex)
+    }
+    return uppercase.value ? result.toUpperCase() : result
+  }
+
   results.value = algorithms.map(({ label, fn, format }) => ({
     label,
     value: format ? format(formatHash(fn(input.value))) : formatHash(fn(input.value)),
