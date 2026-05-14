@@ -53,6 +53,7 @@ export default defineNuxtConfig({
     '/':        { prerender: true },
     '/about':   { prerender: true },
     '/links':   { prerender: true },
+    '/api/__sitemap__/urls': { prerender: true },
     '/api/**':  { cors: true },
   },
 
