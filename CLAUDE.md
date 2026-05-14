@@ -1,10 +1,10 @@
 # dz-tools-nuxt
 
-基于 Nuxt 3 的工具类网站，从现有 Vue 3 项目（`D:\SourceCode\dz-tools`）迁移。
+基于 Nuxt 4 的工具类网站，从现有 Vue 3 项目（`D:\SourceCode\dz-tools`）迁移。
 
 ## 技术栈
 
-- Nuxt 3 + TypeScript
+- Nuxt 4 + TypeScript
 - Element Plus + SCSS
 - @nuxtjs/i18n（中/英双语，no_prefix 策略）
 - @nuxtjs/sitemap
@@ -22,62 +22,46 @@
 
 ## 项目结构
 
-- `pages/` — 页面路由（index, about, links, [...slug].vue）
-- `tools/` — 工具系统（分组目录嵌套工具目录，两层目录约定推导路径和分组关系）
-- `server/api/` — Nitro API 路由
-- `i18n/locales/` — 翻译文件（工具按文件拆分）
-- `components/` — 通用组件（AppHeader, AppFooter, ToolCard）
-- `composables/` — 组合式函数（useToolRegistry, useSeo）
+Nuxt 4 使用 `app/` 作为源码目录，`~` 别名解析到 `app/`。
 
-## 现有项目（dz-tools）关键信息
+- `app/pages/` — 页面路由（index, about, links, [...slug]）
+- `app/tools/` — 工具系统（分组目录嵌套工具目录，两层目录约定推导路径和分组关系）
+- `app/server/api/` — Nitro API 路由
+- `app/components/` — 通用组件（AppHeader, AppFooter, ToolCard）
+- `app/composables/` — 组合式函数（useToolRegistry, useSeo）
+- `app/layouts/` — 布局（default.vue）
+- `app/config/site.ts` — 站点配置（title: DZ Tools, url: https://devzyh.cn）
+- `app/data/links.json` — 链接收藏数据
+- `i18n/locales/` — 翻译文件（项目根目录，工具按文件拆分）
+- `scripts/` — 脚手架脚本（create-tool.ts）
 
-- 入口：`src/main.ts`，路由：`src/router/index.ts`
-- 布局：`src/layouts/DefaultLayout.vue`，通用组件：AppHeader, AppFooter, ToolCard
-- 页面：HomeView（分组导航）、GroupView（分组概述）、ToolView（工具渲染）、AboutView、LinksView、NotFoundView
-- 全局样式：`src/styles/index.scss`
-- 站点配置：`src/config/site.ts`（title: DZ Tools, url: https://devzyh.cn）
-- 链接数据：`src/data/links.json`
-- 依赖：element-plus, @element-plus/icons-vue, @unhead/vue, crypto-js, codemirror, jsoneditor, ace-builds, cron-parser, he, js-yaml, xml-formatter
+## 工具分组（19 个工具，6 个分组）
 
-### 现有工具分组
-
-| 分组 | 工具 |
-|------|------|
-| converter（转换器） | Base64Tool, ConvertTool, TimestampTool |
-| crypto（加密） | CryptoTool, HashTool |
-| developer（开发者） | CronTool, JsonEditorTool, RegexTool, XmlEditorTool, XsltTool |
-| loghub（日志） | GroovySqlTool, OlyCryptTool |
-| text（文本） | CountTextTool, DiffTool, ExtractTextTool, JoinTextTool, PasswordTool |
-| web（Web） | HtmlEntityTool, IpQueryTool |
-
-### 现有工具 meta 格式（嵌入组件内）
-
-```ts
-export const meta = {
-  title: 'Base64文本',
-  description: '对文本使用Base64进行编码和解码',
-  href: '/base64',
-  sort: 1,
-  icon: 'Lock',
-}
-```
-
-迁移时需拆分为独立 `meta.ts`，移除 `href`（由目录名推导），`title`/`description` 改为 i18n key。
-
-## 迁移原则
-
-- 迁移后路由、外观、功能与现有项目完全一致
-- 不修改工具组件内部逻辑，只调整 meta 导出格式和 SEO 代码
-- 渐进迁移：逐个工具迁移，每迁移一个验证一个
+| 分组 | 目录 | 工具 |
+|------|------|------|
+| Web | web/ | myip, html |
+| 开发工具 | developer/ | json, xml, cron, xslt, regex |
+| 加解密 | crypto/ | crypto, hash |
+| 文本 | text/ | diff, password, extract-text, join-text, count-text |
+| 转换器 | converter/ | base64, convert, timestamp |
+| 通天晓 | loghub/ | groovy-sql-json, oly-crypt（hidden） |
 
 ## 开发
 
 ```bash
-pnpm dev
-pnpm create:tool  # 添加新工具
-pnpm build        # 构建（SSG）
+pnpm dev            # 启动开发服务器
+pnpm create:tool    # 添加新工具
+pnpm generate       # SSG 构建预渲染
+pnpm preview        # 预览构建结果
 ```
+
+## 注意事项
+
+- CommonJS 模块（如 `he`）需使用默认导入 + 解构，避免 SSR 环境的 ESM 兼容问题
+- 工具组件中的浏览器 API（如 `navigator.clipboard`）需用 `import.meta.client` 守卫
+- loghub 分组设置了 `hidden: true`，不出现在首页但 URL 仍可访问
 
 ## 设计文档
 
 - `docs/superpowers/specs/2026-05-13-nuxt-tools-architecture-design.md`
+- `docs/superpowers/plans/2026-05-13-nuxt-tools-migration-plan.md`
