@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, shallowRef } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-let MergeViewClass: any
-let basicSetup: any
+const ORIGINAL_KEY = 'dz-tools-diff-original'
+const MODIFIED_KEY = 'dz-tools-diff-modified'
 
-const ORIGINAL = `const greet = (name) => {
+const SAMPLE_ORIGINAL = `const greet = (name) => {
   return "Hello, " + name;
 }
 
@@ -15,7 +15,7 @@ const farewell = (name) => {
 console.log(greet("World"));
 console.log(farewell("World"));`
 
-const MODIFIED = `const greet = (name) => {
+const SAMPLE_MODIFIED = `const greet = (name) => {
   return \`Hello, \${name}!\`;
 }
 
@@ -27,18 +27,55 @@ console.log(greet("World"));
 console.log(farewell("World", "tomorrow"));`
 
 const container = ref<HTMLDivElement>()
-const mv = shallowRef<MergeView>()
 const editorReady = ref(false)
+let MergeViewClass: any
+let basicSetup: any
+let EditorViewModule: any
+let mv: any = null
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+
+function debounceRebuild() {
+  if (debounceTimer) clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => {
+    rebuildMergeView()
+  }, 300)
+}
+
+function getPanelContent(panel: 'a' | 'b'): string {
+  if (!mv) return ''
+  return mv[panel].state.doc.toString()
+}
+
+function rebuildMergeView() {
+  if (!container.value || !MergeViewClass || !basicSetup || !EditorViewModule) return
+  const originalDoc = getPanelContent('a')
+  const modifiedDoc = getPanelContent('b')
+  mv?.destroy()
+  mv = new MergeViewClass({
+    a: { doc: originalDoc, extensions: [basicSetup, EditorViewModule.updateListener.of(() => debounceRebuild())] },
+    b: { doc: modifiedDoc, extensions: [basicSetup, EditorViewModule.updateListener.of(() => debounceRebuild())] },
+    parent: container.value,
+    highlightChanges: true,
+    revertControls: 'a-to-b',
+    collapseUnchanged: { margin: 4, minSize: 4 },
+  })
+}
 
 onMounted(async () => {
   if (!import.meta.client || !container.value) return
-  const mergeMod = await import('@codemirror/merge')
-  const cmMod = await import('codemirror')
-  MergeViewClass = mergeMod.MergeView
-  basicSetup = cmMod.basicSetup
-  mv.value = new MergeViewClass({
-    a: { doc: ORIGINAL, extensions: [basicSetup] },
-    b: { doc: MODIFIED, extensions: [basicSetup] },
+  const [{ MergeView }, { basicSetup: bs }, { EditorView }] = await Promise.all([
+    import('@codemirror/merge'),
+    import('codemirror'),
+    import('@codemirror/view'),
+  ])
+  MergeViewClass = MergeView
+  basicSetup = bs
+  EditorViewModule = EditorView
+  const originalDoc = localStorage.getItem(ORIGINAL_KEY) || SAMPLE_ORIGINAL
+  const modifiedDoc = localStorage.getItem(MODIFIED_KEY) || SAMPLE_MODIFIED
+  mv = new MergeViewClass({
+    a: { doc: originalDoc, extensions: [basicSetup, EditorView.updateListener.of(() => debounceRebuild())] },
+    b: { doc: modifiedDoc, extensions: [basicSetup, EditorView.updateListener.of(() => debounceRebuild())] },
     parent: container.value,
     highlightChanges: true,
     revertControls: 'a-to-b',
@@ -48,7 +85,14 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  mv.value?.destroy()
+  if (debounceTimer) clearTimeout(debounceTimer)
+  if (mv) {
+    const aContent = getPanelContent('a')
+    const bContent = getPanelContent('b')
+    localStorage.setItem(ORIGINAL_KEY, aContent)
+    localStorage.setItem(MODIFIED_KEY, bContent)
+    mv.destroy()
+  }
 })
 </script>
 
@@ -62,7 +106,7 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .diff-tool {
-  height: calc(100vh - 100px);
+  height: 79vh;
   min-height: 400px;
 }
 
@@ -73,6 +117,7 @@ onBeforeUnmount(() => {
   overflow: hidden;
 
   :deep(.cm-editor) {
+    height: 100%;
     font-size: 14px;
     font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
   }
@@ -111,6 +156,13 @@ onBeforeUnmount(() => {
 
   :deep(.cm-merge-chunk-end.cm-merge-removed) {
     border-bottom-color: var(--el-color-danger) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .diff-tool {
+    height: auto;
+    min-height: 500px;
   }
 }
 </style>

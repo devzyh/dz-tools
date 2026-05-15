@@ -23,6 +23,7 @@ withDefaults(defineProps<{
 <style scoped lang="scss">
 .editor-loader {
   position: relative;
+  height: 100%;
 }
 
 .editor-loading {
