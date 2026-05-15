@@ -7,6 +7,7 @@ let xmlFormat: (xml: string, options: any) => string | undefined
 
 const STORAGE_KEY = 'dz-tools-xml'
 const editorContainer = ref<HTMLDivElement>()
+const editorReady = ref(false)
 let editor: ace.Ace.Editor | null = null
 
 function getEditor(): ace.Ace.Editor {
@@ -57,11 +58,11 @@ onMounted(async () => {
   const [aceMod, xmlMod] = await Promise.all([
     import('ace-builds'),
     import('xml-formatter'),
-    import('ace-builds/src-noconflict/mode-xml'),
-    import('ace-builds/src-noconflict/theme-sqlserver'),
   ])
   ace = aceMod
   xmlFormat = xmlMod.default || xmlMod
+  await import('ace-builds/src-noconflict/mode-xml')
+  await import('ace-builds/src-noconflict/theme-sqlserver')
 
   const container = editorContainer.value!
   editor = ace.edit(container)
@@ -74,6 +75,7 @@ onMounted(async () => {
   editor.session.on('change', () => {
     localStorage.setItem(STORAGE_KEY, editor?.getValue() || '')
   })
+  editorReady.value = true
 })
 
 onBeforeUnmount(() => {
@@ -96,7 +98,9 @@ onBeforeUnmount(() => {
         <el-button type="danger" @click="clearXml">清空</el-button>
       </el-button-group>
     </div>
-    <div ref="editorContainer" class="xml-editor-container" />
+    <EditorLoader v-model:ready="editorReady">
+      <div ref="editorContainer" class="xml-editor-container" />
+    </EditorLoader>
   </div>
 </template>
 

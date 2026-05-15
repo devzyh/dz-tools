@@ -4,6 +4,7 @@ import { ElMessage } from 'element-plus'
 
 const STORAGE_KEY = 'dz-tools-json'
 const editorContainer = ref<HTMLDivElement>()
+const editorReady = ref(false)
 let editor: any = null
 
 function getEditor(): any {
@@ -95,10 +96,10 @@ onMounted(async () => {
   const saved = localStorage.getItem(STORAGE_KEY)
   if (saved) {
     editor.setText(saved)
-    if (editor.getText().length > 0) {
-      editor.format()
-    }
+    try { editor.format() } catch { /* saved content may not be valid JSON */ }
   }
+
+  editorReady.value = true
 })
 
 onBeforeUnmount(() => {
@@ -125,7 +126,9 @@ onBeforeUnmount(() => {
         <el-button type="danger" @click="clearJson">清空</el-button>
       </el-button-group>
     </div>
-    <div ref="editorContainer" class="json-editor-container" />
+    <EditorLoader v-model:ready="editorReady">
+      <div ref="editorContainer" class="json-editor-container" />
+    </EditorLoader>
   </div>
 </template>
 

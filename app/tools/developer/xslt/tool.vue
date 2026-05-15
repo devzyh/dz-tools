@@ -6,6 +6,7 @@ let ace: typeof import('ace-builds') | null = null
 const xsltRef = ref<HTMLElement>()
 const sourceRef = ref<HTMLElement>()
 const resultRef = ref<HTMLElement>()
+const editorReady = ref(false)
 
 const xsltCacheKey = 'dz-tools-xslt'
 const sourceCacheKey = 'dz-tools-xslt-source'
@@ -77,10 +78,8 @@ function formatXmlString(xml: string): string {
 onMounted(async () => {
   if (!import.meta.client) return
   ace = await import('ace-builds')
-  await Promise.all([
-    import('ace-builds/src-noconflict/mode-xml'),
-    import('ace-builds/src-noconflict/theme-sqlserver'),
-  ])
+  await import('ace-builds/src-noconflict/mode-xml')
+  await import('ace-builds/src-noconflict/theme-sqlserver')
   if (xsltRef.value) {
     xsltEditor = createEditor(xsltRef.value)
     xsltEditor.session.setValue(localStorage.getItem(xsltCacheKey) || '')
@@ -98,6 +97,7 @@ onMounted(async () => {
   if (resultRef.value) {
     resultEditor = createEditor(resultRef.value, true)
   }
+  editorReady.value = true
 })
 
 onBeforeUnmount(() => {
@@ -113,20 +113,22 @@ onBeforeUnmount(() => {
       <el-button type="primary" @click="convertXslt">渲染XML</el-button>
       <el-button type="warning" @click="formatXml">美化XML</el-button>
     </div>
-    <div class="editor-section">
-      <div class="section-label">XSLT代码</div>
-      <div ref="xsltRef" class="editor-panel" />
-    </div>
-    <div class="editor-row">
-      <div class="editor-half">
-        <div class="section-label">XML数据</div>
-        <div ref="sourceRef" class="editor-panel" />
+    <EditorLoader v-model:ready="editorReady">
+      <div class="editor-section">
+        <div class="section-label">XSLT代码</div>
+        <div ref="xsltRef" class="editor-panel" />
       </div>
-      <div class="editor-half">
-        <div class="section-label">转换结果</div>
-        <div ref="resultRef" class="editor-panel" />
+      <div class="editor-row">
+        <div class="editor-half">
+          <div class="section-label">XML数据</div>
+          <div ref="sourceRef" class="editor-panel" />
+        </div>
+        <div class="editor-half">
+          <div class="section-label">转换结果</div>
+          <div ref="resultRef" class="editor-panel" />
+        </div>
       </div>
-    </div>
+    </EditorLoader>
   </div>
 </template>
 

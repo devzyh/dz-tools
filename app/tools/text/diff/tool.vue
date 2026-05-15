@@ -28,6 +28,7 @@ console.log(farewell("World", "tomorrow"));`
 
 const container = ref<HTMLDivElement>()
 const mv = shallowRef<MergeView>()
+const editorReady = ref(false)
 
 onMounted(async () => {
   if (!import.meta.client || !container.value) return
@@ -43,6 +44,7 @@ onMounted(async () => {
     revertControls: 'a-to-b',
     collapseUnchanged: { margin: 4, minSize: 4 },
   })
+  editorReady.value = true
 })
 
 onBeforeUnmount(() => {
@@ -52,7 +54,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="diff-tool">
-    <div ref="container" class="diff-merge" />
+    <EditorLoader v-model:ready="editorReady">
+      <div ref="container" class="diff-merge" />
+    </EditorLoader>
   </div>
 </template>
 
