@@ -116,18 +116,13 @@ onBeforeUnmount(() => {
   border-radius: 8px;
   overflow: hidden;
 
-  :deep(.cm-editor) {
+  :deep(.cm-mergeView) {
     height: 100%;
+  }
+
+  :deep(.cm-editor) {
     font-size: 14px;
     font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
-  }
-
-  :deep(.cm-merge-view) {
-    height: 100%;
-  }
-
-  :deep(.cm-merge-pane) {
-    height: 100%;
   }
 
   :deep(.cm-merge-gap) {
