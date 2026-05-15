@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
 }
 
 .xml-editor-container {
-  height: 78vh;
+  height: 74.5vh;
   border: 1px solid #d3d3d3;
   border-radius: 4px;
   overflow: hidden;
