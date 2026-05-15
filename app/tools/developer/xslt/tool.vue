@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-let ace: typeof import('ace-builds') | null = null
-
 const xsltRef = ref<HTMLElement>()
 const sourceRef = ref<HTMLElement>()
 const resultRef = ref<HTMLElement>()
@@ -11,27 +9,26 @@ const editorReady = ref(false)
 const xsltCacheKey = 'dz-tools-xslt'
 const sourceCacheKey = 'dz-tools-xslt-source'
 
-let xsltEditor: ace.Ace.Editor | null = null
-let sourceEditor: ace.Ace.Editor | null = null
-let resultEditor: ace.Ace.Editor | null = null
+let xsltView: any = null
+let sourceView: any = null
+let resultView: any = null
 
-function createEditor(el: HTMLElement, readOnly = false): ace.Ace.Editor {
-  const editor = ace.edit(el)
-  editor.setTheme('ace/theme/sqlserver')
-  editor.setFontSize('14px')
-  editor.setOption('wrap', 'free')
-  editor.setShowPrintMargin(false)
-  editor.session.setMode('ace/mode/xml')
-  if (readOnly) editor.setReadOnly(true)
-  return editor
+function getEditorContent(view: any): string {
+  return view.state.doc.toString()
+}
+
+function setEditorContent(view: any, content: string) {
+  view.dispatch({
+    changes: { from: 0, to: view.state.doc.length, insert: content },
+  })
 }
 
 function convertXslt() {
-  if (!xsltEditor || !sourceEditor || !resultEditor) return
+  if (!xsltView || !sourceView || !resultView) return
   try {
-    resultEditor.setValue(xsltTransform(xsltEditor.getValue(), sourceEditor.getValue()))
+    setEditorContent(resultView, xsltTransform(getEditorContent(xsltView), getEditorContent(sourceView)))
   } catch (err) {
-    resultEditor.setValue('错误信息：' + (err as Error).message)
+    setEditorContent(resultView, '错误信息：' + (err as Error).message)
   }
 }
 
@@ -55,10 +52,9 @@ function xsltTransform(xslt: string, source: string): string {
 }
 
 function formatXml() {
-  if (!sourceEditor) return
-  const xml = sourceEditor.getValue()
-  const formatted = formatXmlString(xml)
-  sourceEditor.setValue(formatted)
+  if (!sourceView) return
+  const xml = getEditorContent(sourceView)
+  setEditorContent(sourceView, formatXmlString(xml))
 }
 
 function formatXmlString(xml: string): string {
@@ -75,35 +71,66 @@ function formatXmlString(xml: string): string {
   return formatted.trim()
 }
 
+async function createEditor(el: HTMLElement, readOnly = false, onChange?: (value: string) => void) {
+  const { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightSpecialChars, drawSelection, highlightActiveLine } = await import('@codemirror/view')
+  const { EditorState } = await import('@codemirror/state')
+  const { defaultKeymap, indentWithTab, history } = await import('@codemirror/commands')
+  const { xml } = await import('@codemirror/lang-xml')
+  const { oneDark } = await import('@codemirror/theme-one-dark')
+  const { defaultHighlightStyle, syntaxHighlighting, indentOnInput, bracketMatching } = await import('@codemirror/language')
+
+  return new EditorView({
+    state: EditorState.create({
+      doc: '',
+      extensions: [
+        lineNumbers(),
+        highlightActiveLineGutter(),
+        highlightSpecialChars(),
+        history(),
+        drawSelection(),
+        EditorState.allowMultipleSelections.of(true),
+        indentOnInput(),
+        bracketMatching(),
+        highlightActiveLine(),
+        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+        keymap.of([indentWithTab, ...defaultKeymap]),
+        xml(),
+        oneDark,
+        EditorView.lineWrapping,
+        ...(onChange ? [EditorView.updateListener.of((update) => {
+          if (update.docChanged) onChange(getEditorContent(update.view))
+        })] : []),
+        ...(readOnly ? [EditorState.readOnly.of(true)] : []),
+      ],
+    }),
+    parent: el,
+  })
+}
+
 onMounted(async () => {
   if (!import.meta.client) return
-  ace = await import('ace-builds')
-  await import('ace-builds/src-noconflict/mode-xml')
-  await import('ace-builds/src-noconflict/theme-sqlserver')
   if (xsltRef.value) {
-    xsltEditor = createEditor(xsltRef.value)
-    xsltEditor.session.setValue(localStorage.getItem(xsltCacheKey) || '')
-    xsltEditor.session.on('change', () => {
-      localStorage.setItem(xsltCacheKey, xsltEditor!.getValue())
+    xsltView = await createEditor(xsltRef.value, false, (val) => {
+      localStorage.setItem(xsltCacheKey, val)
     })
+    setEditorContent(xsltView, localStorage.getItem(xsltCacheKey) || '')
   }
   if (sourceRef.value) {
-    sourceEditor = createEditor(sourceRef.value)
-    sourceEditor.session.setValue(localStorage.getItem(sourceCacheKey) || '')
-    sourceEditor.session.on('change', () => {
-      localStorage.setItem(sourceCacheKey, sourceEditor!.getValue())
+    sourceView = await createEditor(sourceRef.value, false, (val) => {
+      localStorage.setItem(sourceCacheKey, val)
     })
+    setEditorContent(sourceView, localStorage.getItem(sourceCacheKey) || '')
   }
   if (resultRef.value) {
-    resultEditor = createEditor(resultRef.value, true)
+    resultView = await createEditor(resultRef.value, true)
   }
   editorReady.value = true
 })
 
 onBeforeUnmount(() => {
-  xsltEditor?.destroy()
-  sourceEditor?.destroy()
-  resultEditor?.destroy()
+  xsltView?.destroy()
+  sourceView?.destroy()
+  resultView?.destroy()
 })
 </script>
 
@@ -170,6 +197,17 @@ onBeforeUnmount(() => {
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
   overflow: hidden;
+
+  :deep(.cm-editor) {
+    height: 100%;
+    font-size: 14px;
+    font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+  }
+
+  :deep(.cm-scroller) {
+    overflow: auto;
+    font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+  }
 }
 
 .tool-actions {
