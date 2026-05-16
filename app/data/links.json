@@ -48,12 +48,6 @@
         "icon": "https://gitee.com/favicon.ico"
       },
       {
-        "title": "Unicode字符表",
-        "href": "https://www.unicodery.com",
-        "description": "Unicode字符搜索Web服务",
-        "icon": "https://www.unicodery.com/favicon.ico"
-      },
-      {
         "title": "httpbin.org",
         "href": "https://httpbin.org",
         "description": "一个简单的HTPP请求响应网站",
@@ -69,7 +63,7 @@
         "title": "SQLPub",
         "href": "https://sqlpub.com",
         "description": "提供最新版本MySQL 服务器测试服务",
-        "icon": "https://sqlpub.com/logo.svg"
+        "icon": "https://sqlpub.com/favicon.ico"
       },
       {
         "title": "SSL状态检测",
@@ -88,7 +82,7 @@
         "title": "On Java 8",
         "href": "https://gitee.com/lingcoder/OnJava8/tree/1ef7ec48e492862300e667e24c245e9b3a5ccd98",
         "description": "《On Java 8》中文版",
-        "icon": "https://gitee.com/lingcoder/OnJava8/blob/1ef7ec48e492862300e667e24c245e9b3a5ccd98/docs/favicon.ico"
+        "icon": "https://gitee.com/favicon.ico"
       },
       {
         "title": "Java8文档",
@@ -188,12 +182,6 @@
         "icon": "https://developer.aliyun.com/favicon.ico"
       },
       {
-        "title": "美团技术团队",
-        "href": "https://tech.meituan.com",
-        "description": "涵盖了前端、后台等技术领域",
-        "icon": "https://awps-assets.meituan.net/mit/blog/v20190629/asset/icon/favicon.ico"
-      },
-      {
         "title": "凤凰架构",
         "href": "https://icyfenix.cn",
         "description": "构建可靠的大型分布式系统",
@@ -204,6 +192,12 @@
         "href": "https://bugstack.cn",
         "description": "小傅哥bugstack虫洞栈",
         "icon": "https://bugstack.cn/favicon.ico"
+      },
+      {
+        "title": "美团技术团队",
+        "href": "https://tech.meituan.com",
+        "description": "涵盖了前端、后台等技术领域",
+        "icon": "https://awps-assets.meituan.net/mit/blog/v20190629/asset/icon/favicon.ico"
       }
     ]
   },
