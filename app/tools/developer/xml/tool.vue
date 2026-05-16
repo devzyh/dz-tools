@@ -61,6 +61,8 @@ onMounted(async () => {
   ])
   ace = aceMod
   xmlFormat = xmlMod.default || xmlMod
+  const workerUrl = (await import('ace-builds/src-noconflict/worker-xml.js?url')).default
+  ace.config.setModuleUrl('ace/mode/xml_worker', workerUrl)
   await import('ace-builds/src-noconflict/mode-xml')
   await import('ace-builds/src-noconflict/theme-sqlserver')
 

@@ -9,26 +9,16 @@ const editorReady = ref(false)
 const xsltCacheKey = 'dz-tools-xslt'
 const sourceCacheKey = 'dz-tools-xslt-source'
 
-let xsltView: any = null
-let sourceView: any = null
-let resultView: any = null
-
-function getEditorContent(view: any): string {
-  return view.state.doc.toString()
-}
-
-function setEditorContent(view: any, content: string) {
-  view.dispatch({
-    changes: { from: 0, to: view.state.doc.length, insert: content },
-  })
-}
+let ace: typeof import('ace-builds') | null = null
+let xsltEditor: any = null
+let sourceEditor: any = null
+let resultEditor: any = null
 
 function convertXslt() {
-  if (!xsltView || !sourceView || !resultView) return
   try {
-    setEditorContent(resultView, xsltTransform(getEditorContent(xsltView), getEditorContent(sourceView)))
+    setResult(xsltTransform(xsltEditor.getValue(), sourceEditor.getValue()))
   } catch (err) {
-    setEditorContent(resultView, '错误信息：' + (err as Error).message)
+    setResult('错误信息：' + (err as Error).message)
   }
 }
 
@@ -52,9 +42,10 @@ function xsltTransform(xslt: string, source: string): string {
 }
 
 function formatXml() {
-  if (!sourceView) return
-  const xml = getEditorContent(sourceView)
-  setEditorContent(sourceView, formatXmlString(xml))
+  try {
+    const xml = sourceEditor.getValue()
+    sourceEditor.setValue(formatXmlString(xml), -1)
+  } catch { /* ignore */ }
 }
 
 function formatXmlString(xml: string): string {
@@ -71,66 +62,62 @@ function formatXmlString(xml: string): string {
   return formatted.trim()
 }
 
-async function createEditor(el: HTMLElement, readOnly = false, onChange?: (value: string) => void) {
-  const { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightSpecialChars, drawSelection, highlightActiveLine } = await import('@codemirror/view')
-  const { EditorState } = await import('@codemirror/state')
-  const { defaultKeymap, indentWithTab, history } = await import('@codemirror/commands')
-  const { xml } = await import('@codemirror/lang-xml')
-  const { oneDark } = await import('@codemirror/theme-one-dark')
-  const { defaultHighlightStyle, syntaxHighlighting, indentOnInput, bracketMatching } = await import('@codemirror/language')
+function setResult(content: string) {
+  resultEditor.setValue(content, -1)
+}
 
-  return new EditorView({
-    state: EditorState.create({
-      doc: '',
-      extensions: [
-        lineNumbers(),
-        highlightActiveLineGutter(),
-        highlightSpecialChars(),
-        history(),
-        drawSelection(),
-        EditorState.allowMultipleSelections.of(true),
-        indentOnInput(),
-        bracketMatching(),
-        highlightActiveLine(),
-        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-        keymap.of([indentWithTab, ...defaultKeymap]),
-        xml(),
-        oneDark,
-        EditorView.lineWrapping,
-        ...(onChange ? [EditorView.updateListener.of((update) => {
-          if (update.docChanged) onChange(getEditorContent(update.view))
-        })] : []),
-        ...(readOnly ? [EditorState.readOnly.of(true)] : []),
-      ],
-    }),
-    parent: el,
-  })
+function createAceEditor(el: HTMLElement, readOnly = false, onChange?: (value: string) => void) {
+  const editor = ace!.edit(el)
+  editor.setTheme('ace/theme/sqlserver')
+  editor.setFontSize('14px')
+  editor.setOption('wrap', 'free')
+  editor.setShowPrintMargin(false)
+  editor.session.setMode('ace/mode/xml')
+
+  if (readOnly) {
+    editor.setReadOnly(true)
+    editor.setOption('highlightActiveLine', false)
+  }
+
+  if (onChange) {
+    editor.session.on('change', () => onChange(editor.getValue()))
+  }
+
+  return editor
 }
 
 onMounted(async () => {
   if (!import.meta.client) return
+
+  ace = await import('ace-builds')
+  const workerUrl = (await import('ace-builds/src-noconflict/worker-xml.js?url')).default
+  ace.config.setModuleUrl('ace/mode/xml_worker', workerUrl)
+  await import('ace-builds/src-noconflict/mode-xml')
+  await import('ace-builds/src-noconflict/theme-sqlserver')
+
   if (xsltRef.value) {
-    xsltView = await createEditor(xsltRef.value, false, (val) => {
+    xsltEditor = createAceEditor(xsltRef.value, false, (val) => {
       localStorage.setItem(xsltCacheKey, val)
     })
-    setEditorContent(xsltView, localStorage.getItem(xsltCacheKey) || '')
+    xsltEditor.setValue(localStorage.getItem(xsltCacheKey) || '', -1)
   }
   if (sourceRef.value) {
-    sourceView = await createEditor(sourceRef.value, false, (val) => {
+    sourceEditor = createAceEditor(sourceRef.value, false, (val) => {
       localStorage.setItem(sourceCacheKey, val)
     })
-    setEditorContent(sourceView, localStorage.getItem(sourceCacheKey) || '')
+    sourceEditor.setValue(localStorage.getItem(sourceCacheKey) || '', -1)
   }
   if (resultRef.value) {
-    resultView = await createEditor(resultRef.value, true)
+    resultEditor = createAceEditor(resultRef.value, true)
   }
+
   editorReady.value = true
 })
 
 onBeforeUnmount(() => {
-  xsltView?.destroy()
-  sourceView?.destroy()
-  resultView?.destroy()
+  xsltEditor?.destroy()
+  sourceEditor?.destroy()
+  resultEditor?.destroy()
 })
 </script>
 
@@ -197,17 +184,6 @@ onBeforeUnmount(() => {
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
   overflow: hidden;
-
-  :deep(.cm-editor) {
-    height: 100%;
-    font-size: 14px;
-    font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
-  }
-
-  :deep(.cm-scroller) {
-    overflow: auto;
-    font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
-  }
 }
 
 .tool-actions {
