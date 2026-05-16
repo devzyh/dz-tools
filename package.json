@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@codemirror/merge": "^6.12.1",
+    "@codemirror/state": "^6.0.0",
+    "@codemirror/view": "^6.0.0",
     "@element-plus/icons-vue": "^2.3.2",
     "@nuxtjs/i18n": "^10.3.0",
     "@nuxtjs/sitemap": "^8.0.15",
