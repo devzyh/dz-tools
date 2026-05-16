@@ -72,6 +72,10 @@ watch(query, () => {
   showDropdown.value = true
 })
 
+watch(() => route.path, () => {
+  menuOpen.value = false
+})
+
 function handleKeydown(e: KeyboardEvent) {
   if (!showDropdown.value && e.key === 'ArrowDown') {
     showDropdown.value = true

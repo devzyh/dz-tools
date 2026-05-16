@@ -24,6 +24,7 @@ withDefaults(defineProps<{
 .editor-loader {
   position: relative;
   height: 100%;
+  min-height: 200px;
 }
 
 .editor-loading {
