@@ -80,8 +80,14 @@ function clearJson() {
 onMounted(async () => {
   if (!import.meta.client || !editorContainer.value) return
 
-  const { default: JSONEditor } = await import('jsoneditor')
+  const aceModule = await import('ace-builds')
+  ;(window as any).ace = aceModule
+  await import('ace-builds/src-noconflict/mode-json')
+  await import('ace-builds/src-noconflict/theme-sqlserver')
+
+  const editorModule = await import('jsoneditor/dist/jsoneditor-minimalist.min.js')
   await import('jsoneditor/dist/jsoneditor.css')
+  const JSONEditor = editorModule.default || editorModule
 
   editor = new JSONEditor(editorContainer.value, {
     mode: 'code',
