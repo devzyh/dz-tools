@@ -28,54 +28,17 @@ console.log(farewell("World", "tomorrow"));`
 
 const container = ref<HTMLDivElement>()
 const editorReady = ref(false)
-let MergeViewClass: any
-let basicSetup: any
-let EditorViewModule: any
 let mv: any = null
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
-
-function debounceRebuild() {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  debounceTimer = setTimeout(() => {
-    rebuildMergeView()
-  }, 300)
-}
-
-function getPanelContent(panel: 'a' | 'b'): string {
-  if (!mv) return ''
-  return mv[panel].state.doc.toString()
-}
-
-function rebuildMergeView() {
-  if (!container.value || !MergeViewClass || !basicSetup || !EditorViewModule) return
-  const originalDoc = getPanelContent('a')
-  const modifiedDoc = getPanelContent('b')
-  mv?.destroy()
-  mv = new MergeViewClass({
-    a: { doc: originalDoc, extensions: [basicSetup, EditorViewModule.updateListener.of(() => debounceRebuild())] },
-    b: { doc: modifiedDoc, extensions: [basicSetup, EditorViewModule.updateListener.of(() => debounceRebuild())] },
-    parent: container.value,
-    highlightChanges: true,
-    revertControls: 'a-to-b',
-    collapseUnchanged: { margin: 4, minSize: 4 },
-  })
-}
 
 onMounted(async () => {
   if (!import.meta.client || !container.value) return
-  const [{ MergeView }, { basicSetup: bs }, { EditorView }] = await Promise.all([
+  const [{ MergeView }, { basicSetup }] = await Promise.all([
     import('@codemirror/merge'),
     import('codemirror'),
-    import('@codemirror/view'),
   ])
-  MergeViewClass = MergeView
-  basicSetup = bs
-  EditorViewModule = EditorView
-  const originalDoc = localStorage.getItem(ORIGINAL_KEY) || SAMPLE_ORIGINAL
-  const modifiedDoc = localStorage.getItem(MODIFIED_KEY) || SAMPLE_MODIFIED
-  mv = new MergeViewClass({
-    a: { doc: originalDoc, extensions: [basicSetup, EditorView.updateListener.of(() => debounceRebuild())] },
-    b: { doc: modifiedDoc, extensions: [basicSetup, EditorView.updateListener.of(() => debounceRebuild())] },
+  mv = new MergeView({
+    a: { doc: localStorage.getItem(ORIGINAL_KEY) || SAMPLE_ORIGINAL, extensions: [basicSetup] },
+    b: { doc: localStorage.getItem(MODIFIED_KEY) || SAMPLE_MODIFIED, extensions: [basicSetup] },
     parent: container.value,
     highlightChanges: true,
     revertControls: 'a-to-b',
@@ -85,12 +48,9 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  if (debounceTimer) clearTimeout(debounceTimer)
   if (mv) {
-    const aContent = getPanelContent('a')
-    const bContent = getPanelContent('b')
-    localStorage.setItem(ORIGINAL_KEY, aContent)
-    localStorage.setItem(MODIFIED_KEY, bContent)
+    localStorage.setItem(ORIGINAL_KEY, mv.a.state.doc.toString())
+    localStorage.setItem(MODIFIED_KEY, mv.b.state.doc.toString())
     mv.destroy()
   }
 })
@@ -114,7 +74,6 @@ onBeforeUnmount(() => {
   height: 100%;
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
-  overflow: hidden;
 
   :deep(.cm-mergeView) {
     height: 100%;
