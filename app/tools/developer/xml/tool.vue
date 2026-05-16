@@ -3,7 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus'
 
 let ace: typeof import('ace-builds') | null = null
-let xmlFormat: (xml: string, options: any) => string | undefined
+let xmlFormat: (xml: string, options?: { indentation?: string; collapseContent?: boolean; lineSeparator?: string }) => string | undefined
 
 const STORAGE_KEY = 'dz-tools-xml'
 const editorContainer = ref<HTMLDivElement>()

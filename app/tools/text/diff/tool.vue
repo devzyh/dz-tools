@@ -28,7 +28,7 @@ console.log(farewell("World", "tomorrow"));`
 
 const container = ref<HTMLDivElement>()
 const editorReady = ref(false)
-let mv: any = null
+let mv: InstanceType<typeof MergeView> | null = null
 
 onMounted(async () => {
   if (!import.meta.client || !container.value) return

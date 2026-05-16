@@ -38,9 +38,7 @@ function parse() {
   }
   error.value = ''
   try {
-    const interval = CronExpressionParser.parse(expression.value.trim(), {
-      throwOnError: true,
-    } as any)
+    const interval = CronExpressionParser.parse(expression.value.trim())
     const dayNames = [
       '周日',
       '周一',
@@ -50,7 +48,7 @@ function parse() {
       '周五',
       '周六',
     ]
-    schedules.value = interval.take(10).map((d: any) => {
+    schedules.value = interval.take(10).map((d) => {
       const date = d.toDate()
       return {
         date: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`,

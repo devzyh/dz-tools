@@ -56,8 +56,7 @@ async function compute() {
 }
 
 function copy(value: string) {
-  navigator.clipboard.writeText(value)
-  ElMessage.success('已复制')
+  copyToClipboard(value)
 }
 </script>
 

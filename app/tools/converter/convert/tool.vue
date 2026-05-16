@@ -118,8 +118,7 @@ function swap() {
 
 function copy() {
   if (!output.value) { ElMessage.warning('没有可复制的内容'); return }
-  navigator.clipboard.writeText(output.value)
-  ElMessage.success('已复制')
+  copyToClipboard(output.value)
 }
 </script>
 

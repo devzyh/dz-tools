@@ -264,8 +264,7 @@ function copySql() {
     ElMessage.warning('没有可复制的内容')
     return
   }
-  navigator.clipboard.writeText(sqlOutput.value)
-  ElMessage.success('SQL 已复制')
+  copyToClipboard(sqlOutput.value, 'SQL 已复制')
 }
 
 function copyJson() {
@@ -273,8 +272,7 @@ function copyJson() {
     ElMessage.warning('没有可复制的内容')
     return
   }
-  navigator.clipboard.writeText(jsonOutput.value)
-  ElMessage.success('JSON 已复制')
+  copyToClipboard(jsonOutput.value, 'JSON 已复制')
 }
 
 function clear() {

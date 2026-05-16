@@ -22,8 +22,7 @@ function decode() {
 }
 
 function copy() {
-  navigator.clipboard.writeText(output.value)
-  ElMessage.success('已复制')
+  copyToClipboard(output.value)
 }
 </script>
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 
 const ip = ref('')
@@ -34,16 +33,14 @@ onMounted(async () => {
 
 function copy() {
   if (!ip.value) return
-  navigator.clipboard.writeText(ip.value)
+  copyToClipboard(ip.value, 'IP 地址已复制')
   copiedTarget.value = 'ip'
-  ElMessage.success('IP 地址已复制')
 }
 
 function copyCurl() {
   if (!curlCmd.value) return
-  navigator.clipboard.writeText(curlCmd.value)
+  copyToClipboard(curlCmd.value, '命令已复制')
   copiedTarget.value = 'curl'
-  ElMessage.success('命令已复制')
 }
 </script>
 

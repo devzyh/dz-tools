@@ -90,8 +90,7 @@ function copyResult() {
     ElMessage.warning('请先生成密码')
     return
   }
-  navigator.clipboard.writeText(result.value)
-  ElMessage.success('已复制到剪贴板')
+  copyToClipboard(result.value, '已复制到剪贴板')
 }
 
 function clearResult() {

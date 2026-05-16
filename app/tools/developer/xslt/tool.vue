@@ -10,9 +10,9 @@ const xsltCacheKey = 'dz-tools-xslt'
 const sourceCacheKey = 'dz-tools-xslt-source'
 
 let ace: typeof import('ace-builds') | null = null
-let xsltEditor: any = null
-let sourceEditor: any = null
-let resultEditor: any = null
+let xsltEditor: ace.Ace.Editor | null = null
+let sourceEditor: ace.Ace.Editor | null = null
+let resultEditor: ace.Ace.Editor | null = null
 
 function convertXslt() {
   try {

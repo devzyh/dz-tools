@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ElMessage } from 'element-plus'
 
 const input = ref('')
 const activeTab = ref<'charToCode' | 'codeToChar'>('charToCode')
@@ -81,13 +80,6 @@ const codeToCharResults = computed(() => {
   }))
 })
 
-function copyText(text: string, label = '已复制') {
-  navigator.clipboard.writeText(text).then(() => ElMessage.success(label))
-}
-
-function copyCell(text: string) {
-  copyText(text)
-}
 </script>
 
 <template>
@@ -110,7 +102,7 @@ function copyCell(text: string) {
             >
               <div class="char-display">{{ item.char === ' ' ? '␣' : item.char }}</div>
               <div class="char-info">
-                <span class="char-unicode" @click="copyCell(item.unicode)">{{ item.unicode }}</span>
+                <span class="char-unicode" @click="copyToClipboard(item.unicode)">{{ item.unicode }}</span>
                 <span class="char-name">{{ item.name }}</span>
               </div>
               <div class="char-detail">
@@ -147,7 +139,7 @@ function copyCell(text: string) {
             >
               <div class="char-display">{{ item.char === ' ' ? '␣' : item.char }}</div>
               <div class="char-info">
-                <span class="char-unicode" @click="copyCell(item.unicode)">{{ item.unicode }}</span>
+                <span class="char-unicode" @click="copyToClipboard(item.unicode)">{{ item.unicode }}</span>
                 <span class="char-name">{{ item.name }}</span>
               </div>
             </div>

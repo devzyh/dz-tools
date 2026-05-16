@@ -30,9 +30,8 @@ function copy() {
     return
   }
   if (import.meta.client) {
-    navigator.clipboard.writeText(output.value)
+    copyToClipboard(output.value)
   }
-  ElMessage.success('已复制')
 }
 </script>
 

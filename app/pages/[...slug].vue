@@ -17,8 +17,8 @@ if (entry && isTool(entry)) {
 }
 
 if (entry) {
-  const title = isTool(entry) ? entry.meta.title : (entry as any).meta.title
-  const description = isTool(entry) ? entry.meta.description : (entry as any).meta.description || ''
+  const title = entry.meta.title
+  const description = entry.meta.description || ''
   usePageSeo({
     title: `${title} - ${appConfig.title}`,
     description,

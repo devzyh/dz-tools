@@ -69,8 +69,7 @@ function dateToTs() {
 }
 
 function copy(val: string) {
-  navigator.clipboard.writeText(val)
-  ElMessage.success('已复制')
+  copyToClipboard(val)
 }
 </script>
 

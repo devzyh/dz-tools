@@ -1,3 +1,4 @@
+import type { Component } from 'vue'
 import type { ToolMeta, GroupMeta, ResolvedTool, ResolvedGroup, ResolvedEntry } from './types'
 
 // 扫描分组元数据文件（一级：tools/{group}/meta.ts）
@@ -13,7 +14,7 @@ const toolMetaModules = import.meta.glob<{ default: ToolMeta }>(
 )
 
 // 扫描工具 Vue 组件（二级：tools/{group}/{tool}/*.vue）
-const toolComponentModules = import.meta.glob<{ default: any }>(
+const toolComponentModules = import.meta.glob<{ default: Component }>(
   './**/*.vue',
   { eager: false }
 )
@@ -87,7 +88,7 @@ function getAllSlugs(): string[] {
   return slugs
 }
 
-function getToolComponent(group: string, toolSlug: string): (() => Promise<any>) | null {
+function getToolComponent(group: string, toolSlug: string): (() => Promise<Component>) | null {
   const componentKey = Object.keys(toolComponentModules).find(key => {
     const match = key.match(/\.\/([^/]+)\/([^/]+)\/[^.]+\.vue$/)
     if (!match) return false
