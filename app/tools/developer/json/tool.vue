@@ -82,6 +82,8 @@ onMounted(async () => {
 
   const aceModule = await import('ace-builds')
   ;(window as any).ace = aceModule
+  const workerUrl = (await import('ace-builds/src-noconflict/worker-json.js?url')).default
+  aceModule.config.setModuleUrl('ace/mode/json_worker', workerUrl)
   await import('ace-builds/src-noconflict/mode-json')
   await import('ace-builds/src-noconflict/theme-sqlserver')
 
