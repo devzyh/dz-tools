@@ -1,5 +1,72 @@
 [
   {
+    "title": "AI大模型",
+    "description": null,
+    "icon": null,
+    "links": [
+      {
+        "title": "Claude Code",
+        "href": "https://code.claude.com/docs/zh-CN/overview",
+        "description": "AI 驱动的编码助手",
+        "icon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/favicon.ico"
+      },
+      {
+        "title": "mcp.so",
+        "href": "https://mcp.so/zh",
+        "description": "第三方 MCP 市场",
+        "icon": "https://mcp.so/favicon.ico"
+      },
+      {
+        "title": "skills.sh",
+        "href": "https://www.skills.sh/",
+        "description": "Agent Skills 目录",
+        "icon": "https://www.skills.sh/favicon.ico"
+      },
+      {
+        "title": "Ollama",
+        "href": "https://ollama.com",
+        "description": "用开放模型聊天和构建",
+        "icon": "https://ollama.com/public/icon-64x64.png"
+      },
+      {
+        "title": "LangChain4j",
+        "href": "https://docs.langchain4j.dev",
+        "description": "用LLMs增强Java程序",
+        "icon": "https://docs.langchain4j.dev/img/favicon.ico"
+      },
+      {
+        "title": "Spring AI Alibaba",
+        "href": "https://java2ai.com",
+        "description": "Spring生态的阿里AI",
+        "icon": "https://java2ai.com/img/favicon.png"
+      },
+      {
+        "title": "Dify",
+        "href": "https://dify.ai",
+        "description": "打造生产级Agentic工作流",
+        "icon": "https://framerusercontent.com/images/5DjvEqzd8wAijK6D0yeFokYMteE.svg"
+      },
+      {
+        "title": "Arena",
+        "href": "https://arena.ai/leaderboard/",
+        "description": "大模型的测评机构",
+        "icon": "https://arena.ai/images/favicon-rebrand.svg"
+      },
+      {
+        "title": "OpenRouter",
+        "href": "https://openrouter.ai/",
+        "description": "大模型 API 聚合平台",
+        "icon": "https://openrouter.ai/favicon.ico"
+      },
+      {
+        "title": "Hugging Face",
+        "href": "https://huggingface.co",
+        "description": "人工智能社区构建未来",
+        "icon": "https://huggingface.co/front/assets/huggingface_logo-noborder.svg"
+      }
+    ]
+  },
+  {
     "title": "数据编辑",
     "description": null,
     "icon": null,
@@ -198,61 +265,6 @@
         "href": "https://tech.meituan.com",
         "description": "涵盖了前端、后台等技术领域",
         "icon": "https://awps-assets.meituan.net/mit/blog/v20190629/asset/icon/favicon.ico"
-      }
-    ]
-  },
-  {
-    "title": "AI大模型",
-    "description": null,
-    "icon": null,
-    "links": [
-      {
-        "title": "Hugging Face",
-        "href": "https://huggingface.co",
-        "description": "人工智能社区构建未来",
-        "icon": "https://huggingface.co/front/assets/huggingface_logo-noborder.svg"
-      },
-      {
-        "title": "Ollama",
-        "href": "https://ollama.com",
-        "description": "用开放模型聊天和构建",
-        "icon": "https://ollama.com/public/icon-64x64.png"
-      },
-      {
-        "title": "Dify",
-        "href": "https://dify.ai",
-        "description": "打造生产级Agentic工作流",
-        "icon": "https://framerusercontent.com/images/5DjvEqzd8wAijK6D0yeFokYMteE.svg"
-      },
-      {
-        "title": "LangChain4j",
-        "href": "https://docs.langchain4j.dev",
-        "description": "用LLMs增强Java程序",
-        "icon": "https://docs.langchain4j.dev/img/favicon.ico"
-      },
-      {
-        "title": "Spring AI Alibaba",
-        "href": "https://java2ai.com",
-        "description": "Spring生态的阿里AI",
-        "icon": "https://java2ai.com/img/favicon.png"
-      },
-      {
-        "title": "Smithery",
-        "href": "https://smithery.ai",
-        "description": "将上下文转化为AI的技能",
-        "icon": "https://smithery.ai/icon.svg?icon.2e4c651c.svg"
-      },
-      {
-        "title": "Claude Code",
-        "href": "https://code.claude.com/docs/zh-CN/overview",
-        "description": "AI 驱动的编码助手",
-        "icon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/favicon.ico"
-      },
-      {
-        "title": "OpenClaw",
-        "href": "https://openclaws.io/zh/",
-        "description": "真正会做事的 AI",
-        "icon": "https://openclaws.io/favicon.ico"
       }
     ]
   },
