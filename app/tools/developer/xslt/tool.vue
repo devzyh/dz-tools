@@ -66,6 +66,14 @@ function setResult(content: string) {
   resultEditor.setValue(content, -1)
 }
 
+function clearAll() {
+  xsltEditor.setValue('', -1)
+  sourceEditor.setValue('', -1)
+  resultEditor.setValue('', -1)
+  localStorage.removeItem(xsltCacheKey)
+  localStorage.removeItem(sourceCacheKey)
+}
+
 function createAceEditor(el: HTMLElement, readOnly = false, onChange?: (value: string) => void) {
   const editor = ace!.edit(el)
   editor.setTheme('ace/theme/sqlserver')
@@ -92,6 +100,8 @@ onMounted(async () => {
   ace = await import('ace-builds')
   const workerUrl = (await import('ace-builds/src-noconflict/worker-xml.js?url')).default
   ace.config.setModuleUrl('ace/mode/xml_worker', workerUrl)
+  const searchboxUrl = (await import('ace-builds/src-noconflict/ext-searchbox.js?url')).default
+  ace.config.setModuleUrl('ace/ext/searchbox', searchboxUrl)
   await import('ace-builds/src-noconflict/mode-xml')
   await import('ace-builds/src-noconflict/theme-sqlserver')
 
@@ -126,6 +136,7 @@ onBeforeUnmount(() => {
     <div class="tool-actions">
       <el-button type="primary" @click="convertXslt">渲染XML</el-button>
       <el-button type="warning" @click="formatXml">美化XML</el-button>
+      <el-button type="danger" @click="clearAll">清空</el-button>
     </div>
     <EditorLoader v-model:ready="editorReady">
       <div class="editor-section">

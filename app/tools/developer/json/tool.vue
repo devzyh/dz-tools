@@ -84,6 +84,8 @@ onMounted(async () => {
   ;(window as any).ace = aceModule
   const workerUrl = (await import('ace-builds/src-noconflict/worker-json.js?url')).default
   aceModule.config.setModuleUrl('ace/mode/json_worker', workerUrl)
+  const searchboxUrl = (await import('ace-builds/src-noconflict/ext-searchbox.js?url')).default
+  aceModule.config.setModuleUrl('ace/ext/searchbox', searchboxUrl)
   await import('ace-builds/src-noconflict/mode-json')
   await import('ace-builds/src-noconflict/theme-sqlserver')
 
