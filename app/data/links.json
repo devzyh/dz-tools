@@ -11,10 +11,10 @@
         "icon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/favicon.ico"
       },
       {
-        "title": "mcp.so",
-        "href": "https://mcp.so/zh",
-        "description": "第三方 MCP 市场",
-        "icon": "https://mcp.so/favicon.ico"
+        "title": "MCPWorld",
+        "href": "https://www.mcpworld.com/",
+        "description": "探索海量可用的 MCP Servers",
+        "icon": "https://www.mcpworld.com/favicon.ico"
       },
       {
         "title": "skills.sh",
@@ -67,7 +67,7 @@
     ]
   },
   {
-    "title": "数据编辑",
+    "title": "效率工具",
     "description": null,
     "icon": null,
     "links": [
@@ -88,14 +88,7 @@
         "href": "https://regex101.com",
         "description": "编程语言正则表达式测试器",
         "icon": "https://regex101.com/favicon.ico"
-      }
-    ]
-  },
-  {
-    "title": "效率工具",
-    "description": null,
-    "icon": null,
-    "links": [
+      },
       {
         "title": "Z-Library",
         "href": "https://zh.zlib.by/",

@@ -4,8 +4,8 @@ const { title } = useAppConfig()
 const linksData = (await import('~/data/links.json')).default
 
 usePageSeo({
-  title: `友情链接 - ${title}`,
-  description: `${title} 收录的友情链接`,
+  title: `链接 - ${title}`,
+  description: `${title} 收录的实用链接`,
   path: '/links',
 })
 
