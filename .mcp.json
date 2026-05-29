@@ -1,0 +1,38 @@
+{
+  "mcpServers": {
+    "codegraph": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@colbymchenry/codegraph@latest",
+        "serve",
+        "--mcp"
+      ],
+      "env": {
+        "CODEGRAPH_NO_DAEMON": "1"
+      }
+    },
+    "anysearch": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://api.anysearch.com/mcp",
+        "--header",
+        "Authorization: Bearer ${env:ANYSEARCH_TOKEN}"
+      ]
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--browser",
+        "msedge"
+      ]
+    }
+  }
+}

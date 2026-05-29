@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node *)",
+      "Bash(pnpm dev *)",
+      "Bash(git add *)",
+      "Bash(git stash *)",
+      "Bash(xargs grep *)",
+      "mcp__codegraph__*"
+    ],
+    "ask": [
+      "Bash(git commit *)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "enabledMcpjsonServers": [
+    "codegraph",
+    "anysearch",
+    "playwright"
+  ],
+  "language": "简体中文"
+}

@@ -25,4 +25,17 @@ logs
 !.env.example
 
 # AI Agent
-.claude
+.env.local
+.env.*.local
+CLAUDE.local.md
+.claude/*
+!.claude/settings.json
+!.claude/commands/
+!.claude/rules/
+!.claude/skills/
+!.claude/agents/
+!.claude/hooks/
+!.claude/templates/
+.codegraph/
+.playwright-mcp/
+*.png
