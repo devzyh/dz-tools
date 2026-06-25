@@ -23,6 +23,12 @@
         "icon": "https://www.skills.sh/favicon.ico"
       },
       {
+        "title": "UI Style Prompt",
+        "href": "https://www.uiprompt.site/zh/styles",
+        "description": "AI UI 设计风格提示词库",
+        "icon": "https://www.uiprompt.site/favicon.ico"
+      },
+      {
         "title": "Ollama",
         "href": "https://ollama.com",
         "description": "用开放模型聊天和构建",
