@@ -78,16 +78,16 @@
     "icon": null,
     "links": [
       {
+        "title": "Mermaid",
+        "href": "https://mermaid.live/",
+        "description": "在线流程图、图表编辑器",
+        "icon": "https://mermaid.live/favicon.ico"
+      },
+      {
         "title": "draw.io",
         "href": "https://app.diagrams.net",
         "description": "图表软件和流程图制作工具",
         "icon": "https://app.diagrams.net/favicon.ico"
-      },
-      {
-        "title": "PlantUML",
-        "href": "https://plantuml.com/zh",
-        "description": "可快速、直接地创建图表",
-        "icon": "https://plantuml.com/favicon.ico"
       },
       {
         "title": "正则表达式",
