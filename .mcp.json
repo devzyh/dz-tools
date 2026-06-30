@@ -23,16 +23,6 @@
         "--header",
         "Authorization: Bearer ${env:ANYSEARCH_TOKEN}"
       ]
-    },
-    "playwright": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@playwright/mcp@latest",
-        "--browser",
-        "msedge"
-      ]
     }
   }
 }
