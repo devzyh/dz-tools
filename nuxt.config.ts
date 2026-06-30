@@ -18,10 +18,6 @@ export default defineNuxtConfig({
     url: 'https://devzyh.cn',
   },
 
-  sitemap: {
-    sources: ['/api/__sitemap__/urls'],
-  },
-
   css: [
     'element-plus/dist/index.css',
     '~/styles/index.scss',
@@ -54,7 +50,6 @@ export default defineNuxtConfig({
     '/':        { prerender: true },
     '/about':   { prerender: true },
     '/links':   { prerender: true },
-    '/api/__sitemap__/urls': { prerender: true },
     '/api/**':  { cors: true },
   },
 
