@@ -3,15 +3,15 @@ import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Select, CloseBold } from '@element-plus/icons-vue'
 
-
-
 const pattern = ref('')
 const testText = ref('')
 const flagGlobal = ref(true)
 const flagIgnoreCase = ref(false)
 const flagMultiline = ref(false)
 
-const matchResults = ref<{ match: string; groups: (string | undefined)[]; index: number; end: number }[]>([])
+const matchResults = ref<
+  { match: string; groups: (string | undefined)[]; index: number; end: number }[]
+>([])
 const hasError = ref(false)
 const errorMsg = ref('')
 const hasRun = ref(false)
@@ -26,7 +26,7 @@ const flagStr = computed(() => {
 
 const matchCount = computed(() => matchResults.value.length)
 
-const hasGroups = computed(() => matchResults.value.some(m => m.groups.length > 1))
+const hasGroups = computed(() => matchResults.value.some((m) => m.groups.length > 1))
 
 const formattedHtml = computed(() => {
   if (!hasRun.value || matchResults.value.length === 0) return ''
@@ -67,7 +67,7 @@ function runTest() {
   try {
     const regex = new RegExp(pattern.value, flagStr.value)
     const matches = Array.from(testText.value.matchAll(regex))
-    matchResults.value = matches.map(m => ({
+    matchResults.value = matches.map((m) => ({
       match: m[0],
       groups: [...m],
       index: m.index,
@@ -136,7 +136,9 @@ function escapeHtml(text: string) {
         <div class="regex-status" :class="matchResults.length ? 'is-matched' : 'is-unmatched'">
           <el-icon v-if="matchResults.length" class="status-icon"><Select /></el-icon>
           <el-icon v-else class="status-icon"><CloseBold /></el-icon>
-          <span>{{ matchResults.length ? `找到 ${matchResults.length} 个匹配项` : '没有找到匹配项' }}</span>
+          <span>{{
+            matchResults.length ? `找到 ${matchResults.length} 个匹配项` : '没有找到匹配项'
+          }}</span>
         </div>
 
         <div v-if="matchResults.length" class="regex-section">
@@ -148,14 +150,12 @@ function escapeHtml(text: string) {
           <div class="section-title">
             匹配详情
             <el-tag size="small" effect="plain" class="count-tag">{{ matchCount }} 项</el-tag>
-            <el-tag v-if="hasGroups" size="small" type="warning" effect="plain" class="count-tag">{{ totalGroupCount }} 个捕获组</el-tag>
+            <el-tag v-if="hasGroups" size="small" type="warning" effect="plain" class="count-tag"
+              >{{ totalGroupCount }} 个捕获组</el-tag
+            >
           </div>
           <div class="regex-details">
-            <div
-              v-for="(item, idx) in matchResults"
-              :key="idx"
-              class="detail-row"
-            >
+            <div v-for="(item, idx) in matchResults" :key="idx" class="detail-row">
               <span class="detail-index">#{{ idx + 1 }}</span>
               <span class="detail-match">{{ item.match }}</span>
               <span class="detail-pos">位置 {{ item.index }}–{{ item.end }}</span>
@@ -166,18 +166,10 @@ function escapeHtml(text: string) {
         <div v-if="hasGroups && matchResults.length" class="regex-section">
           <div class="section-title">捕获组</div>
           <div class="regex-details">
-            <div
-              v-for="(item, idx) in matchResults"
-              :key="idx"
-              class="group-row"
-            >
+            <div v-for="(item, idx) in matchResults" :key="idx" class="group-row">
               <span class="group-match-label">匹配 #{{ idx + 1 }}</span>
               <div class="group-items">
-                <span
-                  v-for="(g, gi) in item.groups.slice(1)"
-                  :key="gi"
-                  class="group-item"
-                >
+                <span v-for="(g, gi) in item.groups.slice(1)" :key="gi" class="group-item">
                   <el-tag size="small" effect="plain">组 {{ gi + 1 }}</el-tag>
                   {{ g !== undefined ? g : '未定义' }}
                 </span>
@@ -194,15 +186,20 @@ function escapeHtml(text: string) {
         <div class="ref-card">
           <div class="ref-card-title">元字符</div>
           <table class="ref-table">
-            <tr v-for="item in [
-              ['.', '任意字符（除换行）'],
-              ['^', '字符串开始'],
-              ['$', '字符串结束'],
-              ['*', '0次或多次'],
-              ['+', '1次或多次'],
-              ['?', '0次或1次'],
-            ]" :key="item[0]">
-              <td><code>{{ item[0] }}</code></td>
+            <tr
+              v-for="item in [
+                ['.', '任意字符（除换行）'],
+                ['^', '字符串开始'],
+                ['$', '字符串结束'],
+                ['*', '0次或多次'],
+                ['+', '1次或多次'],
+                ['?', '0次或1次'],
+              ]"
+              :key="item[0]"
+            >
+              <td>
+                <code>{{ item[0] }}</code>
+              </td>
               <td>{{ item[1] }}</td>
             </tr>
           </table>
@@ -210,15 +207,20 @@ function escapeHtml(text: string) {
         <div class="ref-card">
           <div class="ref-card-title">字符类</div>
           <table class="ref-table">
-            <tr v-for="item in [
-              ['\\d', '数字 [0-9]'],
-              ['\\D', '非数字'],
-              ['\\w', '单词字符'],
-              ['\\W', '非单词字符'],
-              ['\\s', '空白字符'],
-              ['\\S', '非空白字符'],
-            ]" :key="item[0]">
-              <td><code>{{ item[0] }}</code></td>
+            <tr
+              v-for="item in [
+                ['\\d', '数字 [0-9]'],
+                ['\\D', '非数字'],
+                ['\\w', '单词字符'],
+                ['\\W', '非单词字符'],
+                ['\\s', '空白字符'],
+                ['\\S', '非空白字符'],
+              ]"
+              :key="item[0]"
+            >
+              <td>
+                <code>{{ item[0] }}</code>
+              </td>
               <td>{{ item[1] }}</td>
             </tr>
           </table>
@@ -226,15 +228,20 @@ function escapeHtml(text: string) {
         <div class="ref-card">
           <div class="ref-card-title">量词</div>
           <table class="ref-table">
-            <tr v-for="item in [
-              ['{n}', '恰好n次'],
-              ['{n,}', '至少n次'],
-              ['{n,m}', 'n到m次'],
-              ['(?=...)','前瞻断言'],
-              ['(?!...)','负前瞻'],
-              ['(?:...)','非捕获组'],
-            ]" :key="item[0]">
-              <td><code>{{ item[0] }}</code></td>
+            <tr
+              v-for="item in [
+                ['{n}', '恰好n次'],
+                ['{n,}', '至少n次'],
+                ['{n,m}', 'n到m次'],
+                ['(?=...)', '前瞻断言'],
+                ['(?!...)', '负前瞻'],
+                ['(?:...)', '非捕获组'],
+              ]"
+              :key="item[0]"
+            >
+              <td>
+                <code>{{ item[0] }}</code>
+              </td>
               <td>{{ item[1] }}</td>
             </tr>
           </table>

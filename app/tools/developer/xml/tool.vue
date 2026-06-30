@@ -3,7 +3,10 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus'
 
 let ace: typeof import('ace-builds') | null = null
-let xmlFormat: (xml: string, options?: { indentation?: string; collapseContent?: boolean; lineSeparator?: string }) => string | undefined
+let xmlFormat: (
+  xml: string,
+  options?: { indentation?: string; collapseContent?: boolean; lineSeparator?: string },
+) => string | undefined
 
 const STORAGE_KEY = 'dz-tools-xml'
 const editorContainer = ref<HTMLDivElement>()
@@ -55,10 +58,7 @@ function clearXml() {
 onMounted(async () => {
   if (!import.meta.client || !editorContainer.value) return
 
-  const [aceMod, xmlMod] = await Promise.all([
-    import('ace-builds'),
-    import('xml-formatter'),
-  ])
+  const [aceMod, xmlMod] = await Promise.all([import('ace-builds'), import('xml-formatter')])
   ace = aceMod
   xmlFormat = xmlMod.default || xmlMod
   const workerUrl = (await import('ace-builds/src-noconflict/worker-xml.js?url')).default

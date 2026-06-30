@@ -33,7 +33,9 @@ const props = defineProps<{
   border: 1px solid #e4e7ed;
   background: #fff;
   cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
   text-decoration: none;
 
   &:hover {

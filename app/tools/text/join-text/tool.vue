@@ -2,8 +2,6 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-
-
 const input = ref('')
 const output = ref('')
 const wrapStart = ref('"')
@@ -15,12 +13,15 @@ function join() {
     ElMessage.warning('请输入文本内容')
     return
   }
-  const lines = input.value.split('\n').map(l => l.trim()).filter(Boolean)
+  const lines = input.value
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
   if (lines.length === 0) {
     ElMessage.warning('没有有效内容')
     return
   }
-  output.value = lines.map(l => `${wrapStart.value}${l}${wrapEnd.value}`).join(joinSymbol.value)
+  output.value = lines.map((l) => `${wrapStart.value}${l}${wrapEnd.value}`).join(joinSymbol.value)
   ElMessage.success(`已连接 ${lines.length} 项`)
 }
 

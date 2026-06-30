@@ -37,15 +37,19 @@ function xsltTransform(xslt: string, source: string): string {
   processor.importStylesheet(xsltDoc)
   const resultDoc = processor.transformToDocument(xmlDoc)
 
-  return resultDoc.body.querySelector('pre')?.innerHTML
-    ?? new XMLSerializer().serializeToString(resultDoc)
+  return (
+    resultDoc.body.querySelector('pre')?.innerHTML ??
+    new XMLSerializer().serializeToString(resultDoc)
+  )
 }
 
 function formatXml() {
   try {
     const xml = sourceEditor.getValue()
     sourceEditor.setValue(formatXmlString(xml), -1)
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 function formatXmlString(xml: string): string {

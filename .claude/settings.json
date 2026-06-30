@@ -6,7 +6,8 @@
       "Bash(git add *)",
       "Bash(git stash *)",
       "Bash(xargs grep *)",
-      "mcp__codegraph__*"
+      "mcp__codegraph__*",
+      "mcp__anysearch__*"
     ],
     "ask": [
       "Bash(git commit *)"
@@ -15,8 +16,7 @@
   },
   "enabledMcpjsonServers": [
     "codegraph",
-    "anysearch",
-    "playwright"
+    "anysearch"
   ],
   "language": "简体中文"
 }

@@ -25,17 +25,32 @@ function generateKey() {
 }
 
 async function encrypt() {
-  if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
-  if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
+  if (!input.value.trim()) {
+    ElMessage.warning('请输入内容')
+    return
+  }
+  if (!key.value.trim()) {
+    ElMessage.warning('请输入密钥')
+    return
+  }
   try {
     const CryptoJS = (await import('crypto-js')).default
     let encrypted: ReturnType<typeof CryptoJS.AES.encrypt>
     switch (algorithm.value) {
-      case 'AES': encrypted = CryptoJS.AES.encrypt(input.value, key.value); break
-      case 'TripleDES': encrypted = CryptoJS.TripleDES.encrypt(input.value, key.value); break
-      case 'Rabbit': encrypted = CryptoJS.Rabbit.encrypt(input.value, key.value); break
-      case 'RC4': encrypted = CryptoJS.RC4.encrypt(input.value, key.value); break
-      default: throw new Error('不支持的算法')
+      case 'AES':
+        encrypted = CryptoJS.AES.encrypt(input.value, key.value)
+        break
+      case 'TripleDES':
+        encrypted = CryptoJS.TripleDES.encrypt(input.value, key.value)
+        break
+      case 'Rabbit':
+        encrypted = CryptoJS.Rabbit.encrypt(input.value, key.value)
+        break
+      case 'RC4':
+        encrypted = CryptoJS.RC4.encrypt(input.value, key.value)
+        break
+      default:
+        throw new Error('不支持的算法')
     }
     output.value = encrypted.toString()
   } catch (err) {
@@ -44,17 +59,32 @@ async function encrypt() {
 }
 
 async function decrypt() {
-  if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
-  if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
+  if (!input.value.trim()) {
+    ElMessage.warning('请输入内容')
+    return
+  }
+  if (!key.value.trim()) {
+    ElMessage.warning('请输入密钥')
+    return
+  }
   try {
     const CryptoJS = (await import('crypto-js')).default
     let decrypted: ReturnType<typeof CryptoJS.AES.decrypt>
     switch (algorithm.value) {
-      case 'AES': decrypted = CryptoJS.AES.decrypt(input.value, key.value); break
-      case 'TripleDES': decrypted = CryptoJS.TripleDES.decrypt(input.value, key.value); break
-      case 'Rabbit': decrypted = CryptoJS.Rabbit.decrypt(input.value, key.value); break
-      case 'RC4': decrypted = CryptoJS.RC4.decrypt(input.value, key.value); break
-      default: throw new Error('不支持的算法')
+      case 'AES':
+        decrypted = CryptoJS.AES.decrypt(input.value, key.value)
+        break
+      case 'TripleDES':
+        decrypted = CryptoJS.TripleDES.decrypt(input.value, key.value)
+        break
+      case 'Rabbit':
+        decrypted = CryptoJS.Rabbit.decrypt(input.value, key.value)
+        break
+      case 'RC4':
+        decrypted = CryptoJS.RC4.decrypt(input.value, key.value)
+        break
+      default:
+        throw new Error('不支持的算法')
     }
     output.value = decrypted.toString(CryptoJS.enc.Utf8)
   } catch (err) {
@@ -63,7 +93,10 @@ async function decrypt() {
 }
 
 function copy() {
-  if (!output.value) { ElMessage.warning('没有可复制的内容'); return }
+  if (!output.value) {
+    ElMessage.warning('没有可复制的内容')
+    return
+  }
   copyToClipboard(output.value)
 }
 

@@ -6,7 +6,13 @@ import AppFooter from '~/components/AppFooter.vue'
 <template>
   <div class="app-layout">
     <AppHeader />
-    <NuxtLoadingIndicator color="#409eff" :height="2" :duration="1000" :throttle="50" style="top: 60px" />
+    <NuxtLoadingIndicator
+      color="#409eff"
+      :height="2"
+      :duration="1000"
+      :throttle="50"
+      style="top: 60px"
+    />
     <main class="app-main">
       <slot />
     </main>

@@ -2,8 +2,6 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-
-
 const input = ref('')
 const key = ref('')
 const output = ref('')
@@ -70,8 +68,14 @@ public class LoghubOlyCryptService {
 }`
 
 async function encrypt() {
-  if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
-  if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
+  if (!input.value.trim()) {
+    ElMessage.warning('请输入内容')
+    return
+  }
+  if (!key.value.trim()) {
+    ElMessage.warning('请输入密钥')
+    return
+  }
   try {
     const CryptoJS = (await import('crypto-js')).default
     const state = CryptoJS.SHA1(key.value)
@@ -87,8 +91,14 @@ async function encrypt() {
 }
 
 async function decrypt() {
-  if (!input.value.trim()) { ElMessage.warning('请输入内容'); return }
-  if (!key.value.trim()) { ElMessage.warning('请输入密钥'); return }
+  if (!input.value.trim()) {
+    ElMessage.warning('请输入内容')
+    return
+  }
+  if (!key.value.trim()) {
+    ElMessage.warning('请输入密钥')
+    return
+  }
   try {
     const CryptoJS = (await import('crypto-js')).default
     const state = CryptoJS.SHA1(key.value)
@@ -127,7 +137,10 @@ function swap() {
 }
 
 function copy() {
-  if (!output.value) { ElMessage.warning('没有可复制的内容'); return }
+  if (!output.value) {
+    ElMessage.warning('没有可复制的内容')
+    return
+  }
   copyToClipboard(output.value)
 }
 
@@ -138,12 +151,7 @@ function copyCode() {
 
 <template>
   <div class="tool-form">
-    <el-input
-      v-model="input"
-      type="textarea"
-      :rows="5"
-      placeholder="请输入需要加密或解密的内容"
-    />
+    <el-input v-model="input" type="textarea" :rows="5" placeholder="请输入需要加密或解密的内容" />
     <div class="key-group">
       <el-input v-model="key" placeholder="请输入加密/解密密钥" />
       <el-button @click="generateKey">随机</el-button>

@@ -16,19 +16,20 @@ interface SearchItem {
 }
 
 const allSearchItems = computed(() => [
-  ...allTools.map(tool => ({
+  ...allTools.map((tool) => ({
     title: tool.meta.title,
     description: tool.meta.description,
     path: `/${tool.slug}`,
     type: 'tool' as const,
   })),
-  ...(linksData as { links: { title: string; href: string; description?: string }[] }[]).flatMap(group =>
-    group.links.map(link => ({
-      title: link.title,
-      description: link.description ?? '',
-      path: link.href,
-      type: 'link' as const,
-    })),
+  ...(linksData as { links: { title: string; href: string; description?: string }[] }[]).flatMap(
+    (group) =>
+      group.links.map((link) => ({
+        title: link.title,
+        description: link.description ?? '',
+        path: link.href,
+        type: 'link' as const,
+      })),
   ),
 ])
 
@@ -42,10 +43,11 @@ const filteredItems = computed(() => {
   const items = allSearchItems.value
   if (!Array.isArray(items)) return []
   const q = query.value.toLowerCase()
-  return items.filter(item =>
-    item.title.toLowerCase().includes(q)
-    || (item.description || '').toLowerCase().includes(q)
-    || item.path.toLowerCase().includes(q),
+  return items.filter(
+    (item) =>
+      item.title.toLowerCase().includes(q) ||
+      (item.description || '').toLowerCase().includes(q) ||
+      item.path.toLowerCase().includes(q),
   )
 })
 
@@ -54,10 +56,13 @@ watch(query, () => {
   showDropdown.value = true
 })
 
-watch(() => route.path, () => {
-  query.value = ''
-  showDropdown.value = false
-})
+watch(
+  () => route.path,
+  () => {
+    query.value = ''
+    showDropdown.value = false
+  },
+)
 
 function handleKeydown(e: KeyboardEvent) {
   if (!showDropdown.value && e.key === 'ArrowDown') {
@@ -69,7 +74,8 @@ function handleKeydown(e: KeyboardEvent) {
     activeItemIndex.value = (activeItemIndex.value + 1) % filteredItems.value.length
   } else if (e.key === 'ArrowUp') {
     e.preventDefault()
-    activeItemIndex.value = activeItemIndex.value <= 0 ? filteredItems.value.length - 1 : activeItemIndex.value - 1
+    activeItemIndex.value =
+      activeItemIndex.value <= 0 ? filteredItems.value.length - 1 : activeItemIndex.value - 1
   }
   if (e.key === 'Enter') {
     if (activeItemIndex.value >= 0 && activeItemIndex.value < filteredItems.value.length) {

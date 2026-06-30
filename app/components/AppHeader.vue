@@ -23,9 +23,12 @@ function handleSelect(path: string) {
 
 const menuOpen = ref(false)
 
-watch(() => route.path, () => {
-  menuOpen.value = false
-})
+watch(
+  () => route.path,
+  () => {
+    menuOpen.value = false
+  },
+)
 
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
@@ -38,12 +41,26 @@ function toggleMenu() {
       <strong>DZ Tools</strong>
     </div>
     <nav class="header-nav">
-      <a class="nav-link" :class="{ active: activeIndex === '/' }" @click="handleSelect('/')">{{ $t('nav.home') }}</a>
-      <a class="nav-link" :class="{ active: activeIndex === '/links' }" @click="handleSelect('/links')">{{ $t('nav.links') }}</a>
-      <a class="nav-link" :class="{ active: activeIndex === '/about' }" @click="handleSelect('/about')">{{ $t('nav.about') }}</a>
+      <a class="nav-link" :class="{ active: activeIndex === '/' }" @click="handleSelect('/')">{{
+        $t('nav.home')
+      }}</a>
+      <a
+        class="nav-link"
+        :class="{ active: activeIndex === '/links' }"
+        @click="handleSelect('/links')"
+        >{{ $t('nav.links') }}</a
+      >
+      <a
+        class="nav-link"
+        :class="{ active: activeIndex === '/about' }"
+        @click="handleSelect('/about')"
+        >{{ $t('nav.about') }}</a
+      >
     </nav>
     <div class="header-right">
-      <button v-if="useAppConfig().showLangSwitch" class="lang-switch" @click="switchLocale">{{ locale === 'zh-CN' ? 'EN' : '中' }}</button>
+      <button v-if="useAppConfig().showLangSwitch" class="lang-switch" @click="switchLocale">
+        {{ locale === 'zh-CN' ? 'EN' : '中' }}
+      </button>
       <div class="desktop-search">
         <AppSearch />
       </div>
@@ -52,9 +69,21 @@ function toggleMenu() {
       </button>
     </div>
     <div class="mobile-menu" :class="{ open: menuOpen }">
-      <a class="nav-link" :class="{ active: activeIndex === '/' }" @click="handleSelect('/')">{{ $t('nav.home') }}</a>
-      <a class="nav-link" :class="{ active: activeIndex === '/links' }" @click="handleSelect('/links')">{{ $t('nav.links') }}</a>
-      <a class="nav-link" :class="{ active: activeIndex === '/about' }" @click="handleSelect('/about')">{{ $t('nav.about') }}</a>
+      <a class="nav-link" :class="{ active: activeIndex === '/' }" @click="handleSelect('/')">{{
+        $t('nav.home')
+      }}</a>
+      <a
+        class="nav-link"
+        :class="{ active: activeIndex === '/links' }"
+        @click="handleSelect('/links')"
+        >{{ $t('nav.links') }}</a
+      >
+      <a
+        class="nav-link"
+        :class="{ active: activeIndex === '/about' }"
+        @click="handleSelect('/about')"
+        >{{ $t('nav.about') }}</a
+      >
       <div class="mobile-search">
         <AppSearch />
       </div>
@@ -103,7 +132,9 @@ function toggleMenu() {
   color: var(--el-text-color-secondary);
   cursor: pointer;
   border-radius: 4px;
-  transition: color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    background 0.15s;
 
   &:hover {
     color: var(--el-color-primary);
@@ -121,7 +152,9 @@ function toggleMenu() {
   color: var(--el-text-color-regular);
   cursor: pointer;
   border-radius: 4px;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 
   &:hover {
     color: var(--el-text-color-primary);
@@ -152,19 +185,35 @@ function toggleMenu() {
       height: 2px;
       background: var(--el-text-color-primary);
       border-radius: 1px;
-      transition: transform 0.3s, opacity 0.3s;
+      transition:
+        transform 0.3s,
+        opacity 0.3s;
       position: absolute;
       left: 0;
     }
 
-    & { top: 9px; }
-    &::before { content: ''; top: -7px; }
-    &::after { content: ''; top: 7px; }
+    & {
+      top: 9px;
+    }
+    &::before {
+      content: '';
+      top: -7px;
+    }
+    &::after {
+      content: '';
+      top: 7px;
+    }
 
     &.open {
       background: transparent;
-      &::before { transform: rotate(45deg); top: 0; }
-      &::after { transform: rotate(-45deg); top: 0; }
+      &::before {
+        transform: rotate(45deg);
+        top: 0;
+      }
+      &::after {
+        transform: rotate(-45deg);
+        top: 0;
+      }
     }
   }
 }

@@ -21,7 +21,11 @@ async function compute() {
   const CryptoJS = (await import('crypto-js')).default
   const algorithms = [
     { label: 'MD5', fn: (msg: string) => CryptoJS.MD5(msg) },
-    { label: 'MD5(16位)', fn: (msg: string) => CryptoJS.MD5(msg), format: (h: string) => h.substring(8, 24) },
+    {
+      label: 'MD5(16位)',
+      fn: (msg: string) => CryptoJS.MD5(msg),
+      format: (h: string) => h.substring(8, 24),
+    },
     { label: 'SHA-1', fn: (msg: string) => CryptoJS.SHA1(msg) },
     { label: 'SHA-224', fn: (msg: string) => CryptoJS.SHA224(msg) },
     { label: 'SHA-256', fn: (msg: string) => CryptoJS.SHA256(msg) },
@@ -35,13 +39,21 @@ async function compute() {
     let result: string
     switch (encoding.value) {
       case 'binary':
-        result = hash.toString(CryptoJS.enc.Binary).match(/.{1,8}/g)?.join(' ') || ''
+        result =
+          hash
+            .toString(CryptoJS.enc.Binary)
+            .match(/.{1,8}/g)
+            ?.join(' ') || ''
         break
       case 'base64':
         result = hash.toString(CryptoJS.enc.Base64)
         break
       case 'urlsafe-base64':
-        result = hash.toString(CryptoJS.enc.Base64).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+        result = hash
+          .toString(CryptoJS.enc.Base64)
+          .replace(/\+/g, '-')
+          .replace(/\//g, '_')
+          .replace(/=+$/, '')
         break
       default:
         result = hash.toString(CryptoJS.enc.Hex)
@@ -62,12 +74,7 @@ function copy(value: string) {
 
 <template>
   <div class="hash-tool">
-    <el-input
-      v-model="input"
-      type="textarea"
-      :rows="5"
-      :placeholder="'请输入需要计算哈希的文本'"
-    />
+    <el-input v-model="input" type="textarea" :rows="5" :placeholder="'请输入需要计算哈希的文本'" />
     <div class="tool-actions">
       <el-select v-model="encoding" style="width: 180px">
         <el-option :label="'十六进制'" value="hex" />

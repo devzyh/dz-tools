@@ -4,8 +4,6 @@ import { CronExpressionParser } from 'cron-parser'
 import { ElMessage } from 'element-plus'
 import { WarningFilled, Clock } from '@element-plus/icons-vue'
 
-
-
 const expression = ref('')
 const schedules = ref<{ date: string; day: string }[]>([])
 const error = ref('')
@@ -39,15 +37,7 @@ function parse() {
   error.value = ''
   try {
     const interval = CronExpressionParser.parse(expression.value.trim())
-    const dayNames = [
-      '周日',
-      '周一',
-      '周二',
-      '周三',
-      '周四',
-      '周五',
-      '周六',
-    ]
+    const dayNames = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
     schedules.value = interval.take(10).map((d) => {
       const date = d.toDate()
       return {
@@ -59,6 +49,11 @@ function parse() {
     error.value = (err as Error).message
     schedules.value = []
   }
+}
+
+function applyPreset(value: string) {
+  expression.value = value
+  parse()
 }
 </script>
 
@@ -76,11 +71,9 @@ function parse() {
     </div>
 
     <div class="cron-fields">
-      <span
-        v-for="field in fieldDesc"
-        :key="field.label"
-        class="field-tag"
-      >{{ field.label }}<small>{{ field.range }}</small></span>
+      <span v-for="field in fieldDesc" :key="field.label" class="field-tag"
+        >{{ field.label }}<small>{{ field.range }}</small></span
+      >
     </div>
 
     <div class="cron-presets">
@@ -89,7 +82,7 @@ function parse() {
         :key="item.value"
         class="preset-tag"
         effect="plain"
-        @click="expression = item.value; parse()"
+        @click="applyPreset(item.value)"
       >
         {{ item.label }}
       </el-tag>
@@ -105,11 +98,7 @@ function parse() {
         <el-icon><Clock /></el-icon>
         <span>最近 10 次执行时间</span>
       </div>
-      <div
-        v-for="(item, index) in schedules"
-        :key="index"
-        class="cron-row"
-      >
+      <div v-for="(item, index) in schedules" :key="index" class="cron-row">
         <span class="cron-index">{{ index + 1 }}</span>
         <span class="cron-date">{{ item.date }}</span>
         <el-tag size="small" effect="plain" class="cron-day">{{ item.day }}</el-tag>

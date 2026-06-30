@@ -92,9 +92,17 @@ function handleImgError(e: Event) {
               @load="handleImgLoad"
               @error="handleImgError"
             />
-            <svg class="link-icon-default" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              class="link-icon-default"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <circle cx="12" cy="12" r="10" />
-              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              <path
+                d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+              />
             </svg>
           </div>
           <div class="link-info">
@@ -154,7 +162,9 @@ function handleImgError(e: Event) {
   border: 1px solid #e4e7ed;
   background: #fff;
   text-decoration: none;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
 
   &:hover {
     border-color: #409eff;

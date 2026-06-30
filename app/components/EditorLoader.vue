@@ -3,11 +3,14 @@ import { Loading } from '@element-plus/icons-vue'
 
 const ready = defineModel<boolean>('ready', { default: false })
 
-withDefaults(defineProps<{
-  text?: string
-}>(), {
-  text: '正在加载编辑器...',
-})
+withDefaults(
+  defineProps<{
+    text?: string
+  }>(),
+  {
+    text: '正在加载编辑器...',
+  },
+)
 </script>
 
 <template>

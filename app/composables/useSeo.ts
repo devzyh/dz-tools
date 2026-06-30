@@ -33,10 +33,15 @@ export function usePageSeo(options: {
         innerHTML: JSON.stringify({
           '@context': 'https://schema.org',
           '@type': schemaType === 'WebApplication' ? 'WebApplication' : 'WebSite',
-          name: schemaType === 'WebApplication' ? options.title.replace(` - ${appConfig.title}`, '') : appConfig.title,
+          name:
+            schemaType === 'WebApplication'
+              ? options.title.replace(` - ${appConfig.title}`, '')
+              : appConfig.title,
           description: options.description,
           url,
-          ...(schemaType === 'WebApplication' ? { applicationCategory: 'DeveloperApplication' } : {}),
+          ...(schemaType === 'WebApplication'
+            ? { applicationCategory: 'DeveloperApplication' }
+            : {}),
         }),
       },
     ],

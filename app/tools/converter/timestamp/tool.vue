@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {ref, onMounted, onUnmounted} from 'vue'
-import {ElMessage} from 'element-plus'
-import {CopyDocument} from '@element-plus/icons-vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { CopyDocument } from '@element-plus/icons-vue'
 
 const now = ref(Math.floor(Date.now() / 1000))
 let timer: ReturnType<typeof setInterval>
@@ -86,18 +86,18 @@ function copy(val: string) {
       </div>
       <div class="ts-card-row">
         <el-input
-            v-model="tsInput"
-            :placeholder="'输入时间戳（10位秒 / 13位毫秒，自动识别）'"
-            class="ts-card-input"
-            clearable
-            @keyup.enter="tsToDate"
+          v-model="tsInput"
+          :placeholder="'输入时间戳（10位秒 / 13位毫秒，自动识别）'"
+          class="ts-card-input"
+          clearable
+          @keyup.enter="tsToDate"
         />
         <el-button type="primary" @click="tsToDate">转换</el-button>
       </div>
       <div v-if="tsResult" class="ts-card-output" @click="copy(tsResult)">
         <span class="ts-card-output-text">{{ tsResult }}</span>
         <el-icon class="ts-card-output-copy">
-          <CopyDocument/>
+          <CopyDocument />
         </el-icon>
       </div>
     </div>
@@ -108,14 +108,14 @@ function copy(val: string) {
       </div>
       <div class="ts-card-row">
         <el-date-picker
-            v-model="dateInput"
-            type="datetime"
-            :placeholder="'选择或输入日期时间'"
-            class="ts-card-picker"
-            format="YYYY-MM-DD HH:mm:ss"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            clearable
-            @change="dateToTs"
+          v-model="dateInput"
+          type="datetime"
+          :placeholder="'选择或输入日期时间'"
+          class="ts-card-picker"
+          format="YYYY-MM-DD HH:mm:ss"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          clearable
+          @change="dateToTs"
         />
         <el-button type="primary" @click="dateToTs">转换</el-button>
       </div>
@@ -124,14 +124,14 @@ function copy(val: string) {
           <span class="ts-card-output-tag">秒(s)</span>
           <span class="ts-card-output-text">{{ dateResult }}</span>
           <el-icon class="ts-card-output-copy">
-            <CopyDocument/>
+            <CopyDocument />
           </el-icon>
         </div>
         <div class="ts-card-output" @click="copy(dateResultMs)">
           <span class="ts-card-output-tag">毫秒(ms)</span>
           <span class="ts-card-output-text">{{ dateResultMs }}</span>
           <el-icon class="ts-card-output-copy">
-            <CopyDocument/>
+            <CopyDocument />
           </el-icon>
         </div>
       </div>
@@ -150,7 +150,11 @@ function copy(val: string) {
 
 .ts-current {
   padding: 20px 24px;
-  background: linear-gradient(135deg, var(--el-color-primary-light-9), var(--el-color-primary-light-7));
+  background: linear-gradient(
+    135deg,
+    var(--el-color-primary-light-9),
+    var(--el-color-primary-light-7)
+  );
   border: 1px solid var(--el-color-primary-light-5);
   border-radius: 10px;
   cursor: pointer;

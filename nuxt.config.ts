@@ -9,19 +9,13 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: [
-    '@nuxtjs/i18n',
-    '@nuxtjs/sitemap',
-  ],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/sitemap'],
 
   site: {
     url: 'https://devzyh.cn',
   },
 
-  css: [
-    'element-plus/dist/index.css',
-    '~/styles/index.scss',
-  ],
+  css: ['element-plus/dist/index.css', '~/styles/index.scss'],
 
   i18n: {
     strategy: 'no_prefix',
@@ -47,10 +41,10 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/':        { prerender: true },
-    '/about':   { prerender: true },
-    '/links':   { prerender: true },
-    '/api/**':  { cors: true },
+    '/': { prerender: true },
+    '/about': { prerender: true },
+    '/links': { prerender: true },
+    '/api/**': { cors: true },
   },
 
   ssr: true,

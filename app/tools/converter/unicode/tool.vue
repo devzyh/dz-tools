@@ -7,7 +7,10 @@ const codeBase = ref<'hex' | 'dec' | 'oct' | 'binary'>('hex')
 const codeInput = ref('')
 
 function parseCodeInput(raw: string, base: string): number[] {
-  const tokens = raw.trim().split(/[\s,;]+/).filter(Boolean)
+  const tokens = raw
+    .trim()
+    .split(/[\s,;]+/)
+    .filter(Boolean)
   const results: number[] = []
   for (const token of tokens) {
     let normalized = token
@@ -21,35 +24,56 @@ function parseCodeInput(raw: string, base: string): number[] {
       else if (/^0x/i.test(token)) normalized = token
     }
     const num = Number(normalized)
-    if (!isNaN(num) && num >= 0 && num <= 0x10FFFF) results.push(num)
+    if (!isNaN(num) && num >= 0 && num <= 0x10ffff) results.push(num)
   }
   return results
 }
 
 function encodeUtf8(cp: number): string {
   const bytes: number[] = []
-  if (cp <= 0x7F) bytes.push(cp)
-  else if (cp <= 0x7FF) { bytes.push(0xC0 | (cp >> 6), 0x80 | (cp & 0x3F)) }
-  else if (cp <= 0xFFFF) { bytes.push(0xE0 | (cp >> 12), 0x80 | ((cp >> 6) & 0x3F), 0x80 | (cp & 0x3F)) }
-  else { bytes.push(0xF0 | (cp >> 18), 0x80 | ((cp >> 12) & 0x3F), 0x80 | ((cp >> 6) & 0x3F), 0x80 | (cp & 0x3F)) }
-  return bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ')
+  if (cp <= 0x7f) bytes.push(cp)
+  else if (cp <= 0x7ff) {
+    bytes.push(0xc0 | (cp >> 6), 0x80 | (cp & 0x3f))
+  } else if (cp <= 0xffff) {
+    bytes.push(0xe0 | (cp >> 12), 0x80 | ((cp >> 6) & 0x3f), 0x80 | (cp & 0x3f))
+  } else {
+    bytes.push(
+      0xf0 | (cp >> 18),
+      0x80 | ((cp >> 12) & 0x3f),
+      0x80 | ((cp >> 6) & 0x3f),
+      0x80 | (cp & 0x3f),
+    )
+  }
+  return bytes.map((b) => b.toString(16).toUpperCase().padStart(2, '0')).join(' ')
 }
 
 function getCharName(cp: number): string {
   const ranges: [number, number, string][] = [
-    [0x00, 0x1F, '控制字符'], [0x20, 0x20, '空格'],
-    [0x30, 0x39, '数字'], [0x41, 0x5A, '大写字母'],
-    [0x61, 0x7A, '小写字母'], [0x7F, 0x9F, '控制字符'],
-    [0xA0, 0xBF, '拉丁扩展'], [0x3000, 0x303F, 'CJK 标点'],
-    [0x3400, 0x4DBF, 'CJK 扩展 A'], [0x4E00, 0x9FFF, 'CJK 汉字'],
-    [0xF900, 0xFAFF, 'CJK 兼容汉字'], [0xFF00, 0xFFEF, '全角字符'],
-    [0xFE30, 0xFE4F, 'CJK 兼容形式'], [0x2000, 0x206F, '通用标点'],
-    [0xAC00, 0xD7AF, '韩文音节'], [0x3040, 0x309F, '平假名'],
-    [0x30A0, 0x30FF, '片假名'], [0x0400, 0x04FF, '西里尔字母'],
-    [0x0600, 0x06FF, '阿拉伯字母'],
-    [0x1F300, 0x1F5FF, '象形文字'], [0x1F600, 0x1F64F, '表情符号'],
-    [0x1F680, 0x1F6FF, '交通地图'], [0x1F900, 0x1F9FF, '补充符号'],
-    [0x2600, 0x26FF, '杂项符号'], [0x2700, 0x27BF, '装饰符号'],
+    [0x00, 0x1f, '控制字符'],
+    [0x20, 0x20, '空格'],
+    [0x30, 0x39, '数字'],
+    [0x41, 0x5a, '大写字母'],
+    [0x61, 0x7a, '小写字母'],
+    [0x7f, 0x9f, '控制字符'],
+    [0xa0, 0xbf, '拉丁扩展'],
+    [0x3000, 0x303f, 'CJK 标点'],
+    [0x3400, 0x4dbf, 'CJK 扩展 A'],
+    [0x4e00, 0x9fff, 'CJK 汉字'],
+    [0xf900, 0xfaff, 'CJK 兼容汉字'],
+    [0xff00, 0xffef, '全角字符'],
+    [0xfe30, 0xfe4f, 'CJK 兼容形式'],
+    [0x2000, 0x206f, '通用标点'],
+    [0xac00, 0xd7af, '韩文音节'],
+    [0x3040, 0x309f, '平假名'],
+    [0x30a0, 0x30ff, '片假名'],
+    [0x0400, 0x04ff, '西里尔字母'],
+    [0x0600, 0x06ff, '阿拉伯字母'],
+    [0x1f300, 0x1f5ff, '象形文字'],
+    [0x1f600, 0x1f64f, '表情符号'],
+    [0x1f680, 0x1f6ff, '交通地图'],
+    [0x1f900, 0x1f9ff, '补充符号'],
+    [0x2600, 0x26ff, '杂项符号'],
+    [0x2700, 0x27bf, '装饰符号'],
   ]
   for (const [start, end, name] of ranges) {
     if (cp >= start && cp <= end) return name
@@ -79,7 +103,6 @@ const codeToCharResults = computed(() => {
     name: getCharName(cp),
   }))
 })
-
 </script>
 
 <template>
@@ -95,14 +118,12 @@ const codeToCharResults = computed(() => {
             resize="none"
           />
           <div v-if="charToCodeResults.length" class="char-grid">
-            <div
-              v-for="(item, idx) in charToCodeResults"
-              :key="idx"
-              class="char-card"
-            >
+            <div v-for="(item, idx) in charToCodeResults" :key="idx" class="char-card">
               <div class="char-display">{{ item.char === ' ' ? '␣' : item.char }}</div>
               <div class="char-info">
-                <span class="char-unicode" @click="copyToClipboard(item.unicode)">{{ item.unicode }}</span>
+                <span class="char-unicode" @click="copyToClipboard(item.unicode)">{{
+                  item.unicode
+                }}</span>
                 <span class="char-name">{{ item.name }}</span>
               </div>
               <div class="char-detail">
@@ -127,19 +148,21 @@ const codeToCharResults = computed(() => {
           <el-input
             v-model="codeInput"
             type="textarea"
-            :placeholder="codeBase === 'hex' ? '输入编码，如 4E2D U+4E2D \\u4E2D，空格分隔' : `输入${{ hex: '十六进制', dec: '十进制', oct: '八进制', binary: '二进制' }[codeBase]}编码，空格分隔`"
+            :placeholder="
+              codeBase === 'hex'
+                ? '输入编码，如 4E2D U+4E2D \\u4E2D，空格分隔'
+                : `输入${{ hex: '十六进制', dec: '十进制', oct: '八进制', binary: '二进制' }[codeBase]}编码，空格分隔`
+            "
             :autosize="{ minRows: 3, maxRows: 8 }"
             resize="none"
           />
           <div v-if="codeToCharResults.length" class="char-grid">
-            <div
-              v-for="(item, idx) in codeToCharResults"
-              :key="idx"
-              class="char-card"
-            >
+            <div v-for="(item, idx) in codeToCharResults" :key="idx" class="char-card">
               <div class="char-display">{{ item.char === ' ' ? '␣' : item.char }}</div>
               <div class="char-info">
-                <span class="char-unicode" @click="copyToClipboard(item.unicode)">{{ item.unicode }}</span>
+                <span class="char-unicode" @click="copyToClipboard(item.unicode)">{{
+                  item.unicode
+                }}</span>
                 <span class="char-name">{{ item.name }}</span>
               </div>
             </div>

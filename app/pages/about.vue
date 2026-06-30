@@ -29,8 +29,8 @@ usePageSeo({
       <div class="about-card">
         <h2 class="section-title">关于我</h2>
         <p class="section-text">
-          Yuhang || devzyh<br>
-          ZGV2enloQG91dGxvb2suY29t<br>
+          Yuhang || devzyh<br />
+          ZGV2enloQG91dGxvb2suY29t<br />
           用代码解决实际问题，而非创造问题；用数据验证直觉，而非替代直觉。
         </p>
       </div>

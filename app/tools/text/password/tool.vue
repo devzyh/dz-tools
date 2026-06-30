@@ -2,12 +2,39 @@
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 
-
-
 const NUMBER_ARR = '0123456789'.split('')
 const LOWER_ARR = 'abcdefghijklmnopqrstuvwxyz'.split('')
 const UPPER_ARR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-const SYMBOL_ARR = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', ']', '_', '{', '|', '}']
+const SYMBOL_ARR = [
+  '!',
+  '"',
+  '#',
+  '$',
+  '%',
+  '&',
+  "'",
+  '(',
+  ')',
+  '*',
+  '+',
+  ',',
+  '-',
+  '.',
+  '/',
+  ':',
+  ';',
+  '<',
+  '=',
+  '>',
+  '?',
+  '@',
+  '[',
+  ']',
+  '_',
+  '{',
+  '|',
+  '}',
+]
 
 const useNumber = ref(true)
 const useLower = ref(true)
@@ -30,7 +57,7 @@ const charPool = computed(() => {
   if (includeChars.value) pool.push(...includeChars.value.split(''))
   if (excludeChars.value) {
     const excludeSet = new Set(excludeChars.value.split(''))
-    pool = pool.filter(c => !excludeSet.has(c))
+    pool = pool.filter((c) => !excludeSet.has(c))
   }
   return pool
 })

@@ -10,7 +10,11 @@ useSeoMeta({
 
 <template>
   <div class="error-page">
-    <el-result icon="warning" :title="error.statusCode?.toString()" :sub-title="error.message || '页面不存在'">
+    <el-result
+      icon="warning"
+      :title="error.statusCode?.toString()"
+      :sub-title="error.message || '页面不存在'"
+    >
       <template #extra>
         <el-button type="primary" @click="clearError({ redirect: '/' })">返回首页</el-button>
       </template>

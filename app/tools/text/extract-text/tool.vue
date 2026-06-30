@@ -2,8 +2,6 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-
-
 const input = ref('')
 const output = ref('')
 const startSymbol = ref('[')
@@ -32,7 +30,9 @@ function extract() {
     return
   }
 
-  let results = matches.map(m => m.slice(startSymbol.value.length, m.length - endSymbol.value.length))
+  let results = matches.map((m) =>
+    m.slice(startSymbol.value.length, m.length - endSymbol.value.length),
+  )
 
   if (enableDedup.value) {
     results = [...new Set(results)]

@@ -8,6 +8,10 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "create:tool": "cross-env MSYS_NO_PATHCONV=1 tsx scripts/create-tool.ts",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "fmt": "oxfmt --write .",
+    "fmt:check": "oxfmt --check .",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
@@ -35,6 +39,8 @@
     "@types/he": "^1.2.3",
     "@types/js-yaml": "^4.0.9",
     "cross-env": "^10.1.0",
+    "oxfmt": "^0.56.0",
+    "oxlint": "^1.71.0",
     "tsx": "^4.21.0"
   }
 }

@@ -46,7 +46,9 @@ function transformJson() {
 
 function escapeJson() {
   try {
-    let text = getEditor().getText().replace(/[\r\n]/g, '')
+    let text = getEditor()
+      .getText()
+      .replace(/[\r\n]/g, '')
     text = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
     getEditor().setText(text)
   } catch {
@@ -106,7 +108,11 @@ onMounted(async () => {
   const saved = localStorage.getItem(STORAGE_KEY)
   if (saved) {
     editor.setText(saved)
-    try { editor.format() } catch { /* saved content may not be valid JSON */ }
+    try {
+      editor.format()
+    } catch {
+      /* saved content may not be valid JSON */
+    }
   }
 
   editorReady.value = true

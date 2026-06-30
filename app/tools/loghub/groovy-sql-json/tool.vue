@@ -2,8 +2,6 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-
-
 const input = ref('')
 const activeTab = ref('sql')
 const sqlOutput = ref('')
@@ -71,28 +69,47 @@ function parseGroovy(code: string) {
 
     // 跳过非字段行：class声明、import、static、方法、空行、注解、闭包、子类等
     const firstWord = line.split(/[\s(]/)[0]
-    const keywords = new Set(['if','else','for','while','switch','case','break','continue','return','throw','new','try','catch','finally','assert','println','super','this'])
+    const keywords = new Set([
+      'if',
+      'else',
+      'for',
+      'while',
+      'switch',
+      'case',
+      'break',
+      'continue',
+      'return',
+      'throw',
+      'new',
+      'try',
+      'catch',
+      'finally',
+      'assert',
+      'println',
+      'super',
+      'this',
+    ])
     if (
-      !line
-      || keywords.has(firstWord)
-      || line.startsWith('import ')
-      || line.startsWith('package ')
-      || line.startsWith('class ')
-      || line.startsWith('static ')
-      || line.startsWith('@')
-      || line.startsWith('//')
-      || line.startsWith('/*')
-      || line.startsWith('*')
-      || line.includes('implements ')
-      || line.includes('extends ')
-      || line.startsWith('public ')
-      || line.startsWith('private ')
-      || line.startsWith('protected ')
-      || line.startsWith('def ')
-      || line.includes('()')
-      || line.includes('() {') === false && line.includes('{') && !line.includes('=')
-      || line === '}'
-      || line === '})'
+      !line ||
+      keywords.has(firstWord) ||
+      line.startsWith('import ') ||
+      line.startsWith('package ') ||
+      line.startsWith('class ') ||
+      line.startsWith('static ') ||
+      line.startsWith('@') ||
+      line.startsWith('//') ||
+      line.startsWith('/*') ||
+      line.startsWith('*') ||
+      line.includes('implements ') ||
+      line.includes('extends ') ||
+      line.startsWith('public ') ||
+      line.startsWith('private ') ||
+      line.startsWith('protected ') ||
+      line.startsWith('def ') ||
+      line.includes('()') ||
+      (line.includes('() {') === false && line.includes('{') && !line.includes('=')) ||
+      line === '}' ||
+      line === '})'
     ) {
       continue
     }
@@ -117,7 +134,7 @@ function parseGroovy(code: string) {
 
 function dedupFields(fields: GroovyField[]): GroovyField[] {
   const seen = new Set<string>()
-  return fields.filter(f => {
+  return fields.filter((f) => {
     if (seen.has(f.name)) return false
     seen.add(f.name)
     return true
@@ -126,24 +143,27 @@ function dedupFields(fields: GroovyField[]): GroovyField[] {
 
 function groovyTypeToSql(type: string, name: string, comment: string, isIdColumn: boolean): string {
   const auditColumns: Record<string, string> = {
-    'created': "  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP",
-    'createdBy': "  `createdBy` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL",
-    'lastUpdated': "  `lastUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
-    'lastUpdatedBy': "  `lastUpdatedBy` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL",
+    created: '  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP',
+    createdBy:
+      '  `createdBy` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL',
+    lastUpdated:
+      '  `lastUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+    lastUpdatedBy:
+      '  `lastUpdatedBy` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL',
   }
   if (auditColumns[name]) return auditColumns[name]
 
   const mapping: Record<string, string> = {
-    'Long': 'BIGINT',
-    'BigDecimal': 'DECIMAL(18,6)',
-    'Boolean': 'TINYINT(1)',
-    'Date': 'DATETIME',
-    'LocalDateTime': 'DATETIME',
-    'LocalDate': 'DATE',
-    'Double': 'DOUBLE',
-    'Float': 'FLOAT',
-    'Short': 'SMALLINT',
-    'Byte': 'TINYINT',
+    Long: 'BIGINT',
+    BigDecimal: 'DECIMAL(18,6)',
+    Boolean: 'TINYINT(1)',
+    Date: 'DATETIME',
+    LocalDateTime: 'DATETIME',
+    LocalDate: 'DATE',
+    Double: 'DOUBLE',
+    Float: 'FLOAT',
+    Short: 'SMALLINT',
+    Byte: 'TINYINT',
   }
 
   let sqlType: string
@@ -186,18 +206,18 @@ function generateSql(defineInfo: DefineInfo | null, fields: GroovyField[]): stri
 
 function groovyTypeToJsonType(type: string): string {
   const mapping: Record<string, string> = {
-    'Long': 'integer',
-    'Integer': 'integer',
-    'BigDecimal': 'number',
-    'Boolean': 'integer',
-    'Double': 'number',
-    'Float': 'number',
-    'Short': 'integer',
-    'Byte': 'integer',
-    'Date': 'datetime',
-    'LocalDateTime': 'datetime',
-    'LocalDate': 'datetime',
-    'String': 'string',
+    Long: 'integer',
+    Integer: 'integer',
+    BigDecimal: 'number',
+    Boolean: 'integer',
+    Double: 'number',
+    Float: 'number',
+    Short: 'integer',
+    Byte: 'integer',
+    Date: 'datetime',
+    LocalDateTime: 'datetime',
+    LocalDate: 'datetime',
+    String: 'string',
   }
   return mapping[type] || 'string'
 }
@@ -207,24 +227,29 @@ function generateJson(defineInfo: DefineInfo | null, fields: GroovyField[]): str
     return `// 未找到表定义`
   }
 
-  const codeField = fields.find(f => f.name.toLowerCase().includes('code'))
-  const nameField = fields.find(f => f.name.toLowerCase() === 'name' || f.name.toLowerCase().includes('name'))
+  const codeField = fields.find((f) => f.name.toLowerCase().includes('code'))
+  const nameField = fields.find(
+    (f) => f.name.toLowerCase() === 'name' || f.name.toLowerCase().includes('name'),
+  )
 
   const json: Record<string, any> = {
     autoIncrementField: defineInfo.autoIncrement ? defineInfo.idColumn : undefined,
     code: defineInfo.table,
     idColumnName: defineInfo.idColumn,
     idAttr: codeField?.name || defineInfo.idColumn,
-    labelAttr: codeField && nameField ? `${codeField.name},${nameField.name}` : (nameField?.name || defineInfo.idColumn),
+    labelAttr:
+      codeField && nameField
+        ? `${codeField.name},${nameField.name}`
+        : nameField?.name || defineInfo.idColumn,
     logHistory: defineInfo.logHistory,
     service: defineInfo.table,
     tableName: defineInfo.table,
   }
 
   // 移除 undefined 值
-  Object.keys(json).forEach(k => json[k] === undefined && delete json[k])
+  Object.keys(json).forEach((k) => json[k] === undefined && delete json[k])
 
-  const fieldsJson = fields.map(f => {
+  const fieldsJson = fields.map((f) => {
     const fieldObj: Record<string, string> = {
       field: f.name,
       id: f.name,
@@ -284,12 +309,7 @@ function clear() {
 
 <template>
   <div class="tool-form">
-    <el-input
-      v-model="input"
-      type="textarea"
-      :rows="12"
-      placeholder="请粘贴 Groovy 实体类代码"
-    />
+    <el-input v-model="input" type="textarea" :rows="12" placeholder="请粘贴 Groovy 实体类代码" />
     <div class="tool-actions">
       <el-button type="primary" @click="convert">转换</el-button>
       <el-button @click="copySql">复制SQL</el-button>
@@ -298,20 +318,10 @@ function clear() {
     </div>
     <el-tabs v-if="sqlOutput || jsonOutput" v-model="activeTab">
       <el-tab-pane label="MySQL 建表语句" name="sql">
-        <el-input
-          v-model="sqlOutput"
-          type="textarea"
-          :rows="16"
-          readonly
-        />
+        <el-input v-model="sqlOutput" type="textarea" :rows="16" readonly />
       </el-tab-pane>
       <el-tab-pane label="界面 JSON" name="json">
-        <el-input
-          v-model="jsonOutput"
-          type="textarea"
-          :rows="16"
-          readonly
-        />
+        <el-input v-model="jsonOutput" type="textarea" :rows="16" readonly />
       </el-tab-pane>
     </el-tabs>
   </div>

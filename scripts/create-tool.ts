@@ -12,7 +12,9 @@ function question(prompt: string): Promise<string> {
   return new Promise((resolve) => rl.question(prompt, resolve))
 }
 
-function close() { rl.close() }
+function close() {
+  rl.close()
+}
 
 function metaTemplate(title: string, description: string, sort: number) {
   return `import { defineToolMeta } from '~/tools/types'
@@ -72,36 +74,54 @@ function nextSort(groupDir: string): number {
 
 async function main() {
   const name = (await question('工具目录名 (kebab-case, e.g. json-editor): ')).trim()
-  if (!name) { console.error('工具名不能为空'); close(); process.exit(1) }
+  if (!name) {
+    console.error('工具名不能为空')
+    close()
+    process.exit(1)
+  }
 
   const group = (await question('分组目录名 (e.g. developer): ')).trim()
-  if (!group) { console.error('必须指定分组'); close(); process.exit(1) }
+  if (!group) {
+    console.error('必须指定分组')
+    close()
+    process.exit(1)
+  }
 
   const groupDir = resolve(toolsDir, group)
 
   if (!existsSync(groupDir)) {
-    const create = (await question(`分组 "${group}" 不存在，是否创建？(Y/n): `)).trim().toLowerCase() !== 'n'
+    const create =
+      (await question(`分组 "${group}" 不存在，是否创建？(Y/n): `)).trim().toLowerCase() !== 'n'
     if (create) {
       const groupTitle = (await question(`分组显示标题 (回车默认 "${group}"): `)).trim() || group
       mkdirSync(groupDir, { recursive: true })
-      writeFileSync(resolve(groupDir, 'meta.ts'),
-        `import { defineGroupMeta } from '~/tools/types'\n\nexport default defineGroupMeta({\n  title: '${groupTitle}',\n  description: null,\n  sort: 1,\n})\n`
+      writeFileSync(
+        resolve(groupDir, 'meta.ts'),
+        `import { defineGroupMeta } from '~/tools/types'\n\nexport default defineGroupMeta({\n  title: '${groupTitle}',\n  description: null,\n  sort: 1,\n})\n`,
       )
       console.log(`已创建分组 ${group}/`)
     } else {
-      console.error('操作取消'); close(); process.exit(1)
+      console.error('操作取消')
+      close()
+      process.exit(1)
     }
   }
 
   const title = (await question('工具标题 (中文): ')).trim()
-  if (!title) { console.error('工具标题不能为空'); close(); process.exit(1) }
+  if (!title) {
+    console.error('工具标题不能为空')
+    close()
+    process.exit(1)
+  }
   const description = (await question('工具描述 (中文): ')).trim()
 
   const sort = nextSort(groupDir)
   const toolDir = resolve(groupDir, name)
 
   if (existsSync(toolDir)) {
-    console.error(`工具已存在: ${toolDir}`); close(); process.exit(1)
+    console.error(`工具已存在: ${toolDir}`)
+    close()
+    process.exit(1)
   }
 
   mkdirSync(toolDir, { recursive: true })
@@ -112,4 +132,8 @@ async function main() {
   close()
 }
 
-main().catch(e => { console.error(e); close(); process.exit(1) })
+main().catch((e) => {
+  console.error(e)
+  close()
+  process.exit(1)
+})

@@ -3,8 +3,6 @@ import { ref } from 'vue'
 import jsYaml from 'js-yaml'
 import { ElMessage } from 'element-plus'
 
-
-
 const input = ref('')
 const output = ref('')
 type Format = 'json' | 'xml' | 'yaml'
@@ -60,7 +58,10 @@ function xmlToJson(xml: string): any {
 }
 
 function xmlNodeToJson(node: Element): any {
-  if (!node.children.length || (node.children.length === 1 && node.children[0].nodeName === '#text' && !node.attributes.length)) {
+  if (
+    !node.children.length ||
+    (node.children.length === 1 && node.children[0].nodeName === '#text' && !node.attributes.length)
+  ) {
     return node.textContent?.trim() ?? ''
   }
   if (node.children.length === 1 && node.children[0].nodeName === '#text') {
@@ -105,7 +106,11 @@ function jsonToXml(obj: any, indent = ''): string {
 }
 
 function escapeXml(str: string): string {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
 }
 
 function swap() {
@@ -117,7 +122,10 @@ function swap() {
 }
 
 function copy() {
-  if (!output.value) { ElMessage.warning('没有可复制的内容'); return }
+  if (!output.value) {
+    ElMessage.warning('没有可复制的内容')
+    return
+  }
   copyToClipboard(output.value)
 }
 </script>

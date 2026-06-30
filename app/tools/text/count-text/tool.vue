@@ -45,7 +45,7 @@ const lineCount = computed(() => {
 
 const paragraphCount = computed(() => {
   if (!input.value.trim()) return 0
-  return input.value.split(/\n\s*\n/).filter(p => p.trim()).length
+  return input.value.split(/\n\s*\n/).filter((p) => p.trim()).length
 })
 </script>
 
