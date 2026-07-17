@@ -6,6 +6,20 @@ export default defineNuxtConfig({
     buildAssetsDir: 'assets',
     head: {
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+      script: [
+        {
+          src: 'https://www.googletagmanager.com/gtag/js?id=G-J80TRKBMB0',
+          async: true,
+          tagPosition: 'bodyClose',
+        },
+        {
+          innerHTML: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-J80TRKBMB0');`,
+          tagPosition: 'bodyClose',
+        },
+      ],
     },
   },
 
