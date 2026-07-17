@@ -8,6 +8,16 @@ const appConfig = useAppConfig()
     <p class="footer-text">
       &copy; {{ new Date().getFullYear() }} {{ appConfig.title }}. {{ $t('footer.copyright') }}.
     </p>
+    <p class="footer-text">
+      <a
+        class="footer-link"
+        href="https://beian.miit.gov.cn"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        鄂ICP备2025110168号
+      </a>
+    </p>
   </footer>
 </template>
 
@@ -25,5 +35,15 @@ const appConfig = useAppConfig()
 .footer-text {
   color: #909399;
   font-size: 14px;
+}
+
+.footer-link {
+  color: #909399;
+  font-size: 14px;
+  text-decoration: none;
+
+  &:hover {
+    color: #606266;
+  }
 }
 </style>
