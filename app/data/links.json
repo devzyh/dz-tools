@@ -136,6 +136,12 @@
         "href": "https://www.racent.com/ssl-check",
         "description": "锐成信息提供的SSL状态检测工具",
         "icon": "https://www.racent.com/static/favicon.ico"
+      },
+      {
+        "title": "LinuxMirrors",
+        "href": "https://linuxmirrors.cn",
+        "description": "一键脚本使换源更简单",
+        "icon": "https://linuxmirrors.cn/assets/favicon.ico"
       }
     ]
   },
