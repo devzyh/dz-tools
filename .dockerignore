@@ -11,7 +11,6 @@ dist
 .git
 .idea
 .fleet
-.codegraph
 
 # 文档(构建不需要)
 docs
@@ -23,10 +22,7 @@ README.md
 
 # AI 与工具
 .claude
-.superpowers
-.playwright
-.playwright-cli
-.playwright-mcp
+.codegraph
 
 # 杂项
 *.png
