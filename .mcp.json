@@ -12,17 +12,6 @@
       "env": {
         "CODEGRAPH_NO_DAEMON": "1"
       }
-    },
-    "anysearch": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://api.anysearch.com/mcp",
-        "--header",
-        "Authorization: Bearer ${env:ANYSEARCH_TOKEN}"
-      ]
     }
   }
 }
