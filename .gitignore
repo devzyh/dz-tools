@@ -25,10 +25,8 @@ logs
 !.env.example
 
 # AI Agent
-.claude/*
-!.claude/skills/
-!.claude/agents/
-!.claude/settings.json
-.env.local
-.env.*.local
+docs/
+.claude/
 .codegraph/
+.playwright/
+.playwright-cli/

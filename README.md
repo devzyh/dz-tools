@@ -27,7 +27,7 @@ app/
 │   └── [...slug].vue    # 动态路由（工具页面）
 ├── plugins/
 │   └── element-plus.ts  # Element Plus 插件
-├── tools/               # 工具实现（18 个工具，8 个分组）
+├── tools/               # 工具实现（21 个工具，6 个分组）
 │   ├── registry.ts      # 自动注册路由
 │   ├── types.ts         # 类型定义
 │   ├── converter/       # 转换器（base64、convert、timestamp、unicode）
@@ -35,13 +35,10 @@ app/
 │   ├── developer/       # 开发工具（cron、json、regex、xml、xslt）
 │   ├── loghub/          # 通天晓（groovy-sql-json、oly-crypt）
 │   ├── text/            # 文本处理（count-text、diff、extract-text、join-text、password）
-│   ├── web/             # Web 工具（html、myip）
-│   └── template/        # 工具模板
+│   └── web/             # Web 工具（html、myip）
 ├── app.vue              # 根组件
 ├── app.config.ts        # 应用配置
 └── error.vue            # 错误页面
-scripts/
-└── create-tool.ts       # 工具脚手架
 server/
 ├── api/__sitemap__/urls.ts  # Sitemap API
 └── routes/ip.ts             # IP 查询接口
