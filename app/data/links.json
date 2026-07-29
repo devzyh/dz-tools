@@ -114,12 +114,6 @@
         "icon": "https://gitee.com/favicon.ico"
       },
       {
-        "title": "httpbin.org",
-        "href": "https://httpbin.org",
-        "description": "一个简单的HTPP请求响应网站",
-        "icon": "https://httpbin.org/static/favicon.ico"
-      },
-      {
         "title": "OHTTPS",
         "href": "https://ohttps.com",
         "description": "免费SSL证书、自动化更新、部署、监控",
@@ -142,6 +136,12 @@
         "href": "https://linuxmirrors.cn",
         "description": "一键脚本使换源更简单",
         "icon": "https://linuxmirrors.cn/assets/favicon.ico"
+      },
+      {
+        "title": "InfraFree.dev",
+        "href": "https://infrafree.dev",
+        "description": "免费云服务额度对比平台",
+        "icon": "https://infrafree.dev/favicon.ico"
       }
     ]
   },

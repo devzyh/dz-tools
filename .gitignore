@@ -25,7 +25,6 @@ logs
 !.env.example
 
 # AI Agent
-docs/
 .claude/
 .codegraph/
 .playwright/
