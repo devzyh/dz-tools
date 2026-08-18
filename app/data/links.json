@@ -69,6 +69,12 @@
         "href": "https://huggingface.co",
         "description": "人工智能社区构建未来",
         "icon": "https://huggingface.co/front/assets/huggingface_logo-noborder.svg"
+      },
+      {
+        "title": "Coding Plan 对比",
+        "href": "https://codingplan.fyi",
+        "description": "AI Coding Plan 平台评测与对比",
+        "icon": "https://codingplan.fyi/favicon.ico"
       }
     ]
   },
