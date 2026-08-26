@@ -47,6 +47,12 @@ gtag('config', 'G-J80TRKBMB0');`,
   },
 
   nitro: {
+    // element-plus 的 @popperjs/core 是 npm alias（实际包 @sxzz/popperjs-es），
+    // Nitro 复制 externals 时无法按别名跟踪，导致运行时 SSR 报 ERR_MODULE_NOT_FOUND。
+    // 已将 alias 包加为项目直接依赖提升到顶层 node_modules，此处再将其内联进 server bundle
+    externals: {
+      inline: ['element-plus', '@popperjs/core'],
+    },
     prerender: {
       crawlLinks: true,
       routes: ['/', '/about', '/links'],
