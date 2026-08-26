@@ -59,15 +59,23 @@ function clearXml() {
 onMounted(async () => {
   if (!import.meta.client || !editorContainer.value) return
 
-  const [aceMod, xmlMod] = await Promise.all([import('ace-builds'), import('xml-formatter')])
+  // 第一批并行加载:ace 主包、xml-formatter、worker/searchbox(仅取 URL)
+  const [aceMod, xmlMod, workerUrl, searchboxUrl] = await Promise.all([
+    import('ace-builds/src-min-noconflict/ace.js'),
+    import('xml-formatter'),
+    import('ace-builds/src-min-noconflict/worker-xml.js?url'),
+    import('ace-builds/src-min-noconflict/ext-searchbox.js?url'),
+  ])
   ace = aceMod
   xmlFormat = xmlMod.default || xmlMod
-  const workerUrl = (await import('ace-builds/src-noconflict/worker-xml.js?url')).default
-  ace.config.setModuleUrl('ace/mode/xml_worker', workerUrl)
-  const searchboxUrl = (await import('ace-builds/src-noconflict/ext-searchbox.js?url')).default
-  ace.config.setModuleUrl('ace/ext/searchbox', searchboxUrl)
-  await import('ace-builds/src-noconflict/mode-xml')
-  await import('ace-builds/src-noconflict/theme-sqlserver')
+  ace.config.setModuleUrl('ace/mode/xml_worker', workerUrl.default)
+  ace.config.setModuleUrl('ace/ext/searchbox', searchboxUrl.default)
+
+  // mode/theme 通过全局 ace.define 注册,须在 ace 主包执行后加载
+  await Promise.all([
+    import('ace-builds/src-min-noconflict/mode-xml.js'),
+    import('ace-builds/src-min-noconflict/theme-sqlserver.js'),
+  ])
 
   const container = editorContainer.value!
   editor = ace.edit(container)

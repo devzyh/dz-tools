@@ -83,18 +83,25 @@ function clearJson() {
 onMounted(async () => {
   if (!import.meta.client || !editorContainer.value) return
 
-  const aceModule = await import('ace-builds')
-  ;(window as any).ace = aceModule
-  const workerUrl = (await import('ace-builds/src-noconflict/worker-json.js?url')).default
-  aceModule.config.setModuleUrl('ace/mode/json_worker', workerUrl)
-  const searchboxUrl = (await import('ace-builds/src-noconflict/ext-searchbox.js?url')).default
-  aceModule.config.setModuleUrl('ace/ext/searchbox', searchboxUrl)
-  await import('ace-builds/src-noconflict/mode-json')
-  await import('ace-builds/src-noconflict/theme-sqlserver')
-
-  const editorModule = await import('jsoneditor/dist/jsoneditor-minimalist.min.js')
-  await import('jsoneditor/dist/jsoneditor.css')
+  // 第一批并行加载:ace 主包、worker/searchbox(仅取 URL)、jsoneditor 及样式
+  const [aceModule, workerUrl, searchboxUrl, editorModule] = await Promise.all([
+    import('ace-builds/src-min-noconflict/ace.js'),
+    import('ace-builds/src-min-noconflict/worker-json.js?url'),
+    import('ace-builds/src-min-noconflict/ext-searchbox.js?url'),
+    import('jsoneditor/dist/jsoneditor-minimalist.min.js'),
+    import('jsoneditor/dist/jsoneditor.css'),
+  ])
   const JSONEditor = editorModule.default || editorModule
+
+  ;(window as any).ace = aceModule
+  aceModule.config.setModuleUrl('ace/mode/json_worker', workerUrl.default)
+  aceModule.config.setModuleUrl('ace/ext/searchbox', searchboxUrl.default)
+
+  // mode/theme 通过全局 ace.define 注册,须在 ace 主包执行后加载
+  await Promise.all([
+    import('ace-builds/src-min-noconflict/mode-json.js'),
+    import('ace-builds/src-min-noconflict/theme-sqlserver.js'),
+  ])
 
   editor = new JSONEditor(editorContainer.value, {
     mode: 'code',
