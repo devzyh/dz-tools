@@ -3,12 +3,12 @@ import { ref } from 'vue'
 import jsYaml from 'js-yaml'
 import { ElMessage } from 'element-plus'
 
-const input = ref('')
+const input = useCachedText('dz-tools-convert-input', '')
 const output = ref('')
 type Format = 'json' | 'xml' | 'yaml'
 
-const sourceFormat = ref<Format>('json')
-const targetFormat = ref<Format>('yaml')
+const sourceFormat = useCachedRef<Format>('dz-tools-convert-source', 'json')
+const targetFormat = useCachedRef<Format>('dz-tools-convert-target', 'yaml')
 
 function convert() {
   if (!input.value.trim()) {

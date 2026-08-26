@@ -2,8 +2,9 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const algorithm = ref('AES')
-const input = ref('')
+// 密钥为敏感字段,不参与缓存
+const algorithm = useCachedRef('dz-tools-crypto-algorithm', 'AES')
+const input = useCachedText('dz-tools-crypto-input', '')
 const key = ref('')
 const output = ref('')
 

@@ -36,16 +36,17 @@ const SYMBOL_ARR = [
   '}',
 ]
 
-const useNumber = ref(true)
-const useLower = ref(true)
-const useUpper = ref(true)
-const useSymbol = ref(false)
+const useNumber = useCachedRef('dz-tools-password-use-number', true)
+const useLower = useCachedRef('dz-tools-password-use-lower', true)
+const useUpper = useCachedRef('dz-tools-password-use-upper', true)
+const useSymbol = useCachedRef('dz-tools-password-use-symbol', false)
 
-const generateCount = ref(10)
-const passwordLength = ref(20)
-const includeChars = ref('')
-const excludeChars = ref('0oO1iIlLq9g')
+const generateCount = useCachedRef('dz-tools-password-count', 10)
+const passwordLength = useCachedRef('dz-tools-password-length', 20)
+const includeChars = useCachedText('dz-tools-password-include', '')
+const excludeChars = useCachedText('dz-tools-password-exclude', '0oO1iIlLq9g')
 
+// 生成的密码为敏感内容,不参与缓存
 const result = ref('')
 
 const charPool = computed(() => {

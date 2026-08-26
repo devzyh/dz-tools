@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 
-const input = ref('')
+const input = useCachedText('dz-tools-count-text-input', '')
 
 const cnPunctuation = '，。、；：？！""‘’【】《》（）—…～·'
 const enPunctuation = ',.;:?!\'"()[]{}<>'

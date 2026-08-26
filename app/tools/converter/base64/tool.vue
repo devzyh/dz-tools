@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const input = ref('')
+const input = useCachedText('dz-tools-base64-input', '')
 const output = ref('')
 
 function encode() {

@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const ORIGINAL_KEY = 'dz-tools-diff-original'
 const MODIFIED_KEY = 'dz-tools-diff-modified'
+const { read, write } = useToolCache()
 
 const SAMPLE_ORIGINAL = `const greet = (name) => {
   return "Hello, " + name;
@@ -37,8 +38,8 @@ onMounted(async () => {
     import('codemirror'),
   ])
   mv = new MergeView({
-    a: { doc: localStorage.getItem(ORIGINAL_KEY) || SAMPLE_ORIGINAL, extensions: [basicSetup] },
-    b: { doc: localStorage.getItem(MODIFIED_KEY) || SAMPLE_MODIFIED, extensions: [basicSetup] },
+    a: { doc: read(ORIGINAL_KEY) || SAMPLE_ORIGINAL, extensions: [basicSetup] },
+    b: { doc: read(MODIFIED_KEY) || SAMPLE_MODIFIED, extensions: [basicSetup] },
     parent: container.value,
     highlightChanges: true,
     revertControls: 'a-to-b',
@@ -49,8 +50,8 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   if (mv) {
-    localStorage.setItem(ORIGINAL_KEY, mv.a.state.doc.toString())
-    localStorage.setItem(MODIFIED_KEY, mv.b.state.doc.toString())
+    write(ORIGINAL_KEY, mv.a.state.doc.toString())
+    write(MODIFIED_KEY, mv.b.state.doc.toString())
     mv.destroy()
   }
 })

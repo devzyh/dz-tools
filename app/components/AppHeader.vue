@@ -1,5 +1,28 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { Setting } from '@element-plus/icons-vue'
+
+const { cacheEnabled, setCacheEnabled } = useAppSettings()
+
+const settingsOpen = ref(false)
+const settingsWrapRef = ref<HTMLDivElement>()
+
+/**
+ * 切换设置面板显隐
+ */
+function toggleSettings() {
+  settingsOpen.value = !settingsOpen.value
+}
+
+/**
+ * 点击设置面板外部时关闭面板
+ */
+function handleDocClick(e: MouseEvent) {
+  if (!settingsWrapRef.value?.contains(e.target as Node)) settingsOpen.value = false
+}
+
+onMounted(() => document.addEventListener('click', handleDocClick))
+onBeforeUnmount(() => document.removeEventListener('click', handleDocClick))
 
 const route = useRoute()
 const activeIndex = computed(() => {
@@ -27,6 +50,7 @@ watch(
   () => route.path,
   () => {
     menuOpen.value = false
+    settingsOpen.value = false
   },
 )
 
@@ -63,6 +87,21 @@ function toggleMenu() {
       </button>
       <div class="desktop-search">
         <AppSearch />
+      </div>
+      <div ref="settingsWrapRef" class="settings-wrap">
+        <button class="settings-btn" :aria-label="$t('settings.title')" @click="toggleSettings">
+          <el-icon :size="16"><Setting /></el-icon>
+        </button>
+        <div v-if="settingsOpen" class="settings-panel">
+          <div class="settings-title">{{ $t('settings.title') }}</div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <div class="settings-item-label">{{ $t('settings.dataCache') }}</div>
+              <div class="settings-item-desc">{{ $t('settings.dataCacheDesc') }}</div>
+            </div>
+            <el-switch :model-value="cacheEnabled" @change="setCacheEnabled" />
+          </div>
+        </div>
       </div>
       <button class="menu-toggle" @click="toggleMenu">
         <span class="menu-bar" :class="{ open: menuOpen }" />
@@ -123,7 +162,8 @@ function toggleMenu() {
   gap: 12px;
 }
 
-.lang-switch {
+.lang-switch,
+.settings-btn {
   background: none;
   border: none;
   padding: 4px 6px;
@@ -132,6 +172,8 @@ function toggleMenu() {
   color: var(--el-text-color-secondary);
   cursor: pointer;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
   transition:
     color 0.15s,
     background 0.15s;
@@ -139,6 +181,50 @@ function toggleMenu() {
   &:hover {
     color: var(--el-color-primary);
     background: var(--el-fill-color-light);
+  }
+}
+
+.settings-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.settings-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  padding: 14px 16px;
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 8px;
+  box-shadow: var(--el-box-shadow-light);
+  z-index: 200;
+
+  .settings-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--el-text-color-primary);
+    margin-bottom: 12px;
+  }
+
+  .settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .settings-item-label {
+    font-size: 14px;
+    color: var(--el-text-color-regular);
+  }
+
+  .settings-item-desc {
+    font-size: 12px;
+    color: var(--el-text-color-secondary);
+    margin-top: 4px;
+    line-height: 1.4;
   }
 }
 

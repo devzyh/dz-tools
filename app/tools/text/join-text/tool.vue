@@ -2,11 +2,11 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const input = ref('')
+const input = useCachedText('dz-tools-join-text-input', '')
 const output = ref('')
-const wrapStart = ref('"')
-const wrapEnd = ref('"')
-const joinSymbol = ref(',')
+const wrapStart = useCachedText('dz-tools-join-text-wrap-start', '"')
+const wrapEnd = useCachedText('dz-tools-join-text-wrap-end', '"')
+const joinSymbol = useCachedText('dz-tools-join-text-join', ',')
 
 function join() {
   if (!input.value.trim()) {

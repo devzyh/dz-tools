@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 
-const input = ref('')
-const activeTab = ref<'charToCode' | 'codeToChar'>('charToCode')
-const codeBase = ref<'hex' | 'dec' | 'oct' | 'binary'>('hex')
-const codeInput = ref('')
+const input = useCachedText('dz-tools-unicode-input', '')
+const activeTab = useCachedRef<'charToCode' | 'codeToChar'>('dz-tools-unicode-tab', 'charToCode')
+const codeBase = useCachedRef<'hex' | 'dec' | 'oct' | 'binary'>('dz-tools-unicode-base', 'hex')
+const codeInput = useCachedText('dz-tools-unicode-code', '')
 
 function parseCodeInput(raw: string, base: string): number[] {
   const tokens = raw

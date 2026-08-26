@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const STORAGE_KEY = 'dz-tools-json'
+const { read, write } = useToolCache()
 const editorContainer = ref<HTMLDivElement>()
 const editorReady = ref(false)
 let editor: any = null
@@ -76,7 +77,7 @@ function decodeJson() {
 
 function clearJson() {
   getEditor().setText('')
-  localStorage.setItem(STORAGE_KEY, '')
+  write(STORAGE_KEY, '')
 }
 
 onMounted(async () => {
@@ -101,11 +102,11 @@ onMounted(async () => {
     navigationBar: false,
     statusBar: true,
     onChange: () => {
-      localStorage.setItem(STORAGE_KEY, editor?.getText() || '')
+      write(STORAGE_KEY, editor?.getText() || '')
     },
   })
 
-  const saved = localStorage.getItem(STORAGE_KEY)
+  const saved = read(STORAGE_KEY)
   if (saved) {
     editor.setText(saved)
     try {

@@ -7,6 +7,7 @@ const slug = (Array.isArray(route.params.slug) ? route.params.slug[0] : route.pa
 const { resolve: resolveEntry, findGroup, getToolComponent } = useToolRegistry()
 
 const entry = resolveEntry(slug)
+const { cacheEnabled } = useAppSettings()
 
 let ToolComponent: ReturnType<typeof defineAsyncComponent> | null = null
 if (entry && isTool(entry)) {
@@ -43,6 +44,9 @@ if (entry) {
         <h1 class="tool-title">{{ entry.meta.title }}</h1>
         <p class="tool-desc">{{ entry.meta.description }}</p>
       </template>
+      <ClientOnly>
+        <div v-if="!cacheEnabled" class="cache-tip">{{ $t('settings.cacheDisabledTip') }}</div>
+      </ClientOnly>
       <div class="tool-content">
         <component :is="ToolComponent" v-if="ToolComponent" />
       </div>
@@ -106,6 +110,16 @@ if (entry) {
   .current {
     color: #606266;
   }
+}
+
+.cache-tip {
+  font-size: 13px;
+  color: var(--el-color-warning);
+  background: var(--el-color-warning-light-9);
+  border: 1px solid var(--el-color-warning-light-7);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
 }
 
 .tool-title {

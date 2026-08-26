@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const input = ref('')
-const activeTab = ref('sql')
+const input = useCachedText('dz-tools-groovy-sql-json-input', '')
+const activeTab = useCachedRef('dz-tools-groovy-sql-json-tab', 'sql')
 const sqlOutput = ref('')
 const jsonOutput = ref('')
 

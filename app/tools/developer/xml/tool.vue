@@ -9,6 +9,7 @@ let xmlFormat: (
 ) => string | undefined
 
 const STORAGE_KEY = 'dz-tools-xml'
+const { read, write } = useToolCache()
 const editorContainer = ref<HTMLDivElement>()
 const editorReady = ref(false)
 let editor: ace.Ace.Editor | null = null
@@ -52,7 +53,7 @@ function decodeXml() {
 
 function clearXml() {
   getEditor().setValue('', -1)
-  localStorage.setItem(STORAGE_KEY, '')
+  write(STORAGE_KEY, '')
 }
 
 onMounted(async () => {
@@ -75,9 +76,9 @@ onMounted(async () => {
   editor.setOption('wrap', 'free')
   editor.setShowPrintMargin(false)
   editor.session.setMode('ace/mode/xml')
-  editor.session.setValue(localStorage.getItem(STORAGE_KEY) || '')
+  editor.session.setValue(read(STORAGE_KEY) || '')
   editor.session.on('change', () => {
-    localStorage.setItem(STORAGE_KEY, editor?.getValue() || '')
+    write(STORAGE_KEY, editor?.getValue() || '')
   })
   editorReady.value = true
 })

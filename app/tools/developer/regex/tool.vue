@@ -3,11 +3,11 @@ import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Select, CloseBold } from '@element-plus/icons-vue'
 
-const pattern = ref('')
-const testText = ref('')
-const flagGlobal = ref(true)
-const flagIgnoreCase = ref(false)
-const flagMultiline = ref(false)
+const pattern = useCachedText('dz-tools-regex-pattern', '')
+const testText = useCachedText('dz-tools-regex-text', '')
+const flagGlobal = useCachedRef('dz-tools-regex-flag-global', true)
+const flagIgnoreCase = useCachedRef('dz-tools-regex-flag-ignore-case', false)
+const flagMultiline = useCachedRef('dz-tools-regex-flag-multiline', false)
 
 const matchResults = ref<
   { match: string; groups: (string | undefined)[]; index: number; end: number }[]

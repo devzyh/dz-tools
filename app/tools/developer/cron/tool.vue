@@ -4,7 +4,7 @@ import { CronExpressionParser } from 'cron-parser'
 import { ElMessage } from 'element-plus'
 import { WarningFilled, Clock } from '@element-plus/icons-vue'
 
-const expression = ref('')
+const expression = useCachedText('dz-tools-cron-expression', '')
 const schedules = ref<{ date: string; day: string }[]>([])
 const error = ref('')
 

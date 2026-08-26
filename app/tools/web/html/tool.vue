@@ -5,7 +5,7 @@ import { ElMessage } from 'element-plus'
 
 const { encode, decode } = he
 
-const input = ref('')
+const input = useCachedText('dz-tools-html-input', '')
 const output = ref('')
 
 function convert() {

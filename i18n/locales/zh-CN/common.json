@@ -11,6 +11,12 @@
   "footer": {
     "copyright": "保留所有权利"
   },
+  "settings": {
+    "title": "设置",
+    "dataCache": "数据缓存",
+    "dataCacheDesc": "关闭后不保存，开启可恢复",
+    "cacheDisabledTip": "数据缓存已关闭，内容不会被保存"
+  },
   "error": {
     "notFound": "页面不存在",
     "goHome": "返回首页",

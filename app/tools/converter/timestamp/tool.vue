@@ -16,10 +16,10 @@ onUnmounted(() => {
   clearInterval(timer)
 })
 
-const tsInput = ref('')
+const tsInput = useCachedText('dz-tools-timestamp-input', '')
 const tsResult = ref('')
 
-const dateInput = ref('')
+const dateInput = useCachedText('dz-tools-timestamp-date', '')
 const dateResult = ref('')
 const dateResultMs = ref('')
 

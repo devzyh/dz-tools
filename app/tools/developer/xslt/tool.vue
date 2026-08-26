@@ -8,6 +8,7 @@ const editorReady = ref(false)
 
 const xsltCacheKey = 'dz-tools-xslt'
 const sourceCacheKey = 'dz-tools-xslt-source'
+const { read, write } = useToolCache()
 
 let ace: typeof import('ace-builds') | null = null
 let xsltEditor: ace.Ace.Editor | null = null
@@ -74,8 +75,8 @@ function clearAll() {
   xsltEditor.setValue('', -1)
   sourceEditor.setValue('', -1)
   resultEditor.setValue('', -1)
-  localStorage.removeItem(xsltCacheKey)
-  localStorage.removeItem(sourceCacheKey)
+  write(xsltCacheKey, '')
+  write(sourceCacheKey, '')
 }
 
 function createAceEditor(el: HTMLElement, readOnly = false, onChange?: (value: string) => void) {
@@ -111,15 +112,15 @@ onMounted(async () => {
 
   if (xsltRef.value) {
     xsltEditor = createAceEditor(xsltRef.value, false, (val) => {
-      localStorage.setItem(xsltCacheKey, val)
+      write(xsltCacheKey, val)
     })
-    xsltEditor.setValue(localStorage.getItem(xsltCacheKey) || '', -1)
+    xsltEditor.setValue(read(xsltCacheKey) || '', -1)
   }
   if (sourceRef.value) {
     sourceEditor = createAceEditor(sourceRef.value, false, (val) => {
-      localStorage.setItem(sourceCacheKey, val)
+      write(sourceCacheKey, val)
     })
-    sourceEditor.setValue(localStorage.getItem(sourceCacheKey) || '', -1)
+    sourceEditor.setValue(read(sourceCacheKey) || '', -1)
   }
   if (resultRef.value) {
     resultEditor = createAceEditor(resultRef.value, true)

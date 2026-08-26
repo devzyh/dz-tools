@@ -11,6 +11,12 @@
   "footer": {
     "copyright": "All rights reserved"
   },
+  "settings": {
+    "title": "Settings",
+    "dataCache": "Data Cache",
+    "dataCacheDesc": "Not saved when off, restored when on",
+    "cacheDisabledTip": "Data cache is off, content will not be saved"
+  },
   "error": {
     "notFound": "Page not found",
     "goHome": "Go Home",

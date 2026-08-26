@@ -2,12 +2,12 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const input = ref('')
+const input = useCachedText('dz-tools-extract-text-input', '')
 const output = ref('')
-const startSymbol = ref('[')
-const endSymbol = ref(']')
-const enableDedup = ref(true)
-const sortOrder = ref<'asc' | 'desc' | 'none'>('asc')
+const startSymbol = useCachedText('dz-tools-extract-text-start', '[')
+const endSymbol = useCachedText('dz-tools-extract-text-end', ']')
+const enableDedup = useCachedRef('dz-tools-extract-text-dedup', true)
+const sortOrder = useCachedRef<'asc' | 'desc' | 'none'>('dz-tools-extract-text-sort', 'asc')
 
 function extract() {
   if (!input.value.trim()) {

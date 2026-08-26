@@ -2,9 +2,9 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const input = ref('')
-const encoding = ref('hex')
-const uppercase = ref(false)
+const input = useCachedText('dz-tools-hash-input', '')
+const encoding = useCachedRef('dz-tools-hash-encoding', 'hex')
+const uppercase = useCachedRef('dz-tools-hash-uppercase', false)
 
 interface HashResult {
   label: string

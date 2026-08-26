@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const input = ref('')
+// 密钥为敏感字段,不参与缓存
+const input = useCachedText('dz-tools-oly-crypt-input', '')
 const key = ref('')
 const output = ref('')
 const showCode = ref(false)
