@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- builder ----
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 
 RUN corepack enable && corepack prepare pnpm@9 --activate
 
@@ -19,7 +19,7 @@ RUN pnpm build
 
 # ---- runner ----
 # 干净镜像,不含源码与 node_modules,仅保留 standalone 产物
-FROM node:22-alpine AS runner
+FROM node:24-alpine AS runner
 
 WORKDIR /app
 
