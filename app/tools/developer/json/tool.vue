@@ -83,25 +83,27 @@ function clearJson() {
 onMounted(async () => {
   if (!import.meta.client || !editorContainer.value) return
 
-  // 第一批并行加载:ace 主包、worker/searchbox(仅取 URL)、jsoneditor 及样式
-  const [aceModule, workerUrl, searchboxUrl, editorModule] = await Promise.all([
+  // 第一批并行加载:ace 主包、worker/searchbox(仅取 URL)、jsoneditor 样式(无执行副作用)
+  const [aceModule, workerUrl, searchboxUrl] = await Promise.all([
     import('ace-builds/src-min-noconflict/ace.js'),
     import('ace-builds/src-min-noconflict/worker-json.js?url'),
     import('ace-builds/src-min-noconflict/ext-searchbox.js?url'),
-    import('jsoneditor/dist/jsoneditor-minimalist.min.js'),
     import('jsoneditor/dist/jsoneditor.css'),
   ])
-  const JSONEditor = editorModule.default || editorModule
 
   ;(window as any).ace = aceModule
   aceModule.config.setModuleUrl('ace/mode/json_worker', workerUrl.default)
   aceModule.config.setModuleUrl('ace/ext/searchbox', searchboxUrl.default)
 
-  // mode/theme 通过全局 ace.define 注册,须在 ace 主包执行后加载
-  await Promise.all([
+  // 第二批:jsoneditor 加载时会同步捕获 window.ace 并固化到模块级变量,
+  // 若先于 ace 主包执行会因捕获失败永久降级为空 textarea,故必须串行在赋值之后;
+  // mode/theme 通过全局 ace.define 注册,只依赖 ace 主包,可与 jsoneditor 并行
+  const [editorModule] = await Promise.all([
+    import('jsoneditor/dist/jsoneditor-minimalist.min.js'),
     import('ace-builds/src-min-noconflict/mode-json.js'),
     import('ace-builds/src-min-noconflict/theme-sqlserver.js'),
   ])
+  const JSONEditor = editorModule.default || editorModule
 
   editor = new JSONEditor(editorContainer.value, {
     mode: 'code',

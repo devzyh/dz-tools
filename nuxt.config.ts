@@ -36,7 +36,11 @@ gtag('config', 'G-J80TRKBMB0');`,
   // ElMessage 为命令式调用(不在模板),样式需全局保留。
   // 必须用纯 css 文件而非 es/*/style/css 入口:后者内嵌 .css import,
   // dev 模式 SSR 端将 node_modules 外部化给 Node 原生 ESM,会报 Unknown file extension ".css"
-  css: ['element-plus/theme-chalk/base.css', 'element-plus/theme-chalk/el-message.css', '~/styles/index.scss'],
+  css: [
+    'element-plus/theme-chalk/base.css',
+    'element-plus/theme-chalk/el-message.css',
+    '~/styles/index.scss',
+  ],
 
   vite: {
     plugins: [
