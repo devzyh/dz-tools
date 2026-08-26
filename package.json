@@ -39,6 +39,7 @@
     "@types/he": "^1.2.3",
     "@types/js-yaml": "^4.0.9",
     "oxfmt": "^0.56.0",
-    "oxlint": "^1.71.0"
+    "oxlint": "^1.71.0",
+    "unplugin-vue-components": "^32.1.0"
   }
 }

@@ -1,3 +1,6 @@
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: false },
@@ -29,7 +32,28 @@ gtag('config', 'G-J80TRKBMB0');`,
     url: 'https://devzyh.cn',
   },
 
-  css: ['element-plus/dist/index.css', '~/styles/index.scss'],
+  // element-plus 组件样式由 ElementPlusResolver 按需注入;
+  // ElMessage 为命令式调用(不在模板),样式需全局保留。
+  // 必须用纯 css 文件而非 es/*/style/css 入口:后者内嵌 .css import,
+  // dev 模式 SSR 端将 node_modules 外部化给 Node 原生 ESM,会报 Unknown file extension ".css"
+  css: ['element-plus/theme-chalk/base.css', 'element-plus/theme-chalk/el-message.css', '~/styles/index.scss'],
+
+  vite: {
+    plugins: [
+      // dirs/dts 关闭:本地组件自动注册由 Nuxt 负责,此处仅解析模板内 el-* 按需引入
+      Components({
+        resolvers: [ElementPlusResolver()],
+        dirs: [],
+        dts: false,
+      }),
+    ],
+    // 按需样式入口(es/components/*/style/css)内嵌 .css import,
+    // dev 模式 SSR 端若将 element-plus 外部化给 Node 原生 ESM 会报
+    // Unknown file extension ".css";交回 Vite 管线即可正常转换
+    ssr: {
+      noExternal: ['element-plus'],
+    },
+  },
 
   i18n: {
     strategy: 'no_prefix',
