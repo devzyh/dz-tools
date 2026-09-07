@@ -1,50 +1,53 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const NUMBER_ARR = '0123456789'.split('')
 const LOWER_ARR = 'abcdefghijklmnopqrstuvwxyz'.split('')
 const UPPER_ARR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-const SYMBOL_ARR = [
-  '!',
-  '"',
-  '#',
-  '$',
-  '%',
-  '&',
-  "'",
-  '(',
-  ')',
-  '*',
-  '+',
-  ',',
-  '-',
-  '.',
-  '/',
-  ':',
-  ';',
-  '<',
-  '=',
-  '>',
-  '?',
-  '@',
-  '[',
-  ']',
-  '_',
-  '{',
-  '|',
-  '}',
-]
+/** 常见特殊符号:多数限制符号的网站均可接受 */
+const COMMON_SYMBOL_ARR = '!@#$%^&*()-_=+'.split('')
+/** 全部特殊符号:完整可打印 ASCII 标点 */
+const ALL_SYMBOL_ARR = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'.split('')
 
 const useNumber = useCachedRef('dz-tools-password-use-number', true)
 const useLower = useCachedRef('dz-tools-password-use-lower', true)
 const useUpper = useCachedRef('dz-tools-password-use-upper', true)
-const useSymbol = useCachedRef('dz-tools-password-use-symbol', false)
+/** 符号档位:关闭 / 常见 / 全部 */
+type SymbolMode = 'off' | 'common' | 'all'
+const SYMBOL_MODE_KEY = 'dz-tools-password-symbol-mode'
+const SYMBOL_LEGACY_KEY = 'dz-tools-password-use-symbol'
+const symbolMode = useCachedRef<SymbolMode>(SYMBOL_MODE_KEY, 'common')
 
 const generateCount = useCachedRef('dz-tools-password-count', 10)
 const passwordLength = useCachedRef('dz-tools-password-length', 20)
 const includeChars = useCachedText('dz-tools-password-include', '')
 const excludeChars = useCachedText('dz-tools-password-exclude', '0oO1iIlLq9g')
+
+const { read: readCache } = useToolCache()
+const { cacheEnabled } = useAppSettings()
+
+/**
+ * 迁移旧版符号开关(boolean)到三态档位:true→全部、false→关闭;
+ * 新 key 已存在时不覆盖,迁移完成后清理旧 key
+ */
+function migrateSymbolMode() {
+  const legacy = readCache(SYMBOL_LEGACY_KEY)
+  if (legacy === null) return
+  if (readCache(SYMBOL_MODE_KEY) === null) {
+    symbolMode.value = legacy === 'true' ? 'all' : 'off'
+  }
+  try {
+    localStorage.removeItem(SYMBOL_LEGACY_KEY)
+  } catch {
+    /* 删除失败时忽略,下次进入再迁移 */
+  }
+}
+
+onMounted(migrateSymbolMode)
+watch(cacheEnabled, (enabled) => {
+  if (enabled) migrateSymbolMode()
+})
 
 // 生成的密码为敏感内容,不参与缓存
 const result = ref('')
@@ -54,7 +57,8 @@ const charPool = computed(() => {
   if (useNumber.value) pool.push(...NUMBER_ARR)
   if (useLower.value) pool.push(...LOWER_ARR)
   if (useUpper.value) pool.push(...UPPER_ARR)
-  if (useSymbol.value) pool.push(...SYMBOL_ARR)
+  if (symbolMode.value === 'common') pool.push(...COMMON_SYMBOL_ARR)
+  else if (symbolMode.value === 'all') pool.push(...ALL_SYMBOL_ARR)
   if (includeChars.value) pool.push(...includeChars.value.split(''))
   if (excludeChars.value) {
     const excludeSet = new Set(excludeChars.value.split(''))
@@ -135,9 +139,17 @@ function clearResult() {
           <el-checkbox v-model="useNumber">0-9 数字</el-checkbox>
           <el-checkbox v-model="useLower">a-z 小写</el-checkbox>
           <el-checkbox v-model="useUpper">A-Z 大写</el-checkbox>
-          <el-checkbox v-model="useSymbol">!@# 符号</el-checkbox>
           <span class="pool-size">候选字符 {{ poolSize }} 个</span>
         </div>
+      </div>
+
+      <div class="config-row">
+        <span class="config-label">特殊符号</span>
+        <el-radio-group v-model="symbolMode">
+          <el-radio-button value="off">关闭</el-radio-button>
+          <el-radio-button value="common">常见</el-radio-button>
+          <el-radio-button value="all">全部</el-radio-button>
+        </el-radio-group>
       </div>
 
       <el-row :gutter="16">
