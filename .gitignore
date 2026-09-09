@@ -23,9 +23,3 @@ logs
 .env
 .env.*
 !.env.example
-
-# AI Agent
-.claude/
-.codegraph/
-.playwright/
-.playwright-cli/
