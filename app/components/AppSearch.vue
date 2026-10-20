@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { Search } from '@element-plus/icons-vue'
 
 defineProps<{ compact?: boolean }>()
 
@@ -100,12 +99,12 @@ function handleNavigate(item: SearchItem) {
 
 <template>
   <div class="header-search" @mouseleave="showDropdown = false">
-    <el-input
+    <UInput
       ref="searchInputRef"
       v-model="query"
       :placeholder="$t('search.placeholder')"
-      :prefix-icon="Search"
-      clearable
+      icon="i-ep-search"
+      class="rounded-full"
       @focus="showDropdown = true"
       @keydown="handleKeydown"
     />
@@ -132,10 +131,6 @@ function handleNavigate(item: SearchItem) {
   position: relative;
   display: flex;
   align-items: center;
-
-  :deep(.el-input__wrapper) {
-    border-radius: 18px;
-  }
 }
 
 .search-dropdown {
@@ -143,10 +138,10 @@ function handleNavigate(item: SearchItem) {
   top: 100%;
   right: 0;
   width: 100%;
-  background: var(--el-bg-color);
-  border: 1px solid var(--el-border-color-light);
+  background: var(--ui-bg-elevated);
+  border: 1px solid var(--ui-border);
   border-radius: 8px;
-  box-shadow: var(--el-box-shadow-light);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
   z-index: 9999;
   margin-top: 4px;
 }
@@ -158,12 +153,12 @@ function handleNavigate(item: SearchItem) {
   transition: background 0.15s;
 
   &:hover {
-    background: var(--el-fill-color-light);
+    background: var(--ui-bg-accented);
   }
 
   &.active {
-    background: var(--el-color-primary-light-9);
-    color: var(--el-color-primary);
+    background: color-mix(in srgb, var(--ui-primary) 10%, transparent);
+    color: var(--ui-primary);
   }
 }
 
@@ -171,6 +166,6 @@ function handleNavigate(item: SearchItem) {
   padding: 16px;
   text-align: center;
   font-size: 13px;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
 }
 </style>

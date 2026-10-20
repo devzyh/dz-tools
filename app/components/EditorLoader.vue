@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Loading } from '@element-plus/icons-vue'
-
 const ready = defineModel<boolean>('ready', { default: false })
 
 withDefaults(
@@ -17,7 +15,7 @@ withDefaults(
   <div class="editor-loader">
     <slot />
     <div v-if="!ready" class="editor-loading">
-      <el-icon class="is-loading" :size="20"><Loading /></el-icon>
+      <UIcon name="i-ep-loading" class="size-5 animate-spin" />
       <span>{{ text }}</span>
     </div>
   </div>
@@ -37,10 +35,10 @@ withDefaults(
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--el-bg-color);
-  border: 1px solid var(--el-border-color);
+  background: var(--ui-bg-elevated);
+  border: 1px solid var(--ui-border);
   border-radius: inherit;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
   font-size: 14px;
 }
 </style>

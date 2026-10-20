@@ -113,7 +113,7 @@ function handleImgError(e: Event) {
       </div>
     </div>
 
-    <el-empty v-if="linkGroups.length === 0" description="暂无链接" />
+    <UEmpty v-if="linkGroups.length === 0" icon="i-ep-box" description="暂无链接" />
   </div>
 </template>
 

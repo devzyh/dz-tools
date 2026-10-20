@@ -7,7 +7,7 @@ import AppFooter from '~/components/AppFooter.vue'
   <div class="app-layout">
     <AppHeader />
     <NuxtLoadingIndicator
-      color="#409eff"
+      color="var(--ui-primary)"
       :height="2"
       :duration="1000"
       :throttle="50"

@@ -74,11 +74,11 @@ if (entry) {
     <!-- 404 -->
     <template v-else>
       <ClientOnly>
-        <el-result icon="warning" title="页面不存在">
-          <template #extra>
-            <el-button type="primary" @click="clearError({ redirect: '/' })">返回首页</el-button>
-          </template>
-        </el-result>
+        <div class="page-missing">
+          <UIcon name="i-ep-warning" class="missing-icon" />
+          <div class="missing-title">页面不存在</div>
+          <UButton color="primary" @click="clearError({ redirect: '/' })">返回首页</UButton>
+        </div>
       </ClientOnly>
     </template>
   </div>
@@ -114,12 +114,32 @@ if (entry) {
 
 .cache-tip {
   font-size: 13px;
-  color: var(--el-color-warning);
-  background: var(--el-color-warning-light-9);
-  border: 1px solid var(--el-color-warning-light-7);
+  color: var(--ui-warning);
+  background: color-mix(in srgb, var(--ui-warning) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ui-warning) 25%, transparent);
   border-radius: 4px;
   padding: 8px 12px;
   margin-bottom: 16px;
+}
+
+.page-missing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 0;
+}
+
+.missing-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--ui-warning);
+}
+
+.missing-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ui-text-highlighted);
 }
 
 .tool-title {

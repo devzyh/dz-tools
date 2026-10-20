@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { Setting } from '@element-plus/icons-vue'
 
 const { cacheEnabled, setCacheEnabled } = useAppSettings()
 
@@ -90,7 +89,7 @@ function toggleMenu() {
       </div>
       <div ref="settingsWrapRef" class="settings-wrap">
         <button class="settings-btn" :aria-label="$t('settings.title')" @click="toggleSettings">
-          <el-icon :size="16"><Setting /></el-icon>
+          <UIcon name="i-ep-setting" class="size-4" />
         </button>
         <div v-if="settingsOpen" class="settings-panel">
           <div class="settings-title">{{ $t('settings.title') }}</div>
@@ -99,7 +98,7 @@ function toggleMenu() {
               <div class="settings-item-label">{{ $t('settings.dataCache') }}</div>
               <div class="settings-item-desc">{{ $t('settings.dataCacheDesc') }}</div>
             </div>
-            <el-switch :model-value="cacheEnabled" @change="setCacheEnabled" />
+            <USwitch :model-value="cacheEnabled" @update:model-value="setCacheEnabled" />
           </div>
         </div>
       </div>
@@ -134,8 +133,8 @@ function toggleMenu() {
 .app-header {
   display: flex;
   align-items: center;
-  background: var(--el-bg-color);
-  border-bottom: 1px solid var(--el-border-color-light);
+  background: var(--ui-bg-elevated);
+  border-bottom: 1px solid var(--ui-border);
   padding: 0 20px;
   height: 60px;
   position: sticky;
@@ -146,7 +145,7 @@ function toggleMenu() {
 .header-brand {
   font-size: 18px;
   cursor: pointer;
-  color: var(--el-text-color-primary);
+  color: var(--ui-text-highlighted);
   margin-right: 24px;
 }
 
@@ -169,7 +168,7 @@ function toggleMenu() {
   padding: 4px 6px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
   cursor: pointer;
   border-radius: 4px;
   display: inline-flex;
@@ -179,8 +178,8 @@ function toggleMenu() {
     background 0.15s;
 
   &:hover {
-    color: var(--el-color-primary);
-    background: var(--el-fill-color-light);
+    color: var(--ui-primary);
+    background: var(--ui-bg-accented);
   }
 }
 
@@ -195,16 +194,16 @@ function toggleMenu() {
   right: 0;
   width: 280px;
   padding: 14px 16px;
-  background: var(--el-bg-color);
-  border: 1px solid var(--el-border-color-light);
+  background: var(--ui-bg-elevated);
+  border: 1px solid var(--ui-border);
   border-radius: 8px;
-  box-shadow: var(--el-box-shadow-light);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
   z-index: 200;
 
   .settings-title {
     font-size: 14px;
     font-weight: 600;
-    color: var(--el-text-color-primary);
+    color: var(--ui-text-highlighted);
     margin-bottom: 12px;
   }
 
@@ -217,12 +216,12 @@ function toggleMenu() {
 
   .settings-item-label {
     font-size: 14px;
-    color: var(--el-text-color-regular);
+    color: var(--ui-text);
   }
 
   .settings-item-desc {
     font-size: 12px;
-    color: var(--el-text-color-secondary);
+    color: var(--ui-text-muted);
     margin-top: 4px;
     line-height: 1.4;
   }
@@ -235,7 +234,7 @@ function toggleMenu() {
 .nav-link {
   padding: 8px 16px;
   font-size: 14px;
-  color: var(--el-text-color-regular);
+  color: var(--ui-text);
   cursor: pointer;
   border-radius: 4px;
   transition:
@@ -243,12 +242,12 @@ function toggleMenu() {
     color 0.15s;
 
   &:hover {
-    color: var(--el-text-color-primary);
-    background: var(--el-fill-color-light);
+    color: var(--ui-text-highlighted);
+    background: var(--ui-bg-accented);
   }
 
   &.active {
-    color: var(--el-color-primary);
+    color: var(--ui-primary);
     font-weight: 600;
   }
 }
@@ -269,7 +268,7 @@ function toggleMenu() {
       display: block;
       width: 100%;
       height: 2px;
-      background: var(--el-text-color-primary);
+      background: var(--ui-text-highlighted);
       border-radius: 1px;
       transition:
         transform 0.3s,
@@ -328,8 +327,8 @@ function toggleMenu() {
     top: 60px;
     left: 0;
     right: 0;
-    background: var(--el-bg-color);
-    border-bottom: 1px solid var(--el-border-color-light);
+    background: var(--ui-bg-elevated);
+    border-bottom: 1px solid var(--ui-border);
     flex-direction: column;
     padding: 8px 20px;
 
@@ -340,7 +339,7 @@ function toggleMenu() {
 
   .mobile-menu .nav-link {
     padding: 12px 0;
-    border-bottom: 1px solid var(--el-border-color-extra-light);
+    border-bottom: 1px solid var(--ui-border);
   }
 }
 </style>

@@ -30,7 +30,7 @@ usePageSeo({
       </div>
     </div>
 
-    <el-empty v-if="allGroups.length === 0" description="暂无工具" />
+    <UEmpty v-if="allGroups.length === 0" icon="i-ep-box" description="暂无工具" />
   </div>
 </template>
 

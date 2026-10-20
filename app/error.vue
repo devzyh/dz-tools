@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { NuxtError } from '#app'
 
-const props = defineProps<{ error: NuxtError }>()
+defineProps<{ error: NuxtError }>()
 
 useSeoMeta({
   title: `页面未找到 - DZ Tools`,
@@ -9,15 +9,8 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="error-page">
-    <el-result
-      icon="warning"
-      :title="error.statusCode?.toString()"
-      :sub-title="error.message || '页面不存在'"
-    >
-      <template #extra>
-        <el-button type="primary" @click="clearError({ redirect: '/' })">返回首页</el-button>
-      </template>
-    </el-result>
-  </div>
+  <UError
+    :error="{ statusCode: error.statusCode ?? 500, message: error.message || '页面不存在' }"
+    :clear="{ label: '返回首页', color: 'primary' }"
+  />
 </template>
