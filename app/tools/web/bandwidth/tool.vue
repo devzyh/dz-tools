@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CopyDocument } from '@element-plus/icons-vue'
 
 /** 进制基数：1000 为十进制（网络带宽惯例），1024 为二进制（存储惯例） */
 type Radix = 1000 | 1024
@@ -39,6 +38,11 @@ const bandwidthUnit = ref<(typeof BANDWIDTH_UNITS)[number]['label']>('Mbps')
 /** 网速侧输入框值与单位 */
 const speedInput = ref(12.5)
 const speedUnit = ref<(typeof SPEED_UNITS)[number]['label']>('MB/s')
+
+const radixItems = [
+  { label: '1000（带宽）', value: 1000 },
+  { label: '1024（存储）', value: 1024 },
+]
 
 /** 消除浮点误差，保留 12 位有效数字后去尾零 */
 function round(n: number): number {
@@ -110,10 +114,13 @@ function copySpeed() {
     <!-- 进制开关 -->
     <div class="radix-bar">
       <span class="radix-label">换算进制</span>
-      <el-radio-group v-model="radix" @change="onRadixChange">
-        <el-radio-button :value="1000">1000（带宽）</el-radio-button>
-        <el-radio-button :value="1024">1024（存储）</el-radio-button>
-      </el-radio-group>
+      <URadioGroup
+        v-model="radix"
+        variant="table"
+        orientation="horizontal"
+        :items="radixItems"
+        @update:model-value="onRadixChange"
+      />
     </div>
 
     <!-- 互转主体 -->
@@ -122,26 +129,29 @@ function copySpeed() {
       <div class="side-panel">
         <div class="panel-title">带宽</div>
         <div class="panel-row">
-          <el-input-number
+          <UInputNumber
             :model-value="bandwidthInput"
             :min="0"
-            :controls="false"
+            :increment="false"
+            :decrement="false"
             class="value-input"
             @update:model-value="onBandwidthChange"
           />
-          <el-select v-model="bandwidthUnit" class="unit-select" @change="onBandwidthUnitChange">
-            <el-option
-              v-for="u in BANDWIDTH_UNITS"
-              :key="u.label"
-              :label="u.label"
-              :value="u.label"
-            />
-          </el-select>
+          <USelect
+            v-model="bandwidthUnit"
+            :items="BANDWIDTH_UNITS.map((u) => u.label)"
+            class="unit-select"
+            @update:model-value="onBandwidthUnitChange"
+          />
         </div>
-        <el-button text class="copy-btn" @click="copyBandwidth">
-          <el-icon><CopyDocument /></el-icon>
-          <span>复制结果</span>
-        </el-button>
+        <UButton
+          variant="link"
+          color="neutral"
+          icon="i-ep-copy-document"
+          label="复制结果"
+          class="copy-btn"
+          @click="copyBandwidth"
+        />
       </div>
 
       <!-- 等价标识 -->
@@ -151,21 +161,29 @@ function copySpeed() {
       <div class="side-panel">
         <div class="panel-title">网速</div>
         <div class="panel-row">
-          <el-input-number
+          <UInputNumber
             :model-value="speedInput"
             :min="0"
-            :controls="false"
+            :increment="false"
+            :decrement="false"
             class="value-input"
             @update:model-value="onSpeedChange"
           />
-          <el-select v-model="speedUnit" class="unit-select" @change="onSpeedUnitChange">
-            <el-option v-for="u in SPEED_UNITS" :key="u.label" :label="u.label" :value="u.label" />
-          </el-select>
+          <USelect
+            v-model="speedUnit"
+            :items="SPEED_UNITS.map((u) => u.label)"
+            class="unit-select"
+            @update:model-value="onSpeedUnitChange"
+          />
         </div>
-        <el-button text class="copy-btn" @click="copySpeed">
-          <el-icon><CopyDocument /></el-icon>
-          <span>复制结果</span>
-        </el-button>
+        <UButton
+          variant="link"
+          color="neutral"
+          icon="i-ep-copy-document"
+          label="复制结果"
+          class="copy-btn"
+          @click="copySpeed"
+        />
       </div>
     </div>
 
@@ -192,7 +210,7 @@ function copySpeed() {
 
 .radix-label {
   font-size: 13px;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
 }
 
 .convert-area {
@@ -207,14 +225,14 @@ function copySpeed() {
   flex-direction: column;
   gap: 8px;
   padding: 14px;
-  background: var(--el-fill-color-light);
+  background: var(--ui-bg-accented);
   border-radius: 8px;
 }
 
 .panel-title {
   font-size: 13px;
   font-weight: 500;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
 }
 
 .panel-row {
@@ -225,7 +243,7 @@ function copySpeed() {
 .value-input {
   flex: 1;
 
-  :deep(.el-input__inner) {
+  :deep(input) {
     text-align: left;
     font-size: 16px;
     font-weight: 500;
@@ -241,19 +259,18 @@ function copySpeed() {
   align-self: flex-start;
   padding: 4px 0;
   height: auto;
-  color: var(--el-text-color-secondary);
 }
 
 .equiv {
   font-size: 24px;
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
   text-align: center;
 }
 
 .tip {
   margin: 0;
   font-size: 12px;
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
   line-height: 1.6;
 }
 

@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import he from 'he'
-import { ElMessage } from 'element-plus'
 
 const { encode, decode } = he
 
 const input = useCachedText('dz-tools-html-input', '')
 const output = ref('')
+const message = useMessage()
 
 function convert() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入需要处理的内容')
+    message.warning('请输入需要处理的内容')
     return
   }
   output.value = encode(input.value)
@@ -18,7 +18,7 @@ function convert() {
 
 function reverse() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入需要处理的内容')
+    message.warning('请输入需要处理的内容')
     return
   }
   output.value = decode(input.value)
@@ -26,7 +26,7 @@ function reverse() {
 
 function copy() {
   if (!output.value) {
-    ElMessage.warning('没有可复制的内容')
+    message.warning('没有可复制的内容')
     return
   }
   if (import.meta.client) {
@@ -37,24 +37,13 @@ function copy() {
 
 <template>
   <div class="tool-form">
-    <el-input
-      v-model="input"
-      type="textarea"
-      :rows="6"
-      :placeholder="'请输入需要转义或反转义的内容'"
-    />
+    <UTextarea v-model="input" :rows="6" placeholder="请输入需要转义或反转义的内容" />
     <div class="tool-actions">
-      <el-button type="success" @click="convert">转义HTML实体</el-button>
-      <el-button type="warning" @click="reverse">反转义HTML实体</el-button>
-      <el-button @click="copy">复制</el-button>
+      <UButton color="success" @click="convert">转义HTML实体</UButton>
+      <UButton color="warning" @click="reverse">反转义HTML实体</UButton>
+      <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
-    <el-input
-      v-model="output"
-      type="textarea"
-      :rows="6"
-      readonly
-      :placeholder="'处理结果将在这里显示'"
-    />
+    <UTextarea v-model="output" :rows="6" readonly placeholder="处理结果将在这里显示" />
   </div>
 </template>
 

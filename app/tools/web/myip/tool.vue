@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { Loading } from '@element-plus/icons-vue'
 
 const ip = ref('')
 const loading = ref(true)
@@ -47,7 +46,7 @@ function copyCurl() {
 <template>
   <div class="ip-tool">
     <div v-if="loading" class="ip-loading">
-      <el-icon class="is-loading" :size="20"><Loading /></el-icon>
+      <UIcon name="i-ep-loading" class="size-5 animate-spin" />
       <span>正在查询公网 IP...</span>
     </div>
     <template v-else-if="ip">
@@ -81,7 +80,7 @@ function copyCurl() {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
   font-size: 14px;
 }
 
@@ -91,23 +90,23 @@ function copyCurl() {
   align-items: center;
   gap: 10px;
   padding: 12px 18px;
-  border: 1px solid var(--el-border-color);
+  border: 1px solid var(--ui-border-accented);
   border-radius: 8px;
   cursor: pointer;
   transition: border-color 0.2s;
 
   &:hover {
-    border-color: var(--el-color-primary);
+    border-color: var(--ui-primary);
   }
 }
 
 .curl-card {
-  background: var(--el-fill-color);
+  background: var(--ui-bg-accented);
   border-color: transparent;
 
   &:hover {
-    border-color: var(--el-border-color);
-    background: var(--el-fill-color-light);
+    border-color: var(--ui-border-accented);
+    background: var(--ui-bg-accented);
   }
 }
 
@@ -116,20 +115,20 @@ function copyCurl() {
   font-size: 22px;
   font-weight: 500;
   letter-spacing: 1px;
-  color: var(--el-text-color-primary);
+  color: var(--ui-text-highlighted);
   font-variant-numeric: tabular-nums;
 }
 
 .copy-hint {
   font-size: 12px;
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
   white-space: nowrap;
 }
 
 .curl-cmd {
   font-family: 'Consolas', 'Monaco', monospace;
   font-size: 13px;
-  color: var(--el-text-color-regular);
+  color: var(--ui-text);
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -139,7 +138,7 @@ function copyCurl() {
 
 .curl-label {
   font-size: 12px;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
   white-space: nowrap;
 }
 
@@ -150,17 +149,17 @@ function copyCurl() {
 .curl-tip {
   margin: 0 0 8px;
   font-size: 13px;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
 }
 
 .curl-hint {
   font-size: 12px;
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
   white-space: nowrap;
 }
 
 .ip-error {
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
   font-size: 14px;
 }
 
