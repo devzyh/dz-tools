@@ -26,7 +26,13 @@ gtag('config', 'G-J80TRKBMB0');`,
     },
   },
 
-  modules: ['@nuxtjs/i18n', '@nuxtjs/sitemap'],
+  modules: ['@nuxt/ui', '@nuxtjs/i18n', '@nuxtjs/sitemap'],
+
+  // 过渡期锁定亮色:暗色主题规划二期,届时移除此配置
+  colorMode: {
+    preference: 'light',
+    fallback: 'light',
+  },
 
   site: {
     url: 'https://devzyh.cn',
@@ -37,6 +43,8 @@ gtag('config', 'G-J80TRKBMB0');`,
   // 必须用纯 css 文件而非 es/*/style/css 入口:后者内嵌 .css import,
   // dev 模式 SSR 端将 node_modules 外部化给 Node 原生 ESM,会报 Unknown file extension ".css"
   css: [
+    // Tailwind v4 + Nuxt UI 主题入口(preflight 位于 @layer base,不覆盖下方未分层样式)
+    '~/assets/css/main.css',
     'element-plus/theme-chalk/base.css',
     'element-plus/theme-chalk/el-message.css',
     '~/styles/index.scss',
