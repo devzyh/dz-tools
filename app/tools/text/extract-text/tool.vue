@@ -51,7 +51,7 @@ function extract() {
   }
 
   output.value = results.join('\n')
-  message.success(`共提取 ${matches.length} 项`)
+  message.success(`已提取 ${matches.length} 项`)
 }
 
 function copy() {

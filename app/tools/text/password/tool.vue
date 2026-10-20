@@ -128,7 +128,7 @@ function copyResult() {
     message.warning('请先生成密码')
     return
   }
-  copyToClipboard(result.value, '已复制到剪贴板')
+  copyToClipboard(result.value, '已复制')
 }
 
 function clearResult() {

@@ -286,7 +286,7 @@ function convert() {
   sqlOutput.value = generateSql(defineInfo, uniqueFields)
   jsonOutput.value = generateJson(defineInfo, uniqueFields)
   activeTab.value = 'sql'
-  message.success(`解析完成，共 ${uniqueFields.length} 个字段`)
+  message.success(`已解析 ${uniqueFields.length} 个字段`)
 }
 
 function copySql() {

@@ -152,7 +152,6 @@ const codeToCharResults = computed(() => {
           <div class="config-row">
             <URadioGroup
               v-model="codeBase"
-              size="sm"
               variant="table"
               orientation="horizontal"
               :items="codeBaseItems"

@@ -100,12 +100,12 @@ function onRadixChange() {
 
 /** 复制带宽侧结果 */
 function copyBandwidth() {
-  copyToClipboard(`${bandwidthInput.value} ${bandwidthUnit.value}`, '已复制')
+  copyToClipboard(`${bandwidthInput.value} ${bandwidthUnit.value}`)
 }
 
 /** 复制网速侧结果 */
 function copySpeed() {
-  copyToClipboard(`${speedInput.value} ${speedUnit.value}`, '已复制')
+  copyToClipboard(`${speedInput.value} ${speedUnit.value}`)
 }
 </script>
 

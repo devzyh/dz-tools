@@ -71,7 +71,7 @@ function decodeJson() {
   try {
     getEditor().setText(decodeURIComponent(getEditor().getText()))
   } catch {
-    message.error('解码失败，内容不是有效的 URI 编码')
+    message.error('解码失败：内容不是有效的 URI 编码')
   }
 }
 

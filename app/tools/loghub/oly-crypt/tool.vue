@@ -70,7 +70,7 @@ public class LoghubOlyCryptService {
 
 async function encrypt() {
   if (!input.value.trim()) {
-    message.warning('请输入内容')
+    message.warning('请输入需要加密或解密的内容')
     return
   }
   if (!key.value.trim()) {
@@ -93,7 +93,7 @@ async function encrypt() {
 
 async function decrypt() {
   if (!input.value.trim()) {
-    message.warning('请输入内容')
+    message.warning('请输入需要加密或解密的内容')
     return
   }
   if (!key.value.trim()) {
@@ -167,7 +167,7 @@ function copyCode() {
     <div class="code-block">
       <div class="code-header" @click="showCode = !showCode">
         <span>Java 实现代码</span>
-        <UButton variant="link" color="neutral" size="sm" @click.stop="copyCode">复制</UButton>
+        <UButton variant="link" color="neutral" @click.stop="copyCode">复制</UButton>
       </div>
       <pre v-show="showCode" class="java-code"><code>{{ javaCode }}</code></pre>
     </div>

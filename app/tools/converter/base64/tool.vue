@@ -17,7 +17,7 @@ function decode() {
   try {
     output.value = decodeURIComponent(escape(atob(input.value)))
   } catch {
-    message.error('解码失败，输入内容不是有效的 Base64')
+    message.error('解码失败：输入内容不是有效的 Base64')
   }
 }
 

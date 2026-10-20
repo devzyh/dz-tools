@@ -34,7 +34,7 @@ function generateKey() {
 
 async function encrypt() {
   if (!input.value.trim()) {
-    message.warning('请输入内容')
+    message.warning('请输入需要加密或解密的内容')
     return
   }
   if (!key.value.trim()) {
@@ -68,7 +68,7 @@ async function encrypt() {
 
 async function decrypt() {
   if (!input.value.trim()) {
-    message.warning('请输入内容')
+    message.warning('请输入需要加密或解密的内容')
     return
   }
   if (!key.value.trim()) {
