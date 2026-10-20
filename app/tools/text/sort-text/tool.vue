@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ElMessage } from 'element-plus'
 import { sortLines, type SortDimension, type SortDirection } from './sort'
 
 const input = ref('')
 const output = ref('')
+const message = useMessage()
 
 const dimension = ref<SortDimension>('name')
 const direction = ref<SortDirection>('asc')
@@ -21,11 +21,16 @@ const dimensions: { label: string; value: SortDimension }[] = [
   { label: '随机', value: 'random' },
 ]
 
+const directionItems = [
+  { label: '升序', value: 'asc' },
+  { label: '降序', value: 'desc' },
+]
+
 const isRandom = computed(() => dimension.value === 'random')
 
 function sort() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入文本内容')
+    message.warning('请输入文本内容')
     return
   }
   const result = sortLines(input.value, {
@@ -37,12 +42,12 @@ function sort() {
     ignoreCase: ignoreCase.value,
   })
   output.value = result.join('\n')
-  ElMessage.success(`已排序 ${result.length} 项`)
+  message.success(`已排序 ${result.length} 项`)
 }
 
 function copy() {
   if (!output.value) {
-    ElMessage.warning('没有可复制的内容')
+    message.warning('没有可复制的内容')
     return
   }
   copyToClipboard(output.value)
@@ -54,45 +59,35 @@ function copy() {
     <div class="config-card">
       <div class="config-row">
         <span class="config-label">排序维度</span>
-        <el-select v-model="dimension" style="width: 140px">
-          <el-option v-for="d in dimensions" :key="d.value" :label="d.label" :value="d.value" />
-        </el-select>
+        <USelect v-model="dimension" :items="dimensions" class="w-35" />
         <span class="config-label">方向</span>
-        <el-radio-group v-model="direction" :disabled="isRandom">
-          <el-radio value="asc">升序</el-radio>
-          <el-radio value="desc">降序</el-radio>
-        </el-radio-group>
+        <URadioGroup v-model="direction" :disabled="isRandom" :items="directionItems" />
       </div>
       <div class="config-row">
-        <el-checkbox v-model="trim">去除首尾空白</el-checkbox>
-        <el-checkbox v-model="removeEmpty">去除空行</el-checkbox>
-        <el-checkbox v-model="unique">去重</el-checkbox>
-        <el-checkbox v-model="ignoreCase">忽略大小写</el-checkbox>
+        <UCheckbox v-model="trim" label="去除首尾空白" />
+        <UCheckbox v-model="removeEmpty" label="去除空行" />
+        <UCheckbox v-model="unique" label="去重" />
+        <UCheckbox v-model="ignoreCase" label="忽略大小写" />
       </div>
     </div>
 
-    <el-input
-      v-model="input"
-      type="textarea"
-      :rows="10"
-      :placeholder="'请输入多行文本，每行一个元素'"
-    />
+    <UTextarea v-model="input" :rows="10" placeholder="请输入多行文本，每行一个元素" />
 
     <div class="action-bar">
-      <el-button type="primary" @click="sort">排序</el-button>
-      <el-button @click="copy">复制</el-button>
+      <UButton @click="sort">排序</UButton>
+      <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
 
     <div class="result-card">
       <div class="result-header">
         <span class="config-label">排序结果</span>
       </div>
-      <el-input
+      <UTextarea
         v-model="output"
-        type="textarea"
-        :autosize="{ minRows: 4, maxRows: 20 }"
+        :rows="4"
+        autoresize
         readonly
-        :placeholder="'排序结果将在这里显示'"
+        placeholder="排序结果将在这里显示"
         class="result-textarea"
       />
     </div>
@@ -107,8 +102,8 @@ function copy() {
 }
 
 .config-card {
-  background: var(--el-bg-color-page);
-  border: 1px solid var(--el-border-color-lighter);
+  background: var(--ui-bg-muted);
+  border: 1px solid var(--ui-border);
   border-radius: 8px;
   padding: 20px;
   display: flex;
@@ -144,7 +139,7 @@ function copy() {
 }
 
 .result-textarea {
-  :deep(.el-textarea__inner) {
+  :deep(textarea) {
     font-family: 'Courier New', Courier, monospace;
     font-size: 14px;
     line-height: 1.8;

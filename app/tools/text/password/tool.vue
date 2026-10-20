@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import { ElMessage } from 'element-plus'
 
 const NUMBER_ARR = '0123456789'.split('')
 const LOWER_ARR = 'abcdefghijklmnopqrstuvwxyz'.split('')
@@ -18,6 +17,13 @@ type SymbolMode = 'off' | 'common' | 'all'
 const SYMBOL_MODE_KEY = 'dz-tools-password-symbol-mode'
 const SYMBOL_LEGACY_KEY = 'dz-tools-password-use-symbol'
 const symbolMode = useCachedRef<SymbolMode>(SYMBOL_MODE_KEY, 'common')
+const message = useMessage()
+
+const symbolModeItems = [
+  { label: '关闭', value: 'off' },
+  { label: '常见', value: 'common' },
+  { label: '全部', value: 'all' },
+]
 
 const generateCount = useCachedRef('dz-tools-password-count', 10)
 const passwordLength = useCachedRef('dz-tools-password-length', 20)
@@ -84,7 +90,7 @@ function generateRandomString(pool: string[], length: number): string {
 function generate() {
   const pool = charPool.value
   if (pool.length === 0) {
-    ElMessage.error('没有候选字符，请至少选择一种字符类型')
+    message.error('没有候选字符，请至少选择一种字符类型')
     return
   }
 
@@ -92,16 +98,16 @@ function generate() {
   const len = passwordLength.value
 
   if (count < 1 || count > 1000000) {
-    ElMessage.error('生成数量范围为 1 - 1,000,000')
+    message.error('生成数量范围为 1 - 1,000,000')
     return
   }
   if (len < 1 || len > 1000000) {
-    ElMessage.error('密码长度范围为 1 - 1,000,000')
+    message.error('密码长度范围为 1 - 1,000,000')
     return
   }
 
   if (pool.length ** len < count) {
-    ElMessage.warning('候选字符不足以生成指定数量的唯一密码')
+    message.warning('候选字符不足以生成指定数量的唯一密码')
   }
 
   const set = new Set<string>()
@@ -114,12 +120,12 @@ function generate() {
   }
 
   result.value = [...set].join('\n')
-  ElMessage.success(`已生成 ${set.size} 个密码`)
+  message.success(`已生成 ${set.size} 个密码`)
 }
 
 function copyResult() {
   if (!result.value) {
-    ElMessage.warning('请先生成密码')
+    message.warning('请先生成密码')
     return
   }
   copyToClipboard(result.value, '已复制到剪贴板')
@@ -136,69 +142,50 @@ function clearResult() {
       <div class="config-row">
         <span class="config-label">使用字符</span>
         <div class="char-checks">
-          <el-checkbox v-model="useNumber">0-9 数字</el-checkbox>
-          <el-checkbox v-model="useLower">a-z 小写</el-checkbox>
-          <el-checkbox v-model="useUpper">A-Z 大写</el-checkbox>
+          <UCheckbox v-model="useNumber" label="0-9 数字" />
+          <UCheckbox v-model="useLower" label="a-z 小写" />
+          <UCheckbox v-model="useUpper" label="A-Z 大写" />
           <span class="pool-size">候选字符 {{ poolSize }} 个</span>
         </div>
       </div>
 
       <div class="config-row">
         <span class="config-label">特殊符号</span>
-        <el-radio-group v-model="symbolMode">
-          <el-radio-button value="off">关闭</el-radio-button>
-          <el-radio-button value="common">常见</el-radio-button>
-          <el-radio-button value="all">全部</el-radio-button>
-        </el-radio-group>
+        <URadioGroup
+          v-model="symbolMode"
+          variant="table"
+          orientation="horizontal"
+          :items="symbolModeItems"
+        />
       </div>
 
-      <el-row :gutter="16">
-        <el-col :xs="12" :sm="8">
-          <div class="config-item">
-            <span class="config-label">生成数量</span>
-            <el-input-number
-              v-model="generateCount"
-              :min="1"
-              :max="1000000"
-              controls-position="right"
-              style="width: 100%"
-            />
-          </div>
-        </el-col>
-        <el-col :xs="12" :sm="8">
-          <div class="config-item">
-            <span class="config-label">密码长度</span>
-            <el-input-number
-              v-model="passwordLength"
-              :min="1"
-              :max="1000000"
-              controls-position="right"
-              style="width: 100%"
-            />
-          </div>
-        </el-col>
-      </el-row>
+      <div class="config-grid">
+        <div class="config-item">
+          <span class="config-label">生成数量</span>
+          <UInputNumber v-model="generateCount" :min="1" :max="1000000" class="w-full" />
+        </div>
+        <div class="config-item">
+          <span class="config-label">密码长度</span>
+          <UInputNumber v-model="passwordLength" :min="1" :max="1000000" class="w-full" />
+        </div>
+      </div>
 
-      <el-row :gutter="16">
-        <el-col :xs="24" :sm="12">
-          <div class="config-item">
-            <span class="config-label">包含字符</span>
-            <el-input v-model="includeChars" placeholder="可选，添加到候选字符池" />
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="12">
-          <div class="config-item">
-            <span class="config-label">排除字符</span>
-            <el-input v-model="excludeChars" placeholder="可选" />
-          </div>
-        </el-col>
-      </el-row>
+      <div class="config-grid">
+        <div class="config-item">
+          <span class="config-label">包含字符</span>
+          <UInput v-model="includeChars" placeholder="可选，添加到候选字符池" />
+        </div>
+        <div class="config-item">
+          <span class="config-label">排除字符</span>
+          <UInput v-model="excludeChars" placeholder="可选" />
+        </div>
+      </div>
     </div>
 
     <div class="action-bar">
-      <el-button type="primary" @click="generate">生成密码</el-button>
-      <el-button @click="copyResult">复制结果</el-button>
-      <el-button @click="clearResult">清空</el-button>
+      <UButton @click="generate">生成密码</UButton>
+      <UButton color="neutral" variant="outline" @click="copyResult">复制结果</UButton>
+      <UButton color="neutral" variant="outline" @click="clearResult">清空</UButton>
     </div>
 
     <div class="result-card">
@@ -206,10 +193,10 @@ function clearResult() {
         <span class="config-label">生成结果</span>
         <span v-if="result" class="result-count">{{ result.split('\n').length }} 条</span>
       </div>
-      <el-input
+      <UTextarea
         v-model="result"
-        type="textarea"
-        :autosize="{ minRows: 10, maxRows: 20 }"
+        :rows="10"
+        autoresize
         readonly
         placeholder="生成结果将在这里显示"
         class="result-textarea"
@@ -226,8 +213,8 @@ function clearResult() {
 }
 
 .config-card {
-  background: var(--el-bg-color-page);
-  border: 1px solid var(--el-border-color-lighter);
+  background: var(--ui-bg-muted);
+  border: 1px solid var(--ui-border);
   border-radius: 8px;
   padding: 20px;
   display: flex;
@@ -240,6 +227,16 @@ function clearResult() {
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 12px;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .config-label {
@@ -303,7 +300,7 @@ function clearResult() {
 }
 
 .result-textarea {
-  :deep(.el-textarea__inner) {
+  :deep(textarea) {
     font-family: 'Courier New', Courier, monospace;
     font-size: 14px;
     line-height: 1.8;

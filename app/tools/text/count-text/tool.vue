@@ -51,12 +51,7 @@ const paragraphCount = computed(() => {
 
 <template>
   <div class="count-text-tool">
-    <el-input
-      v-model="input"
-      type="textarea"
-      :rows="16"
-      :placeholder="'请输入或粘贴文本，实时统计'"
-    />
+    <UTextarea v-model="input" :rows="16" placeholder="请输入或粘贴文本，实时统计" />
 
     <div class="stats-card">
       <div class="stat-row">
@@ -103,8 +98,8 @@ const paragraphCount = computed(() => {
 }
 
 .stats-card {
-  background: var(--el-bg-color-page);
-  border: 1px solid var(--el-border-color-lighter);
+  background: var(--ui-bg-muted);
+  border: 1px solid var(--ui-border);
   border-radius: 8px;
   padding: 20px;
   display: grid;
@@ -118,7 +113,7 @@ const paragraphCount = computed(() => {
   justify-content: space-between;
   padding: 8px 12px;
   border-radius: 6px;
-  background: var(--el-bg-color);
+  background: var(--ui-bg-elevated);
 }
 
 .stat-label {

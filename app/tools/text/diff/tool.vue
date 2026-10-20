@@ -73,7 +73,7 @@ onBeforeUnmount(() => {
 
 .diff-merge {
   height: 100%;
-  border: 1px solid var(--el-border-color);
+  border: 1px solid var(--ui-border-accented);
   border-radius: 8px;
 
   :deep(.cm-mergeView) {
@@ -90,27 +90,27 @@ onBeforeUnmount(() => {
   }
 
   :deep(.cm-merge-added) {
-    background-color: var(--el-color-success-light-9) !important;
+    background-color: color-mix(in srgb, var(--ui-success) 10%, transparent) !important;
   }
 
   :deep(.cm-merge-removed) {
-    background-color: var(--el-color-danger-light-9) !important;
+    background-color: color-mix(in srgb, var(--ui-error) 10%, transparent) !important;
   }
 
   :deep(.cm-merge-chunk-start.cm-merge-added) {
-    border-top-color: var(--el-color-success) !important;
+    border-top-color: var(--ui-success) !important;
   }
 
   :deep(.cm-merge-chunk-end.cm-merge-added) {
-    border-bottom-color: var(--el-color-success) !important;
+    border-bottom-color: var(--ui-success) !important;
   }
 
   :deep(.cm-merge-chunk-start.cm-merge-removed) {
-    border-top-color: var(--el-color-danger) !important;
+    border-top-color: var(--ui-error) !important;
   }
 
   :deep(.cm-merge-chunk-end.cm-merge-removed) {
-    border-bottom-color: var(--el-color-danger) !important;
+    border-bottom-color: var(--ui-error) !important;
   }
 }
 
