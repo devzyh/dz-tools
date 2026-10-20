@@ -16,6 +16,7 @@ function getEditor(): any {
 function formatJson() {
   try {
     getEditor().format()
+    message.success('已美化')
   } catch {
     message.error('JSON 格式不正确，无法美化')
   }
@@ -24,6 +25,7 @@ function formatJson() {
 function compactJson() {
   try {
     getEditor().compact()
+    message.success('已压缩')
   } catch {
     message.error('JSON 格式不正确，无法压缩')
   }
@@ -52,6 +54,7 @@ function escapeJson() {
       .replace(/[\r\n]/g, '')
     text = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
     getEditor().setText(text)
+    message.success('已转义')
   } catch {
     message.error('转义失败')
   }
@@ -62,6 +65,7 @@ function unescapeJson() {
     let text = getEditor().getText()
     text = text.replace(/\\\\/g, '\\').replace(/\\"/g, '"')
     getEditor().setText(text)
+    message.success('已修复')
   } catch {
     message.error('修复失败')
   }
@@ -70,6 +74,7 @@ function unescapeJson() {
 function decodeJson() {
   try {
     getEditor().setText(decodeURIComponent(getEditor().getText()))
+    message.success('已解码')
   } catch {
     message.error('解码失败：内容不是有效的 URI 编码')
   }
@@ -78,6 +83,7 @@ function decodeJson() {
 function clearJson() {
   getEditor().setText('')
   write(STORAGE_KEY, '')
+  message.success('已清空')
 }
 
 onMounted(async () => {

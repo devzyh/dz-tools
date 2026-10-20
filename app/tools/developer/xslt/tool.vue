@@ -5,6 +5,7 @@ const xsltRef = ref<HTMLElement>()
 const sourceRef = ref<HTMLElement>()
 const resultRef = ref<HTMLElement>()
 const editorReady = ref(false)
+const message = useMessage()
 
 const xsltCacheKey = 'dz-tools-xslt'
 const sourceCacheKey = 'dz-tools-xslt-source'
@@ -77,6 +78,7 @@ function clearAll() {
   resultEditor.setValue('', -1)
   write(xsltCacheKey, '')
   write(sourceCacheKey, '')
+  message.success('已清空')
 }
 
 function createAceEditor(el: HTMLElement, readOnly = false, onChange?: (value: string) => void) {

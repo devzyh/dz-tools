@@ -309,6 +309,7 @@ function clear() {
   input.value = ''
   sqlOutput.value = ''
   jsonOutput.value = ''
+  message.success('已清空')
 }
 </script>
 

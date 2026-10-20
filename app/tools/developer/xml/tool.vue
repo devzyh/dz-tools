@@ -27,6 +27,7 @@ function formatXml() {
       lineSeparator: '\n',
     })
     getEditor().setValue(result, -1)
+    message.success('已美化')
   } catch {
     message.error('XML 格式不正确，无法美化')
   }
@@ -41,11 +42,13 @@ function compactXml() {
     .replace(/<!--[\s\S]*?-->/g, '')
     .trim()
   getEditor().setValue(xml, -1)
+  message.success('已压缩')
 }
 
 function decodeXml() {
   try {
     getEditor().setValue(decodeURIComponent(getEditor().getValue()), -1)
+    message.success('已解码')
   } catch {
     message.error('解码失败：内容不是有效的 URI 编码')
   }
@@ -54,6 +57,7 @@ function decodeXml() {
 function clearXml() {
   getEditor().setValue('', -1)
   write(STORAGE_KEY, '')
+  message.success('已清空')
 }
 
 onMounted(async () => {
