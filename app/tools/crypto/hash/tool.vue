@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 
 const input = useCachedText('dz-tools-hash-input', '')
 const encoding = useCachedRef('dz-tools-hash-encoding', 'hex')
 const uppercase = useCachedRef('dz-tools-hash-uppercase', false)
+const message = useMessage()
+
+const encodingItems = [
+  { label: '十六进制', value: 'hex' },
+  { label: '二进制', value: 'binary' },
+  { label: 'Base64', value: 'base64' },
+  { label: 'URL安全Base64', value: 'urlsafe-base64' },
+]
 
 interface HashResult {
   label: string
@@ -15,7 +22,7 @@ const results = ref<HashResult[]>([])
 
 async function compute() {
   if (!input.value) {
-    ElMessage.warning('请输入需要计算哈希的文本')
+    message.warning('请输入需要计算哈希的文本')
     return
   }
   const CryptoJS = (await import('crypto-js')).default
@@ -74,16 +81,11 @@ function copy(value: string) {
 
 <template>
   <div class="hash-tool">
-    <el-input v-model="input" type="textarea" :rows="5" :placeholder="'请输入需要计算哈希的文本'" />
+    <UTextarea v-model="input" :rows="5" placeholder="请输入需要计算哈希的文本" />
     <div class="tool-actions">
-      <el-select v-model="encoding" style="width: 180px">
-        <el-option :label="'十六进制'" value="hex" />
-        <el-option :label="'二进制'" value="binary" />
-        <el-option :label="'Base64'" value="base64" />
-        <el-option :label="'URL安全Base64'" value="urlsafe-base64" />
-      </el-select>
-      <el-checkbox v-model="uppercase">大写</el-checkbox>
-      <el-button type="primary" @click="compute">计算哈希</el-button>
+      <USelect v-model="encoding" :items="encodingItems" class="w-45" />
+      <UCheckbox v-model="uppercase" label="大写" />
+      <UButton @click="compute">计算哈希</UButton>
     </div>
     <div v-if="results.length" class="hash-results">
       <div v-for="item in results" :key="item.label" class="hash-row">
@@ -109,7 +111,7 @@ function copy(value: string) {
 }
 
 .hash-results {
-  border: 1px solid var(--el-border-color);
+  border: 1px solid var(--ui-border-accented);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -117,7 +119,7 @@ function copy(value: string) {
 .hash-row {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  border-bottom: 1px solid var(--ui-border);
 
   &:last-child {
     border-bottom: none;
@@ -130,9 +132,9 @@ function copy(value: string) {
   padding: 8px 12px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--el-text-color-regular);
-  background: var(--el-fill-color-light);
-  border-right: 1px solid var(--el-border-color-lighter);
+  color: var(--ui-text);
+  background: var(--ui-bg-accented);
+  border-right: 1px solid var(--ui-border);
 }
 
 .hash-value {
@@ -140,13 +142,13 @@ function copy(value: string) {
   padding: 8px 12px;
   font-family: 'Consolas', 'Monaco', monospace;
   font-size: 13px;
-  color: var(--el-text-color-primary);
+  color: var(--ui-text-highlighted);
   word-break: break-all;
   cursor: pointer;
   line-height: 1.6;
 
   &:hover {
-    background: var(--el-fill-color-light);
+    background: var(--ui-bg-accented);
   }
 }
 

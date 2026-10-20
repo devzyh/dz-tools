@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 
 // 密钥为敏感字段,不参与缓存
 const algorithm = useCachedRef('dz-tools-crypto-algorithm', 'AES')
 const input = useCachedText('dz-tools-crypto-input', '')
 const key = ref('')
 const output = ref('')
+const message = useMessage()
+
+const algorithmItems = [
+  { label: 'AES', value: 'AES' },
+  { label: 'TripleDES', value: 'TripleDES' },
+  { label: 'Rabbit', value: 'Rabbit' },
+  { label: 'RC4', value: 'RC4' },
+]
 
 const keyLengths: Record<string, number> = {
   AES: 32,
@@ -27,11 +34,11 @@ function generateKey() {
 
 async function encrypt() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入内容')
+    message.warning('请输入内容')
     return
   }
   if (!key.value.trim()) {
-    ElMessage.warning('请输入密钥')
+    message.warning('请输入密钥')
     return
   }
   try {
@@ -55,17 +62,17 @@ async function encrypt() {
     }
     output.value = encrypted.toString()
   } catch (err) {
-    ElMessage.error('加密失败：' + (err as Error).message)
+    message.error('加密失败：' + (err as Error).message)
   }
 }
 
 async function decrypt() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入内容')
+    message.warning('请输入内容')
     return
   }
   if (!key.value.trim()) {
-    ElMessage.warning('请输入密钥')
+    message.warning('请输入密钥')
     return
   }
   try {
@@ -89,13 +96,13 @@ async function decrypt() {
     }
     output.value = decrypted.toString(CryptoJS.enc.Utf8)
   } catch (err) {
-    ElMessage.error('解密失败：' + (err as Error).message)
+    message.error('解密失败：' + (err as Error).message)
   }
 }
 
 function copy() {
   if (!output.value) {
-    ElMessage.warning('没有可复制的内容')
+    message.warning('没有可复制的内容')
     return
   }
   copyToClipboard(output.value)
@@ -107,35 +114,19 @@ generateKey()
 <template>
   <div class="tool-form">
     <div class="tool-row">
-      <el-select v-model="algorithm" style="width: 200px">
-        <el-option label="AES" value="AES" />
-        <el-option label="TripleDES" value="TripleDES" />
-        <el-option label="Rabbit" value="Rabbit" />
-        <el-option label="RC4" value="RC4" />
-      </el-select>
+      <USelect v-model="algorithm" :items="algorithmItems" class="w-50" />
       <div class="key-group">
-        <el-input v-model="key" :placeholder="'加密/解密密钥'" />
-        <el-button @click="generateKey">随机</el-button>
+        <UInput v-model="key" placeholder="加密/解密密钥" />
+        <UButton color="neutral" variant="outline" @click="generateKey">随机</UButton>
       </div>
     </div>
-    <el-input
-      v-model="input"
-      type="textarea"
-      :rows="5"
-      :placeholder="'请输入需要加密或解密的内容'"
-    />
+    <UTextarea v-model="input" :rows="5" placeholder="请输入需要加密或解密的内容" />
     <div class="tool-actions">
-      <el-button type="success" @click="encrypt">加密</el-button>
-      <el-button type="warning" @click="decrypt">解密</el-button>
-      <el-button @click="copy">复制</el-button>
+      <UButton color="success" @click="encrypt">加密</UButton>
+      <UButton color="warning" @click="decrypt">解密</UButton>
+      <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
-    <el-input
-      v-model="output"
-      type="textarea"
-      :rows="5"
-      readonly
-      :placeholder="'处理结果将在这里显示'"
-    />
+    <UTextarea v-model="output" :rows="5" readonly placeholder="处理结果将在这里显示" />
   </div>
 </template>
 
