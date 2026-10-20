@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import type { CalendarDateTime } from '@internationalized/date'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { CalendarDateTime, type CalendarDate } from '@internationalized/date'
 
 const now = ref(Math.floor(Date.now() / 1000))
 let timer: ReturnType<typeof setInterval>
@@ -21,8 +21,24 @@ const tsResult = ref('')
 
 // 分段式日期输入，不再持久化缓存(EP 时代缓存的是格式化字符串)
 const dateInput = ref<CalendarDateTime>()
+// 日历弹层选中的日期(不含时间),选定后并入日期时间字段
+const calendarDate = ref<CalendarDate>()
 const dateResult = ref('')
 const dateResultMs = ref('')
+
+watch(calendarDate, (d) => {
+  if (!d) return
+  const t = dateInput.value
+  dateInput.value = new CalendarDateTime(
+    d.year,
+    d.month,
+    d.day,
+    t?.hour ?? 0,
+    t?.minute ?? 0,
+    t?.second ?? 0,
+  )
+  dateToTs()
+})
 
 function pad(n: number) {
   return String(n).padStart(2, '0')
@@ -89,7 +105,7 @@ function copy(val: string) {
           class="ts-card-input"
           @keyup.enter="tsToDate"
         />
-        <UButton @click="tsToDate">转换</UButton>
+        <UButton class="shrink-0" @click="tsToDate">转换</UButton>
       </div>
       <div v-if="tsResult" class="ts-card-output" @click="copy(tsResult)">
         <span class="ts-card-output-text">{{ tsResult }}</span>
@@ -108,7 +124,19 @@ function copy(val: string) {
           class="ts-card-picker w-full"
           @update:model-value="dateToTs"
         />
-        <UButton @click="dateToTs">转换</UButton>
+        <UPopover>
+          <UButton
+            color="neutral"
+            variant="outline"
+            icon="i-ep-calendar"
+            class="shrink-0"
+            aria-label="打开日历选择日期"
+          />
+          <template #content>
+            <UCalendar v-model="calendarDate" class="p-2" />
+          </template>
+        </UPopover>
+        <UButton class="shrink-0" @click="dateToTs">转换</UButton>
       </div>
       <div v-if="dateResult" class="ts-card-output-group">
         <div class="ts-card-output" @click="copy(dateResult)">
