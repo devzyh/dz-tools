@@ -1,6 +1,3 @@
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: false },
@@ -28,6 +25,22 @@ gtag('config', 'G-J80TRKBMB0');`,
 
   modules: ['@nuxt/ui', '@nuxtjs/i18n', '@nuxtjs/sitemap'],
 
+  // 显式声明 ep 图标集走本地 @iconify-json/ep:
+  // pnpm 严格隔离下 @nuxt/icon 的自动探测会失联并退回 Iconify API,SSG 产物将缺图标
+  icon: {
+    serverBundle: {
+      collections: ['ep', 'lucide'],
+    },
+  },
+
+  // 内置 fonts 模块的远程字体源在构建期不可达且非必需(站点使用系统字体栈),直接关闭
+  fonts: {
+    providers: {
+      google: false,
+      googleicons: false,
+    },
+  },
+
   // 过渡期锁定亮色:暗色主题规划二期,届时移除此配置
   colorMode: {
     preference: 'light',
@@ -38,34 +51,7 @@ gtag('config', 'G-J80TRKBMB0');`,
     url: 'https://devzyh.cn',
   },
 
-  // element-plus 组件样式由 ElementPlusResolver 按需注入;
-  // ElMessage 为命令式调用(不在模板),样式需全局保留。
-  // 必须用纯 css 文件而非 es/*/style/css 入口:后者内嵌 .css import,
-  // dev 模式 SSR 端将 node_modules 外部化给 Node 原生 ESM,会报 Unknown file extension ".css"
-  css: [
-    // Tailwind v4 + Nuxt UI 主题入口(preflight 位于 @layer base,不覆盖下方未分层样式)
-    '~/assets/css/main.css',
-    'element-plus/theme-chalk/base.css',
-    'element-plus/theme-chalk/el-message.css',
-    '~/styles/index.scss',
-  ],
-
-  vite: {
-    plugins: [
-      // dirs/dts 关闭:本地组件自动注册由 Nuxt 负责,此处仅解析模板内 el-* 按需引入
-      Components({
-        resolvers: [ElementPlusResolver()],
-        dirs: [],
-        dts: false,
-      }),
-    ],
-    // 按需样式入口(es/components/*/style/css)内嵌 .css import,
-    // dev 模式 SSR 端若将 element-plus 外部化给 Node 原生 ESM 会报
-    // Unknown file extension ".css";交回 Vite 管线即可正常转换
-    ssr: {
-      noExternal: ['element-plus'],
-    },
-  },
+  css: ['~/assets/css/main.css', '~/styles/index.scss'],
 
   i18n: {
     strategy: 'no_prefix',
@@ -83,11 +69,11 @@ gtag('config', 'G-J80TRKBMB0');`,
   },
 
   nitro: {
-    // element-plus 的 @popperjs/core 是 npm alias（实际包 @sxzz/popperjs-es），
-    // Nitro 复制 externals 时无法按别名跟踪，导致运行时 SSR 报 ERR_MODULE_NOT_FOUND。
-    // 已将 alias 包加为项目直接依赖提升到顶层 node_modules，此处再将其内联进 server bundle
+    // @nuxt/icon 的 server bundle 以裸模块名导入图标 JSON,Nitro 会将其外部化,
+    // 预渲染运行时解析失败导致图标回退 Iconify API(SSG 离线必挂);
+    // 内联进 server bundle 交由 Rollup 直接打包
     externals: {
-      inline: ['element-plus', '@popperjs/core'],
+      inline: ['@iconify-json/ep', '@iconify-json/lucide'],
     },
     prerender: {
       crawlLinks: true,
