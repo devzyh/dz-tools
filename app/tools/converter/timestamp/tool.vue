@@ -191,7 +191,7 @@ function copy(val: string) {
           v-model="tsInput"
           placeholder="输入时间戳或日期时间（yyyy-MM-dd HH:mm:ss.zzz）"
           class="ts-card-input"
-          @keyup.enter="tsToDate"
+          @keydown.enter="tsToDate"
         />
         <UButton class="shrink-0" @click="tsToDate">转换</UButton>
       </div>
