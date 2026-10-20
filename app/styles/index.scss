@@ -1,9 +1,5 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+// 全局基础样式:reset 交给 Tailwind preflight(main.css),
+// 此处不再用未分层的 * 选择器清零 padding——它会压过 Tailwind utilities 层
 body {
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;

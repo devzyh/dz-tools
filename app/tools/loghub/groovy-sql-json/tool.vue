@@ -8,8 +8,8 @@ const jsonOutput = ref('')
 const message = useMessage()
 
 const tabItems = [
-  { label: 'MySQL 建表语句', slot: 'sql' },
-  { label: '界面 JSON', slot: 'json' },
+  { label: 'MySQL 建表语句', value: 'sql', slot: 'sql' },
+  { label: '界面 JSON', value: 'json', slot: 'json' },
 ]
 
 interface GroovyField {

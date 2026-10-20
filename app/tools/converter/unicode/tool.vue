@@ -7,8 +7,8 @@ const codeBase = useCachedRef<'hex' | 'dec' | 'oct' | 'binary'>('dz-tools-unicod
 const codeInput = useCachedText('dz-tools-unicode-code', '')
 
 const tabItems = [
-  { label: '字符 → 编码', slot: 'charToCode' },
-  { label: '编码 → 字符', slot: 'codeToChar' },
+  { label: '字符 → 编码', value: 'charToCode', slot: 'charToCode' },
+  { label: '编码 → 字符', value: 'codeToChar', slot: 'codeToChar' },
 ]
 
 const codeBaseItems = [

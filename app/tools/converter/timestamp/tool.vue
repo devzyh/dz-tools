@@ -105,7 +105,7 @@ function copy(val: string) {
         <UInputDate
           v-model="dateInput"
           granularity="second"
-          class="ts-card-picker"
+          class="ts-card-picker w-full"
           @update:model-value="dateToTs"
         />
         <UButton @click="dateToTs">转换</UButton>
