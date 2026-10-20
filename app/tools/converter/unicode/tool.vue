@@ -6,6 +6,18 @@ const activeTab = useCachedRef<'charToCode' | 'codeToChar'>('dz-tools-unicode-ta
 const codeBase = useCachedRef<'hex' | 'dec' | 'oct' | 'binary'>('dz-tools-unicode-base', 'hex')
 const codeInput = useCachedText('dz-tools-unicode-code', '')
 
+const tabItems = [
+  { label: '字符 → 编码', slot: 'charToCode' },
+  { label: '编码 → 字符', slot: 'codeToChar' },
+]
+
+const codeBaseItems = [
+  { label: 'HEX', value: 'hex' },
+  { label: 'DEC', value: 'dec' },
+  { label: 'OCT', value: 'oct' },
+  { label: 'BIN', value: 'binary' },
+]
+
 function parseCodeInput(raw: string, base: string): number[] {
   const tokens = raw
     .trim()
@@ -107,15 +119,15 @@ const codeToCharResults = computed(() => {
 
 <template>
   <div class="unicode-tool">
-    <el-tabs v-model="activeTab">
-      <el-tab-pane label="字符 → 编码" name="charToCode">
+    <UTabs v-model="activeTab" :items="tabItems">
+      <template #charToCode>
         <div class="tab-content">
-          <el-input
+          <UTextarea
             v-model="input"
-            type="textarea"
             placeholder="输入要查询的字符..."
-            :autosize="{ minRows: 3, maxRows: 8 }"
-            resize="none"
+            :rows="3"
+            autoresize
+            class="resize-none"
           />
           <div v-if="charToCodeResults.length" class="char-grid">
             <div v-for="(item, idx) in charToCodeResults" :key="idx" class="char-card">
@@ -133,28 +145,29 @@ const codeToCharResults = computed(() => {
             </div>
           </div>
         </div>
-      </el-tab-pane>
+      </template>
 
-      <el-tab-pane label="编码 → 字符" name="codeToChar">
+      <template #codeToChar>
         <div class="tab-content">
           <div class="config-row">
-            <el-radio-group v-model="codeBase" size="small">
-              <el-radio-button value="hex">HEX</el-radio-button>
-              <el-radio-button value="dec">DEC</el-radio-button>
-              <el-radio-button value="oct">OCT</el-radio-button>
-              <el-radio-button value="binary">BIN</el-radio-button>
-            </el-radio-group>
+            <URadioGroup
+              v-model="codeBase"
+              size="sm"
+              variant="table"
+              orientation="horizontal"
+              :items="codeBaseItems"
+            />
           </div>
-          <el-input
+          <UTextarea
             v-model="codeInput"
-            type="textarea"
             :placeholder="
               codeBase === 'hex'
                 ? '输入编码，如 4E2D U+4E2D \\u4E2D，空格分隔'
                 : `输入${{ hex: '十六进制', dec: '十进制', oct: '八进制', binary: '二进制' }[codeBase]}编码，空格分隔`
             "
-            :autosize="{ minRows: 3, maxRows: 8 }"
-            resize="none"
+            :rows="3"
+            autoresize
+            class="resize-none"
           />
           <div v-if="codeToCharResults.length" class="char-grid">
             <div v-for="(item, idx) in codeToCharResults" :key="idx" class="char-card">
@@ -168,8 +181,8 @@ const codeToCharResults = computed(() => {
             </div>
           </div>
         </div>
-      </el-tab-pane>
-    </el-tabs>
+      </template>
+    </UTabs>
   </div>
 </template>
 
@@ -206,14 +219,14 @@ const codeToCharResults = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  background: var(--el-bg-color-page);
-  border: 1px solid var(--el-border-color-lighter);
+  background: var(--ui-bg-muted);
+  border: 1px solid var(--ui-border);
   border-radius: 8px;
   padding: 12px;
   transition: border-color 0.2s;
 
   &:hover {
-    border-color: var(--el-color-primary-light-5);
+    border-color: color-mix(in srgb, var(--ui-primary) 50%, transparent);
   }
 }
 
@@ -235,7 +248,7 @@ const codeToCharResults = computed(() => {
   font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
   font-size: 13px;
   font-weight: 600;
-  color: var(--el-color-primary);
+  color: var(--ui-primary);
   cursor: pointer;
 
   &:hover {
@@ -245,7 +258,7 @@ const codeToCharResults = computed(() => {
 
 .char-name {
   font-size: 12px;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
 }
 
 .char-detail {
@@ -254,7 +267,7 @@ const codeToCharResults = computed(() => {
   gap: 2px;
   font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
   font-size: 11px;
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
   line-height: 1.5;
 }
 

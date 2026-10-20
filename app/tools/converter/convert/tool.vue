@@ -1,25 +1,31 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import jsYaml from 'js-yaml'
-import { ElMessage } from 'element-plus'
 
 const input = useCachedText('dz-tools-convert-input', '')
 const output = ref('')
+const message = useMessage()
 type Format = 'json' | 'xml' | 'yaml'
 
 const sourceFormat = useCachedRef<Format>('dz-tools-convert-source', 'json')
 const targetFormat = useCachedRef<Format>('dz-tools-convert-target', 'yaml')
 
+const formatItems = [
+  { label: 'JSON', value: 'json' },
+  { label: 'XML', value: 'xml' },
+  { label: 'YAML', value: 'yaml' },
+]
+
 function convert() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入需要转换的内容')
+    message.warning('请输入需要转换的内容')
     return
   }
   try {
     const obj = parse(input.value, sourceFormat.value)
     output.value = stringify(obj, targetFormat.value)
   } catch (err) {
-    ElMessage.error('转换失败：' + (err as Error).message)
+    message.error('转换失败：' + (err as Error).message)
   }
 }
 
@@ -123,7 +129,7 @@ function swap() {
 
 function copy() {
   if (!output.value) {
-    ElMessage.warning('没有可复制的内容')
+    message.warning('没有可复制的内容')
     return
   }
   copyToClipboard(output.value)
@@ -133,34 +139,34 @@ function copy() {
 <template>
   <div class="convert-tool">
     <div class="convert-toolbar">
-      <el-radio-group v-model="sourceFormat">
-        <el-radio-button value="json">JSON</el-radio-button>
-        <el-radio-button value="xml">XML</el-radio-button>
-        <el-radio-button value="yaml">YAML</el-radio-button>
-      </el-radio-group>
+      <URadioGroup
+        v-model="sourceFormat"
+        variant="table"
+        orientation="horizontal"
+        :items="formatItems"
+      />
       <span class="convert-arrow">&rarr;</span>
-      <el-radio-group v-model="targetFormat">
-        <el-radio-button value="json">JSON</el-radio-button>
-        <el-radio-button value="xml">XML</el-radio-button>
-        <el-radio-button value="yaml">YAML</el-radio-button>
-      </el-radio-group>
+      <URadioGroup
+        v-model="targetFormat"
+        variant="table"
+        orientation="horizontal"
+        :items="formatItems"
+      />
       <div class="toolbar-spacer" />
-      <el-button type="primary" @click="convert">转换</el-button>
-      <el-button @click="swap">互换</el-button>
-      <el-button @click="copy">复制</el-button>
+      <UButton @click="convert">转换</UButton>
+      <UButton color="neutral" variant="outline" @click="swap">互换</UButton>
+      <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
     <div class="convert-panels">
-      <el-input
+      <UTextarea
         v-model="input"
-        type="textarea"
-        :placeholder="'请输入要转换的内容'"
+        placeholder="请输入要转换的内容"
         class="convert-textarea"
       />
-      <el-input
+      <UTextarea
         v-model="output"
-        type="textarea"
         readonly
-        :placeholder="'转换结果将显示在这里'"
+        placeholder="转换结果将显示在这里"
         class="convert-textarea"
       />
     </div>
@@ -182,14 +188,14 @@ function copy() {
   gap: 8px;
   flex-wrap: wrap;
   padding: 10px 14px;
-  background: var(--el-fill-color-light);
+  background: var(--ui-bg-accented);
   border-radius: 8px;
   flex-shrink: 0;
 }
 
 .convert-arrow {
   font-size: 18px;
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
   margin: 0 4px;
 }
 
@@ -206,12 +212,12 @@ function copy() {
 }
 
 .convert-textarea {
-  :deep(.el-textarea__inner) {
+  :deep(textarea) {
     font-family: 'Consolas', 'Monaco', monospace;
     font-size: 13px;
     line-height: 1.6;
     resize: none;
-    height: 100% !important;
+    height: 100%;
   }
 }
 

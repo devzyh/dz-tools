@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 
 const input = useCachedText('dz-tools-base64-input', '')
 const output = ref('')
+const message = useMessage()
 
 function encode() {
   try {
     output.value = btoa(unescape(encodeURIComponent(input.value)))
   } catch {
-    ElMessage.error('编码失败')
+    message.error('编码失败')
   }
 }
 
@@ -17,7 +17,7 @@ function decode() {
   try {
     output.value = decodeURIComponent(escape(atob(input.value)))
   } catch {
-    ElMessage.error('解码失败，输入内容不是有效的 Base64')
+    message.error('解码失败，输入内容不是有效的 Base64')
   }
 }
 
@@ -28,24 +28,13 @@ function copy() {
 
 <template>
   <div class="tool-form">
-    <el-input
-      v-model="input"
-      type="textarea"
-      :rows="5"
-      :placeholder="'请输入需要编码或解码的内容'"
-    />
+    <UTextarea v-model="input" :rows="5" placeholder="请输入需要编码或解码的内容" />
     <div class="tool-actions">
-      <el-button type="success" @click="encode">Base64编码</el-button>
-      <el-button type="warning" @click="decode">Base64解码</el-button>
-      <el-button @click="copy">复制</el-button>
+      <UButton color="success" @click="encode">Base64编码</UButton>
+      <UButton color="warning" @click="decode">Base64解码</UButton>
+      <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
-    <el-input
-      v-model="output"
-      type="textarea"
-      :rows="5"
-      readonly
-      :placeholder="'处理结果将在这里显示'"
-    />
+    <UTextarea v-model="output" :rows="5" readonly placeholder="处理结果将在这里显示" />
   </div>
 </template>
 

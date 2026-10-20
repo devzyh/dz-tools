@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { CopyDocument } from '@element-plus/icons-vue'
+import type { CalendarDateTime } from '@internationalized/date'
 
 const now = ref(Math.floor(Date.now() / 1000))
 let timer: ReturnType<typeof setInterval>
@@ -16,10 +15,12 @@ onUnmounted(() => {
   clearInterval(timer)
 })
 
+const message = useMessage()
 const tsInput = useCachedText('dz-tools-timestamp-input', '')
 const tsResult = ref('')
 
-const dateInput = useCachedText('dz-tools-timestamp-date', '')
+// 分段式日期输入，不再持久化缓存(EP 时代缓存的是格式化字符串)
+const dateInput = ref<CalendarDateTime>()
 const dateResult = ref('')
 const dateResultMs = ref('')
 
@@ -43,27 +44,24 @@ function parseTs(raw: string) {
 
 function tsToDate() {
   if (!tsInput.value.trim()) {
-    ElMessage.warning('请输入时间戳')
+    message.warning('请输入时间戳')
     return
   }
   const d = parseTs(tsInput.value)
   if (!d || isNaN(d.getTime())) {
-    ElMessage.error('时间戳无效')
+    message.error('时间戳无效')
     return
   }
   tsResult.value = formatDate(d)
 }
 
 function dateToTs() {
-  if (!dateInput.value) {
-    ElMessage.warning('请选择日期时间')
+  const dt = dateInput.value
+  if (!dt) {
+    message.warning('请选择日期时间')
     return
   }
-  const d = new Date(dateInput.value)
-  if (isNaN(d.getTime())) {
-    ElMessage.error('日期时间无效')
-    return
-  }
+  const d = new Date(dt.year, dt.month - 1, dt.day, dt.hour, dt.minute, dt.second)
   dateResult.value = String(Math.floor(d.getTime() / 1000))
   dateResultMs.value = String(d.getTime())
 }
@@ -85,20 +83,17 @@ function copy(val: string) {
         <span class="ts-card-title">时间戳 → 日期时间</span>
       </div>
       <div class="ts-card-row">
-        <el-input
+        <UInput
           v-model="tsInput"
-          :placeholder="'输入时间戳（10位秒 / 13位毫秒，自动识别）'"
+          placeholder="输入时间戳（10位秒 / 13位毫秒，自动识别）"
           class="ts-card-input"
-          clearable
           @keyup.enter="tsToDate"
         />
-        <el-button type="primary" @click="tsToDate">转换</el-button>
+        <UButton @click="tsToDate">转换</UButton>
       </div>
       <div v-if="tsResult" class="ts-card-output" @click="copy(tsResult)">
         <span class="ts-card-output-text">{{ tsResult }}</span>
-        <el-icon class="ts-card-output-copy">
-          <CopyDocument />
-        </el-icon>
+        <UIcon name="i-ep-copy-document" class="ts-card-output-copy" />
       </div>
     </div>
 
@@ -107,32 +102,24 @@ function copy(val: string) {
         <span class="ts-card-title">日期时间 → 时间戳</span>
       </div>
       <div class="ts-card-row">
-        <el-date-picker
+        <UInputDate
           v-model="dateInput"
-          type="datetime"
-          :placeholder="'选择或输入日期时间'"
+          granularity="second"
           class="ts-card-picker"
-          format="YYYY-MM-DD HH:mm:ss"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          clearable
-          @change="dateToTs"
+          @update:model-value="dateToTs"
         />
-        <el-button type="primary" @click="dateToTs">转换</el-button>
+        <UButton @click="dateToTs">转换</UButton>
       </div>
       <div v-if="dateResult" class="ts-card-output-group">
         <div class="ts-card-output" @click="copy(dateResult)">
           <span class="ts-card-output-tag">秒(s)</span>
           <span class="ts-card-output-text">{{ dateResult }}</span>
-          <el-icon class="ts-card-output-copy">
-            <CopyDocument />
-          </el-icon>
+          <UIcon name="i-ep-copy-document" class="ts-card-output-copy" />
         </div>
         <div class="ts-card-output" @click="copy(dateResultMs)">
           <span class="ts-card-output-tag">毫秒(ms)</span>
           <span class="ts-card-output-text">{{ dateResultMs }}</span>
-          <el-icon class="ts-card-output-copy">
-            <CopyDocument />
-          </el-icon>
+          <UIcon name="i-ep-copy-document" class="ts-card-output-copy" />
         </div>
       </div>
     </div>
@@ -152,22 +139,22 @@ function copy(val: string) {
   padding: 20px 24px;
   background: linear-gradient(
     135deg,
-    var(--el-color-primary-light-9),
-    var(--el-color-primary-light-7)
+    color-mix(in srgb, var(--ui-primary) 10%, transparent),
+    color-mix(in srgb, var(--ui-primary) 30%, transparent)
   );
-  border: 1px solid var(--el-color-primary-light-5);
+  border: 1px solid color-mix(in srgb, var(--ui-primary) 50%, transparent);
   border-radius: 10px;
   cursor: pointer;
   transition: box-shadow 0.2s;
 
   &:hover {
-    box-shadow: 0 2px 12px var(--el-color-primary-light-5);
+    box-shadow: 0 2px 12px color-mix(in srgb, var(--ui-primary) 50%, transparent);
   }
 }
 
 .ts-current-label {
   font-size: 13px;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
   margin-bottom: 8px;
 }
 
@@ -175,28 +162,28 @@ function copy(val: string) {
   font-family: 'Consolas', 'Monaco', monospace;
   font-size: 36px;
   font-weight: 700;
-  color: var(--el-color-primary);
+  color: var(--ui-primary);
   font-variant-numeric: tabular-nums;
   letter-spacing: 2px;
   line-height: 1.2;
 }
 
 .ts-card {
-  border: 1px solid var(--el-border-color);
+  border: 1px solid var(--ui-border-accented);
   border-radius: 10px;
   overflow: hidden;
 }
 
 .ts-card-head {
   padding: 12px 16px;
-  background: var(--el-fill-color-light);
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  background: var(--ui-bg-accented);
+  border-bottom: 1px solid var(--ui-border);
 }
 
 .ts-card-title {
   font-size: 14px;
   font-weight: 600;
-  color: var(--el-text-color-primary);
+  color: var(--ui-text-highlighted);
 }
 
 .ts-card-row {
@@ -209,18 +196,18 @@ function copy(val: string) {
 .ts-card-input {
   flex: 1;
 
-  :deep(.el-input__inner) {
+  :deep(input) {
     font-family: 'Consolas', 'Monaco', monospace;
   }
 }
 
 .ts-card-picker {
   flex: 1;
-  width: 100% !important;
+  min-width: 0;
 }
 
 .ts-card-output-group {
-  border-top: 1px solid var(--el-border-color-lighter);
+  border-top: 1px solid var(--ui-border);
   display: flex;
   flex-direction: column;
 }
@@ -230,7 +217,7 @@ function copy(val: string) {
   align-items: center;
   gap: 10px;
   padding: 12px 16px;
-  border-top: 1px solid var(--el-border-color-lighter);
+  border-top: 1px solid var(--ui-border);
   cursor: pointer;
   transition: background 0.15s;
 
@@ -239,14 +226,14 @@ function copy(val: string) {
   }
 
   &:hover {
-    background: var(--el-fill-color-light);
+    background: var(--ui-bg-accented);
   }
 }
 
 .ts-card-output-tag {
   font-size: 12px;
-  color: var(--el-color-primary);
-  background: var(--el-color-primary-light-9);
+  color: var(--ui-primary);
+  background: color-mix(in srgb, var(--ui-primary) 10%, transparent);
   padding: 2px 8px;
   border-radius: 4px;
   flex-shrink: 0;
@@ -258,12 +245,12 @@ function copy(val: string) {
   font-family: 'Consolas', 'Monaco', monospace;
   font-size: 14px;
   font-variant-numeric: tabular-nums;
-  color: var(--el-text-color-primary);
+  color: var(--ui-text-highlighted);
   word-break: break-all;
 }
 
 .ts-card-output-copy {
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
   flex-shrink: 0;
   font-size: 15px;
 }
