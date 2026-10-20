@@ -7,7 +7,7 @@
 ## 技术栈
 
 - Nuxt 4 + TypeScript + SCSS
-- Element Plus
+- Nuxt UI（Tailwind CSS v4）
 - @nuxtjs/i18n（no_prefix 策略）
 - @nuxtjs/sitemap
 - Nitro Server Routes
@@ -25,17 +25,15 @@ app/
 │   ├── about.vue        # 关于
 │   ├── links.vue        # 友情链接
 │   └── [...slug].vue    # 动态路由（工具页面）
-├── plugins/
-│   └── element-plus.ts  # Element Plus 插件
-├── tools/               # 工具实现（21 个工具，6 个分组）
+├── tools/               # 工具实现（22 个工具，6 个分组）
 │   ├── registry.ts      # 自动注册路由
 │   ├── types.ts         # 类型定义
 │   ├── converter/       # 转换器（base64、convert、timestamp、unicode）
 │   ├── crypto/          # 加解密（crypto、hash）
 │   ├── developer/       # 开发工具（cron、json、regex、xml、xslt）
 │   ├── loghub/          # 通天晓（groovy-sql-json、oly-crypt）
-│   ├── text/            # 文本处理（count-text、diff、extract-text、join-text、password）
-│   └── web/             # Web 工具（html、myip）
+│   ├── text/            # 文本处理（count-text、diff、extract-text、join-text、password、sort-text）
+│   └── web/             # Web 工具（bandwidth、html、myip）
 ├── app.vue              # 根组件
 ├── app.config.ts        # 应用配置
 └── error.vue            # 错误页面
