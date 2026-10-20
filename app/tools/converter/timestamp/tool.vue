@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
-import { CalendarDateTime, type CalendarDate } from '@internationalized/date'
+import { CalendarDate, CalendarDateTime, Time } from '@internationalized/date'
 
 const now = ref(Math.floor(Date.now() / 1000))
 let timer: ReturnType<typeof setInterval>
@@ -21,14 +21,16 @@ const tsResult = ref('')
 
 // 分段式日期输入，不再持久化缓存(EP 时代缓存的是格式化字符串)
 const dateInput = ref<CalendarDateTime>()
-// 日历弹层选中的日期(不含时间),选定后并入日期时间字段
+// 日历弹层:选中的日期与时间,选定后并入日期时间字段
+const pickerOpen = ref(false)
 const calendarDate = ref<CalendarDate>()
+const timeValue = ref<Time>()
 const dateResult = ref('')
 const dateResultMs = ref('')
 
 watch(calendarDate, (d) => {
   if (!d) return
-  const t = dateInput.value
+  const t = timeValue.value ?? dateInput.value
   dateInput.value = new CalendarDateTime(
     d.year,
     d.month,
@@ -39,6 +41,51 @@ watch(calendarDate, (d) => {
   )
   dateToTs()
 })
+
+watch(timeValue, (t) => {
+  if (!t || !calendarDate.value) return
+  dateInput.value = new CalendarDateTime(
+    calendarDate.value.year,
+    calendarDate.value.month,
+    calendarDate.value.day,
+    t.hour,
+    t.minute,
+    t.second ?? 0,
+  )
+  dateToTs()
+})
+
+/**
+ * 打开弹层时以字段当前值为基准初始化日历与时间,空值回退到此刻
+ */
+function openPicker() {
+  const now = new Date()
+  const d = dateInput.value
+  calendarDate.value = d
+    ? new CalendarDate(d.year, d.month, d.day)
+    : new CalendarDate(now.getFullYear(), now.getMonth() + 1, now.getDate())
+  timeValue.value = d
+    ? new Time(d.hour, d.minute, d.second)
+    : new Time(now.getHours(), now.getMinutes(), now.getSeconds())
+  pickerOpen.value = true
+}
+
+/**
+ * 一键填入当前时刻并换算
+ */
+function pickNow() {
+  const now = new Date()
+  dateInput.value = new CalendarDateTime(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    now.getDate(),
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds(),
+  )
+  dateToTs()
+  pickerOpen.value = false
+}
 
 function pad(n: number) {
   return String(n).padStart(2, '0')
@@ -124,16 +171,23 @@ function copy(val: string) {
           class="ts-card-picker w-full"
           @update:model-value="dateToTs"
         />
-        <UPopover>
+        <UPopover v-model:open="pickerOpen">
           <UButton
             color="neutral"
             variant="outline"
             icon="i-ep-calendar"
             class="shrink-0"
-            aria-label="打开日历选择日期"
+            aria-label="打开日期时间选择器"
+            @click="openPicker"
           />
           <template #content>
-            <UCalendar v-model="calendarDate" class="p-2" />
+            <div class="p-3 flex flex-col items-center gap-3">
+              <UCalendar v-model="calendarDate" />
+              <div class="flex items-center gap-2">
+                <UInputTime v-model="timeValue" granularity="second" class="w-36" />
+                <UButton variant="soft" @click="pickNow">此刻</UButton>
+              </div>
+            </div>
           </template>
         </UPopover>
         <UButton class="shrink-0" @click="dateToTs">转换</UButton>
