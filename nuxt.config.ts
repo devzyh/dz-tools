@@ -3,7 +3,8 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
 
   app: {
-    buildAssetsDir: 'assets',
+    // dev 下与 @tailwindcss/vite 的虚拟 CSS 模块路径冲突,恢复默认 '_nuxt'
+    // buildAssetsDir: 'assets',
     head: {
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
       script: [
