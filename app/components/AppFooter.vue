@@ -6,7 +6,7 @@ const appConfig = useAppConfig()
   <footer class="app-footer">
     <div class="footer-divider" />
     <p class="footer-text">
-      &copy; {{ new Date().getFullYear() }} {{ appConfig.title }}. {{ $t('footer.copyright') }}.
+      &copy; {{ new Date().getFullYear() }} {{ appConfig.title }} {{ $t('footer.copyright') }}
     </p>
     <p class="footer-text">
       <a
