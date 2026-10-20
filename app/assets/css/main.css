@@ -1,2 +1,9 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+/* 视觉微调:Nuxt UI 默认的大面积灰面(slate-200)偏深偏蓝,压回 EP 时代的轻灰层次;
+   elevated 用作白卡面(头部/卡片/下拉),accented 用作工具栏/面板底色 */
+:root {
+  --ui-bg-elevated: #fff;
+  --ui-bg-accented: var(--ui-color-neutral-100);
+}
