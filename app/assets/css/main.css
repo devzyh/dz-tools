@@ -7,3 +7,14 @@
   --ui-bg-elevated: #fff;
   --ui-bg-accented: var(--ui-color-neutral-100);
 }
+
+/* Tailwind v4 preflight 将按钮光标重置为 default,恢复交互控件的手型指针 */
+button:not(:disabled),
+[role='button']:not(:disabled),
+[role='checkbox']:not(:disabled),
+[role='switch']:not(:disabled),
+[role='radio']:not(:disabled),
+[role='tab']:not(:disabled),
+select:not(:disabled) {
+  cursor: pointer;
+}
