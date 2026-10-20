@@ -25,6 +25,7 @@ const dateInput = ref<CalendarDateTime>()
 const pickerOpen = ref(false)
 const calendarDate = ref<CalendarDate>()
 const timeValue = ref<Time>()
+const dateStr = ref('')
 const dateResult = ref('')
 const dateResultMs = ref('')
 
@@ -54,6 +55,33 @@ watch(timeValue, (t) => {
   )
   dateToTs()
 })
+
+// 字段值变化(日历/时间/解析结果)→ 格式化回显到文本框
+watch(dateInput, (d) => {
+  if (!d) return
+  const pad = (n: number) => String(n).padStart(2, '0')
+  dateStr.value = `${d.year}-${pad(d.month)}-${pad(d.day)} ${pad(d.hour)}:${pad(d.minute)}:${pad(d.second)}`
+})
+
+/**
+ * 解析文本框输入并换算;日期部分同步进日历,毫秒精度保留在结果中
+ */
+function applyDateStr() {
+  const d = parseDateTimeStr(dateStr.value)
+  if (!d) {
+    if (dateStr.value.trim()) message.error('无法解析，请使用 yyyy-MM-dd HH:mm:ss.zzz 格式')
+    return
+  }
+  dateInput.value = new CalendarDateTime(
+    d.getFullYear(),
+    d.getMonth() + 1,
+    d.getDate(),
+    d.getHours(),
+    d.getMinutes(),
+    d.getSeconds(),
+  )
+  applyDate(d)
+}
 
 /**
  * 打开弹层时以字段当前值为基准初始化日历与时间,空值回退到此刻
@@ -165,7 +193,13 @@ function dateToTs() {
     message.warning('请选择日期时间')
     return
   }
-  const d = new Date(dt.year, dt.month - 1, dt.day, dt.hour, dt.minute, dt.second)
+  applyDate(new Date(dt.year, dt.month - 1, dt.day, dt.hour, dt.minute, dt.second))
+}
+
+/**
+ * 用日期时间对象换算并填充结果
+ */
+function applyDate(d: Date) {
   dateResult.value = String(Math.floor(d.getTime() / 1000))
   dateResultMs.value = String(d.getTime())
 }
@@ -206,11 +240,11 @@ function copy(val: string) {
         <span class="ts-card-title">日期时间 → 时间戳</span>
       </div>
       <div class="ts-card-row">
-        <UInputDate
-          v-model="dateInput"
-          granularity="second"
-          readonly
-          class="ts-card-picker w-full"
+        <UInput
+          v-model="dateStr"
+          placeholder="yyyy-MM-dd HH:mm:ss.zzz"
+          class="ts-card-picker"
+          @keydown.enter="applyDateStr"
         />
         <UPopover v-model:open="pickerOpen">
           <UButton
@@ -231,7 +265,7 @@ function copy(val: string) {
             </div>
           </template>
         </UPopover>
-        <UButton class="shrink-0" @click="dateToTs">转换</UButton>
+        <UButton class="shrink-0" @click="applyDateStr">转换</UButton>
       </div>
       <div v-if="dateResult" class="ts-card-output-group">
         <div class="ts-card-output" @click="copy(dateResult)">
