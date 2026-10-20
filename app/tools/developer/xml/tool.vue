@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { ElMessage } from 'element-plus'
 
 let ace: typeof import('ace-builds') | null = null
 let xmlFormat: (
@@ -12,6 +11,7 @@ const STORAGE_KEY = 'dz-tools-xml'
 const { read, write } = useToolCache()
 const editorContainer = ref<HTMLDivElement>()
 const editorReady = ref(false)
+const message = useMessage()
 let editor: ace.Ace.Editor | null = null
 
 function getEditor(): ace.Ace.Editor {
@@ -28,7 +28,7 @@ function formatXml() {
     })
     getEditor().setValue(result, -1)
   } catch {
-    ElMessage.error('XML 格式不正确，无法美化')
+    message.error('XML 格式不正确，无法美化')
   }
 }
 
@@ -47,7 +47,7 @@ function decodeXml() {
   try {
     getEditor().setValue(decodeURIComponent(getEditor().getValue()), -1)
   } catch {
-    ElMessage.error('解码失败，内容不是有效的 URI 编码')
+    message.error('解码失败，内容不是有效的 URI 编码')
   }
 }
 
@@ -100,16 +100,16 @@ onBeforeUnmount(() => {
 <template>
   <div class="xml-editor-tool">
     <div class="xml-toolbar">
-      <el-button-group>
-        <el-button type="primary" @click="formatXml">美化</el-button>
-        <el-button type="primary" @click="compactXml">压缩</el-button>
-      </el-button-group>
-      <el-button-group>
-        <el-button type="success" @click="decodeXml">解码</el-button>
-      </el-button-group>
-      <el-button-group>
-        <el-button type="danger" @click="clearXml">清空</el-button>
-      </el-button-group>
+      <div class="btn-group">
+        <UButton @click="formatXml">美化</UButton>
+        <UButton @click="compactXml">压缩</UButton>
+      </div>
+      <div class="btn-group">
+        <UButton color="success" @click="decodeXml">解码</UButton>
+      </div>
+      <div class="btn-group">
+        <UButton color="error" @click="clearXml">清空</UButton>
+      </div>
     </div>
     <EditorLoader v-model:ready="editorReady">
       <div ref="editorContainer" class="xml-editor-container" />
@@ -130,9 +130,14 @@ onBeforeUnmount(() => {
   gap: 8px;
 }
 
+.btn-group {
+  display: flex;
+  gap: 4px;
+}
+
 .xml-editor-container {
   height: 74.5vh;
-  border: 1px solid #d3d3d3;
+  border: 1px solid var(--ui-border-accented);
   border-radius: 4px;
   overflow: hidden;
 }

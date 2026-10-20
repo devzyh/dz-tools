@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { CronExpressionParser } from 'cron-parser'
-import { ElMessage } from 'element-plus'
-import { WarningFilled, Clock } from '@element-plus/icons-vue'
 
 const expression = useCachedText('dz-tools-cron-expression', '')
 const schedules = ref<{ date: string; day: string }[]>([])
 const error = ref('')
+const message = useMessage()
 
 const fieldDesc = computed(() => [
   { label: '秒', range: '0-59' },
@@ -31,7 +30,7 @@ const presets = computed(() => [
 
 function parse() {
   if (!expression.value.trim()) {
-    ElMessage.warning('请输入Cron表达式')
+    message.warning('请输入Cron表达式')
     return
   }
   error.value = ''
@@ -60,14 +59,13 @@ function applyPreset(value: string) {
 <template>
   <div class="cron-tool">
     <div class="cron-input-row">
-      <el-input
+      <UInput
         v-model="expression"
         placeholder="0 0 12 * * ?"
         class="cron-input"
-        clearable
         @keyup.enter="parse"
       />
-      <el-button type="primary" @click="parse">解析</el-button>
+      <UButton @click="parse">解析</UButton>
     </div>
 
     <div class="cron-fields">
@@ -77,31 +75,31 @@ function applyPreset(value: string) {
     </div>
 
     <div class="cron-presets">
-      <el-tag
+      <UBadge
         v-for="item in presets"
         :key="item.value"
+        variant="outline"
         class="preset-tag"
-        effect="plain"
         @click="applyPreset(item.value)"
       >
         {{ item.label }}
-      </el-tag>
+      </UBadge>
     </div>
 
     <div v-if="error" class="cron-error">
-      <el-icon><WarningFilled /></el-icon>
+      <UIcon name="i-ep-warning-filled" class="size-4 shrink-0" />
       <span>{{ error }}</span>
     </div>
 
     <div v-if="schedules.length" class="cron-results">
       <div class="results-header">
-        <el-icon><Clock /></el-icon>
+        <UIcon name="i-ep-clock" class="size-4" />
         <span>最近 10 次执行时间</span>
       </div>
       <div v-for="(item, index) in schedules" :key="index" class="cron-row">
         <span class="cron-index">{{ index + 1 }}</span>
         <span class="cron-date">{{ item.date }}</span>
-        <el-tag size="small" effect="plain" class="cron-day">{{ item.day }}</el-tag>
+        <UBadge variant="outline" size="sm" class="cron-day">{{ item.day }}</UBadge>
       </div>
     </div>
   </div>
@@ -122,7 +120,7 @@ function applyPreset(value: string) {
 .cron-input {
   max-width: 480px;
 
-  :deep(.el-input__inner) {
+  :deep(input) {
     font-family: 'Consolas', 'Monaco', monospace;
     font-size: 14px;
     letter-spacing: 1px;
@@ -140,14 +138,14 @@ function applyPreset(value: string) {
   align-items: baseline;
   gap: 4px;
   padding: 2px 10px;
-  background: var(--el-fill-color-light);
+  background: var(--ui-bg-accented);
   border-radius: 4px;
   font-size: 13px;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
 
   small {
     font-size: 11px;
-    color: var(--el-text-color-placeholder);
+    color: var(--ui-text-dimmed);
   }
 }
 
@@ -166,14 +164,14 @@ function applyPreset(value: string) {
   align-items: center;
   gap: 6px;
   padding: 8px 12px;
-  color: var(--el-color-danger);
-  background: var(--el-color-danger-light-9);
+  color: var(--ui-error);
+  background: color-mix(in srgb, var(--ui-error) 10%, transparent);
   border-radius: 6px;
   font-size: 13px;
 }
 
 .cron-results {
-  border: 1px solid var(--el-border-color);
+  border: 1px solid var(--ui-border-accented);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -185,9 +183,9 @@ function applyPreset(value: string) {
   padding: 10px 14px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--el-text-color-secondary);
-  background: var(--el-fill-color-lighter);
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  color: var(--ui-text-muted);
+  background: var(--ui-bg-muted);
+  border-bottom: 1px solid var(--ui-border);
 }
 
 .cron-row {
@@ -195,7 +193,7 @@ function applyPreset(value: string) {
   align-items: center;
   padding: 0 14px;
   height: 40px;
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  border-bottom: 1px solid var(--ui-border);
 
   &:last-child {
     border-bottom: none;
@@ -205,7 +203,7 @@ function applyPreset(value: string) {
 .cron-index {
   width: 32px;
   font-size: 12px;
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
   font-variant-numeric: tabular-nums;
 }
 
@@ -214,7 +212,7 @@ function applyPreset(value: string) {
   font-family: 'Consolas', 'Monaco', monospace;
   font-size: 13px;
   font-variant-numeric: tabular-nums;
-  color: var(--el-text-color-primary);
+  color: var(--ui-text-highlighted);
 }
 
 .cron-day {

@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Select, CloseBold } from '@element-plus/icons-vue'
 
 const pattern = useCachedText('dz-tools-regex-pattern', '')
 const testText = useCachedText('dz-tools-regex-text', '')
 const flagGlobal = useCachedRef('dz-tools-regex-flag-global', true)
 const flagIgnoreCase = useCachedRef('dz-tools-regex-flag-ignore-case', false)
 const flagMultiline = useCachedRef('dz-tools-regex-flag-multiline', false)
+const message = useMessage()
 
 const matchResults = ref<
   { match: string; groups: (string | undefined)[]; index: number; end: number }[]
@@ -52,11 +51,11 @@ const totalGroupCount = computed(() => {
 
 function runTest() {
   if (!pattern.value.trim()) {
-    ElMessage.warning('请输入正则表达式')
+    message.warning('请输入正则表达式')
     return
   }
   if (!testText.value) {
-    ElMessage.warning('请输入测试字符串')
+    message.warning('请输入测试字符串')
     return
   }
 
@@ -93,29 +92,28 @@ function escapeHtml(text: string) {
 <template>
   <div class="regex-tool">
     <div class="regex-input-row">
-      <el-input
+      <UInput
         v-model="pattern"
         placeholder="输入正则表达式，如 ^[a-zA-Z]+$"
         class="regex-pattern"
         @keyup.enter="runTest"
       >
-        <template #prefix>
+        <template #leading>
           <span class="regex-slash">/</span>
         </template>
-        <template #suffix>
+        <template #trailing>
           <span class="regex-slash">/{{ flagStr }}/&nbsp;</span>
         </template>
-      </el-input>
+      </UInput>
       <div class="regex-flags">
-        <el-checkbox v-model="flagGlobal" label="全局(g)" />
-        <el-checkbox v-model="flagIgnoreCase" label="忽略大小写(i)" />
-        <el-checkbox v-model="flagMultiline" label="多行(m)" />
+        <UCheckbox v-model="flagGlobal" label="全局(g)" />
+        <UCheckbox v-model="flagIgnoreCase" label="忽略大小写(i)" />
+        <UCheckbox v-model="flagMultiline" label="多行(m)" />
       </div>
     </div>
 
-    <el-input
+    <UTextarea
       v-model="testText"
-      type="textarea"
       :rows="5"
       placeholder="输入要测试的文本..."
       class="regex-textarea"
@@ -123,7 +121,7 @@ function escapeHtml(text: string) {
     />
 
     <div class="regex-actions">
-      <el-button type="primary" @click="runTest">运行测试</el-button>
+      <UButton @click="runTest">运行测试</UButton>
       <span class="regex-hint">Ctrl+Enter 快捷运行</span>
     </div>
 
@@ -134,8 +132,8 @@ function escapeHtml(text: string) {
 
       <template v-else>
         <div class="regex-status" :class="matchResults.length ? 'is-matched' : 'is-unmatched'">
-          <el-icon v-if="matchResults.length" class="status-icon"><Select /></el-icon>
-          <el-icon v-else class="status-icon"><CloseBold /></el-icon>
+          <UIcon v-if="matchResults.length" name="i-ep-select" class="status-icon" />
+          <UIcon v-else name="i-ep-close-bold" class="status-icon" />
           <span>{{
             matchResults.length ? `找到 ${matchResults.length} 个匹配项` : '没有找到匹配项'
           }}</span>
@@ -149,9 +147,14 @@ function escapeHtml(text: string) {
         <div v-if="matchResults.length" class="regex-section">
           <div class="section-title">
             匹配详情
-            <el-tag size="small" effect="plain" class="count-tag">{{ matchCount }} 项</el-tag>
-            <el-tag v-if="hasGroups" size="small" type="warning" effect="plain" class="count-tag"
-              >{{ totalGroupCount }} 个捕获组</el-tag
+            <UBadge variant="outline" size="sm" class="count-tag">{{ matchCount }} 项</UBadge>
+            <UBadge
+              v-if="hasGroups"
+              variant="outline"
+              size="sm"
+              color="warning"
+              class="count-tag"
+              >{{ totalGroupCount }} 个捕获组</UBadge
             >
           </div>
           <div class="regex-details">
@@ -170,7 +173,7 @@ function escapeHtml(text: string) {
               <span class="group-match-label">匹配 #{{ idx + 1 }}</span>
               <div class="group-items">
                 <span v-for="(g, gi) in item.groups.slice(1)" :key="gi" class="group-item">
-                  <el-tag size="small" effect="plain">组 {{ gi + 1 }}</el-tag>
+                  <UBadge variant="outline" size="sm">组 {{ gi + 1 }}</UBadge>
                   {{ g !== undefined ? g : '未定义' }}
                 </span>
               </div>
@@ -265,14 +268,14 @@ function escapeHtml(text: string) {
 }
 
 .regex-pattern {
-  :deep(.el-input__inner) {
+  :deep(input) {
     font-family: 'Consolas', 'Monaco', monospace;
     font-size: 14px;
   }
 }
 
 .regex-slash {
-  color: var(--el-color-danger);
+  color: var(--ui-error);
   font-weight: bold;
   font-family: 'Consolas', 'Monaco', monospace;
 }
@@ -284,7 +287,7 @@ function escapeHtml(text: string) {
 }
 
 .regex-textarea {
-  :deep(.el-textarea__inner) {
+  :deep(textarea) {
     font-family: 'Consolas', 'Monaco', monospace;
     font-size: 13px;
     line-height: 1.6;
@@ -299,13 +302,13 @@ function escapeHtml(text: string) {
 
 .regex-hint {
   font-size: 12px;
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
 }
 
 .regex-error {
   padding: 10px 14px;
-  color: var(--el-color-danger);
-  background: var(--el-color-danger-light-9);
+  color: var(--ui-error);
+  background: color-mix(in srgb, var(--ui-error) 10%, transparent);
   border-radius: 6px;
   font-size: 13px;
 }
@@ -320,13 +323,13 @@ function escapeHtml(text: string) {
   font-weight: 500;
 
   &.is-matched {
-    color: var(--el-color-success);
-    background: var(--el-color-success-light-9);
+    color: var(--ui-success);
+    background: color-mix(in srgb, var(--ui-success) 10%, transparent);
   }
 
   &.is-unmatched {
-    color: var(--el-color-danger);
-    background: var(--el-color-danger-light-9);
+    color: var(--ui-error);
+    background: color-mix(in srgb, var(--ui-error) 10%, transparent);
   }
 }
 
@@ -343,7 +346,7 @@ function escapeHtml(text: string) {
 .section-title {
   font-size: 13px;
   font-weight: 600;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -355,9 +358,9 @@ function escapeHtml(text: string) {
 
 .regex-formatted {
   padding: 12px 14px;
-  border: 1px solid var(--el-border-color);
+  border: 1px solid var(--ui-border-accented);
   border-radius: 8px;
-  background: var(--el-fill-color-lighter);
+  background: var(--ui-bg-muted);
   font-family: 'Consolas', 'Monaco', monospace;
   font-size: 13px;
   line-height: 1.8;
@@ -367,13 +370,13 @@ function escapeHtml(text: string) {
 }
 
 :deep(.match-highlight) {
-  background: var(--el-color-warning-light-5);
+  background: color-mix(in srgb, var(--ui-warning) 50%, transparent);
   border-radius: 3px;
   padding: 1px 2px;
 }
 
 .regex-details {
-  border: 1px solid var(--el-border-color);
+  border: 1px solid var(--ui-border-accented);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -383,7 +386,7 @@ function escapeHtml(text: string) {
   align-items: center;
   padding: 0 14px;
   height: 40px;
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  border-bottom: 1px solid var(--ui-border);
 
   &:last-child {
     border-bottom: none;
@@ -393,7 +396,7 @@ function escapeHtml(text: string) {
 .detail-index {
   width: 40px;
   font-size: 12px;
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
   font-variant-numeric: tabular-nums;
 }
 
@@ -401,7 +404,7 @@ function escapeHtml(text: string) {
   flex: 1;
   font-family: 'Consolas', 'Monaco', monospace;
   font-size: 13px;
-  color: var(--el-color-primary);
+  color: var(--ui-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -409,14 +412,14 @@ function escapeHtml(text: string) {
 
 .detail-pos {
   font-size: 12px;
-  color: var(--el-text-color-placeholder);
+  color: var(--ui-text-dimmed);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .group-row {
   padding: 8px 14px;
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  border-bottom: 1px solid var(--ui-border);
 
   &:last-child {
     border-bottom: none;
@@ -426,7 +429,7 @@ function escapeHtml(text: string) {
 .group-match-label {
   font-size: 12px;
   font-weight: 600;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
   margin-bottom: 4px;
   display: block;
 }
@@ -456,7 +459,7 @@ function escapeHtml(text: string) {
 }
 
 .ref-card {
-  border: 1px solid var(--el-border-color);
+  border: 1px solid var(--ui-border-accented);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -465,9 +468,9 @@ function escapeHtml(text: string) {
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--el-text-color-secondary);
-  background: var(--el-fill-color-light);
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  color: var(--ui-text-muted);
+  background: var(--ui-bg-accented);
+  border-bottom: 1px solid var(--ui-border);
 }
 
 .ref-table {
@@ -477,10 +480,10 @@ function escapeHtml(text: string) {
   td {
     padding: 5px 12px;
     font-size: 12px;
-    border-bottom: 1px solid var(--el-border-color-lighter);
+    border-bottom: 1px solid var(--ui-border);
 
     &:last-child {
-      color: var(--el-text-color-regular);
+      color: var(--ui-text);
     }
 
     &:last-child {
@@ -490,8 +493,8 @@ function escapeHtml(text: string) {
 
   code {
     font-family: 'Consolas', 'Monaco', monospace;
-    color: var(--el-color-primary);
-    background: var(--el-fill-color);
+    color: var(--ui-primary);
+    background: var(--ui-bg-accented);
     padding: 1px 4px;
     border-radius: 3px;
     font-size: 12px;

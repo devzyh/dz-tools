@@ -147,9 +147,9 @@ onBeforeUnmount(() => {
 <template>
   <div class="xslt-tool">
     <div class="tool-actions">
-      <el-button type="primary" @click="convertXslt">渲染XML</el-button>
-      <el-button type="warning" @click="formatXml">美化XML</el-button>
-      <el-button type="danger" @click="clearAll">清空</el-button>
+      <UButton @click="convertXslt">渲染XML</UButton>
+      <UButton color="warning" @click="formatXml">美化XML</UButton>
+      <UButton color="error" @click="clearAll">清空</UButton>
     </div>
     <EditorLoader v-model:ready="editorReady">
       <div class="editor-section">
@@ -199,13 +199,13 @@ onBeforeUnmount(() => {
 .section-label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--el-text-color-secondary);
+  color: var(--ui-text-muted);
   margin-bottom: 4px;
 }
 
 .editor-panel {
   height: 300px;
-  border: 1px solid var(--el-border-color);
+  border: 1px solid var(--ui-border-accented);
   border-radius: 8px;
   overflow: hidden;
 }

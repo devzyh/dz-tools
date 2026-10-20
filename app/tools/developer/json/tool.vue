@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { ElMessage } from 'element-plus'
 
 const STORAGE_KEY = 'dz-tools-json'
 const { read, write } = useToolCache()
 const editorContainer = ref<HTMLDivElement>()
 const editorReady = ref(false)
+const message = useMessage()
 let editor: any = null
 
 function getEditor(): any {
@@ -17,7 +17,7 @@ function formatJson() {
   try {
     getEditor().format()
   } catch {
-    ElMessage.error('JSON 格式不正确，无法美化')
+    message.error('JSON 格式不正确，无法美化')
   }
 }
 
@@ -25,7 +25,7 @@ function compactJson() {
   try {
     getEditor().compact()
   } catch {
-    ElMessage.error('JSON 格式不正确，无法压缩')
+    message.error('JSON 格式不正确，无法压缩')
   }
 }
 
@@ -33,7 +33,7 @@ function sortJson() {
   try {
     getEditor()._showSortModal()
   } catch {
-    ElMessage.error('排序功能不可用')
+    message.error('排序功能不可用')
   }
 }
 
@@ -41,7 +41,7 @@ function transformJson() {
   try {
     getEditor()._showTransformModal()
   } catch {
-    ElMessage.error('筛选功能不可用')
+    message.error('筛选功能不可用')
   }
 }
 
@@ -53,7 +53,7 @@ function escapeJson() {
     text = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
     getEditor().setText(text)
   } catch {
-    ElMessage.error('转义失败')
+    message.error('转义失败')
   }
 }
 
@@ -63,7 +63,7 @@ function unescapeJson() {
     text = text.replace(/\\\\/g, '\\').replace(/\\"/g, '"')
     getEditor().setText(text)
   } catch {
-    ElMessage.error('修复失败')
+    message.error('修复失败')
   }
 }
 
@@ -71,7 +71,7 @@ function decodeJson() {
   try {
     getEditor().setText(decodeURIComponent(getEditor().getText()))
   } catch {
-    ElMessage.error('解码失败，内容不是有效的 URI 编码')
+    message.error('解码失败，内容不是有效的 URI 编码')
   }
 }
 
@@ -137,20 +137,20 @@ onBeforeUnmount(() => {
 <template>
   <div class="json-editor-tool">
     <div class="json-toolbar">
-      <el-button-group>
-        <el-button type="primary" @click="formatJson">美化</el-button>
-        <el-button type="primary" @click="compactJson">压缩</el-button>
-        <el-button type="primary" @click="sortJson">排序</el-button>
-        <el-button type="primary" @click="transformJson">筛选</el-button>
-      </el-button-group>
-      <el-button-group>
-        <el-button type="success" @click="escapeJson">转义</el-button>
-        <el-button type="success" @click="unescapeJson">修复</el-button>
-        <el-button type="success" @click="decodeJson">解码</el-button>
-      </el-button-group>
-      <el-button-group>
-        <el-button type="danger" @click="clearJson">清空</el-button>
-      </el-button-group>
+      <div class="btn-group">
+        <UButton @click="formatJson">美化</UButton>
+        <UButton @click="compactJson">压缩</UButton>
+        <UButton @click="sortJson">排序</UButton>
+        <UButton @click="transformJson">筛选</UButton>
+      </div>
+      <div class="btn-group">
+        <UButton color="success" @click="escapeJson">转义</UButton>
+        <UButton color="success" @click="unescapeJson">修复</UButton>
+        <UButton color="success" @click="decodeJson">解码</UButton>
+      </div>
+      <div class="btn-group">
+        <UButton color="error" @click="clearJson">清空</UButton>
+      </div>
     </div>
     <EditorLoader v-model:ready="editorReady">
       <div ref="editorContainer" class="json-editor-container" />
@@ -171,9 +171,14 @@ onBeforeUnmount(() => {
   gap: 8px;
 }
 
+.btn-group {
+  display: flex;
+  gap: 4px;
+}
+
 .json-editor-container {
   height: 74.5vh;
-  border: 1px solid #d3d3d3;
+  border: 1px solid var(--ui-border-accented);
   border-radius: 4px;
   overflow: hidden;
 }
