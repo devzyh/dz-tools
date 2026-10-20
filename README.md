@@ -18,6 +18,8 @@
 app/
 ├── components/          # 公共组件
 ├── composables/         # 组合式函数
+├── assets/css/main.css  # Tailwind + Nuxt UI 主题入口
+├── styles/index.scss    # 全局样式
 ├── layouts/
 │   └── default.vue      # 默认布局
 ├── pages/               # 页面路由

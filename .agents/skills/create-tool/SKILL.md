@@ -33,7 +33,7 @@ description: 为 DZ Tools 项目创建新的在线工具——在 app/tools/{分
 | `group`(分组) | **优先归入现有分组**:`converter` / `crypto` / `developer` / `loghub` / `text` / `web`。仅当确实不属于任何现有分组时,才新建分组。 |
 | `title` | 中文,简洁名词(如「JSON 编辑器」)。 |
 | `description` | 中文一句话说明功能。 |
-| `icon` | 选贴合功能的 `@element-plus/icons-vue` 组件名,如 `Document` / `Edit` / `CopyDocument` / `Calendar` / `Key` / `Lock`。 |
+| `icon` | 选贴合功能的 Element Plus 图标名(PascalCase,经 Iconify `ep` 集合渲染),如 `Document` / `Edit` / `CopyDocument` / `Calendar` / `Key` / `Lock`。可用图标见 https://icon-sets.iconify.design/ep/ |
 | `showHeader` | 多数工具用 `true`(显示标题与描述);编辑器类全屏工具可用 `false`。 |
 | `sort` | **读取同组所有 `{tool}/meta.ts` 的 `sort`,取最大值 + 1**。 |
 
@@ -70,7 +70,7 @@ export default defineToolMeta({
   <div class="tool-form">
     <!-- Input area -->
     <div class="tool-actions">
-      <el-button type="primary">执行</el-button>
+      <UButton>执行</UButton>
     </div>
     <!-- Output area -->
   </div>
@@ -107,8 +107,9 @@ export default defineGroupMeta({
 
 1. **sort 必须读同组取 max+1**,不要随手写 1,否则排序错乱。
 2. **SEO 由 `app/pages/[...slug].vue` 自动从 `meta.title` / `meta.description` 生成**(内部调 `usePageSeo`)。`tool.vue` 内**禁止**手动调用 `usePageSeo`,否则重复。填好 meta 的 title/description 即等于填好 SEO。
-3. **icon 用 `@element-plus/icons-vue` 的组件名**(字符串),不是路径、不是 SVG。
+3. **icon 用 Element Plus 图标名**(PascalCase 字符串,由 ToolCard 经 Iconify `ep` 集合渲染为 `i-ep-*`),不是路径、不是 SVG。
 4. **两层 kebab-case 目录**:`{group}/{tool}/`,组件文件名固定 `tool.vue`。
+5. **UI 组件用 Nuxt UI**(UButton/UInput/UTextarea/USelect 等,尺寸用默认 md),操作提示走 `useMessage()` / `copyToClipboard()`——句式与类型规则见项目 `AGENTS.md` 的「UI 规范」一节。
 
 ## 其他
 
