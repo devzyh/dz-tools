@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 
 const input = useCachedText('dz-tools-groovy-sql-json-input', '')
 const activeTab = useCachedRef('dz-tools-groovy-sql-json-tab', 'sql')
 const sqlOutput = ref('')
 const jsonOutput = ref('')
+const message = useMessage()
+
+const tabItems = [
+  { label: 'MySQL 建表语句', slot: 'sql' },
+  { label: '界面 JSON', slot: 'json' },
+]
 
 interface GroovyField {
   type: string
@@ -266,7 +271,7 @@ function generateJson(defineInfo: DefineInfo | null, fields: GroovyField[]): str
 
 function convert() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入 Groovy 实体类')
+    message.warning('请输入 Groovy 实体类')
     return
   }
 
@@ -274,19 +279,19 @@ function convert() {
   const uniqueFields = dedupFields(fields)
 
   if (uniqueFields.length === 0) {
-    ElMessage.warning('未解析到任何字段')
+    message.warning('未解析到任何字段')
     return
   }
 
   sqlOutput.value = generateSql(defineInfo, uniqueFields)
   jsonOutput.value = generateJson(defineInfo, uniqueFields)
   activeTab.value = 'sql'
-  ElMessage.success(`解析完成，共 ${uniqueFields.length} 个字段`)
+  message.success(`解析完成，共 ${uniqueFields.length} 个字段`)
 }
 
 function copySql() {
   if (!sqlOutput.value) {
-    ElMessage.warning('没有可复制的内容')
+    message.warning('没有可复制的内容')
     return
   }
   copyToClipboard(sqlOutput.value, 'SQL 已复制')
@@ -294,7 +299,7 @@ function copySql() {
 
 function copyJson() {
   if (!jsonOutput.value) {
-    ElMessage.warning('没有可复制的内容')
+    message.warning('没有可复制的内容')
     return
   }
   copyToClipboard(jsonOutput.value, 'JSON 已复制')
@@ -309,21 +314,21 @@ function clear() {
 
 <template>
   <div class="tool-form">
-    <el-input v-model="input" type="textarea" :rows="12" placeholder="请粘贴 Groovy 实体类代码" />
+    <UTextarea v-model="input" :rows="12" placeholder="请粘贴 Groovy 实体类代码" />
     <div class="tool-actions">
-      <el-button type="primary" @click="convert">转换</el-button>
-      <el-button @click="copySql">复制SQL</el-button>
-      <el-button @click="copyJson">复制JSON</el-button>
-      <el-button @click="clear">清空</el-button>
+      <UButton @click="convert">转换</UButton>
+      <UButton color="neutral" variant="outline" @click="copySql">复制SQL</UButton>
+      <UButton color="neutral" variant="outline" @click="copyJson">复制JSON</UButton>
+      <UButton color="neutral" variant="outline" @click="clear">清空</UButton>
     </div>
-    <el-tabs v-if="sqlOutput || jsonOutput" v-model="activeTab">
-      <el-tab-pane label="MySQL 建表语句" name="sql">
-        <el-input v-model="sqlOutput" type="textarea" :rows="16" readonly />
-      </el-tab-pane>
-      <el-tab-pane label="界面 JSON" name="json">
-        <el-input v-model="jsonOutput" type="textarea" :rows="16" readonly />
-      </el-tab-pane>
-    </el-tabs>
+    <UTabs v-if="sqlOutput || jsonOutput" v-model="activeTab" :items="tabItems">
+      <template #sql>
+        <UTextarea v-model="sqlOutput" :rows="16" readonly />
+      </template>
+      <template #json>
+        <UTextarea v-model="jsonOutput" :rows="16" readonly />
+      </template>
+    </UTabs>
   </div>
 </template>
 

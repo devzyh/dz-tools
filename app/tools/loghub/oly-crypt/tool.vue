@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 
 // 密钥为敏感字段,不参与缓存
 const input = useCachedText('dz-tools-oly-crypt-input', '')
 const key = ref('')
 const output = ref('')
 const showCode = ref(false)
+const message = useMessage()
 
 const javaCode = `package cn.devzyh.tools.service.loghub;
 
@@ -70,11 +70,11 @@ public class LoghubOlyCryptService {
 
 async function encrypt() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入内容')
+    message.warning('请输入内容')
     return
   }
   if (!key.value.trim()) {
-    ElMessage.warning('请输入密钥')
+    message.warning('请输入密钥')
     return
   }
   try {
@@ -87,17 +87,17 @@ async function encrypt() {
     })
     output.value = encrypted.ciphertext.toString(CryptoJS.enc.Hex).toUpperCase()
   } catch (err) {
-    ElMessage.error('加密失败：' + (err as Error).message)
+    message.error('加密失败：' + (err as Error).message)
   }
 }
 
 async function decrypt() {
   if (!input.value.trim()) {
-    ElMessage.warning('请输入内容')
+    message.warning('请输入内容')
     return
   }
   if (!key.value.trim()) {
-    ElMessage.warning('请输入密钥')
+    message.warning('请输入密钥')
     return
   }
   try {
@@ -113,12 +113,12 @@ async function decrypt() {
     })
     const result = decrypted.toString(CryptoJS.enc.Utf8)
     if (!result) {
-      ElMessage.error('解密失败，请检查密文和密钥是否正确')
+      message.error('解密失败，请检查密文和密钥是否正确')
       return
     }
     output.value = result
   } catch (err) {
-    ElMessage.error('解密失败：' + (err as Error).message)
+    message.error('解密失败：' + (err as Error).message)
   }
 }
 
@@ -139,7 +139,7 @@ function swap() {
 
 function copy() {
   if (!output.value) {
-    ElMessage.warning('没有可复制的内容')
+    message.warning('没有可复制的内容')
     return
   }
   copyToClipboard(output.value)
@@ -152,28 +152,22 @@ function copyCode() {
 
 <template>
   <div class="tool-form">
-    <el-input v-model="input" type="textarea" :rows="5" placeholder="请输入需要加密或解密的内容" />
+    <UTextarea v-model="input" :rows="5" placeholder="请输入需要加密或解密的内容" />
     <div class="key-group">
-      <el-input v-model="key" placeholder="请输入加密/解密密钥" />
-      <el-button @click="generateKey">随机</el-button>
+      <UInput v-model="key" placeholder="请输入加密/解密密钥" />
+      <UButton color="neutral" variant="outline" @click="generateKey">随机</UButton>
     </div>
     <div class="tool-actions">
-      <el-button type="success" @click="encrypt">加密</el-button>
-      <el-button type="warning" @click="decrypt">解密</el-button>
-      <el-button @click="swap">交换</el-button>
-      <el-button @click="copy">复制</el-button>
+      <UButton color="success" @click="encrypt">加密</UButton>
+      <UButton color="warning" @click="decrypt">解密</UButton>
+      <UButton color="neutral" variant="outline" @click="swap">交换</UButton>
+      <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
-    <el-input
-      v-model="output"
-      type="textarea"
-      :rows="5"
-      readonly
-      placeholder="处理结果将在这里显示"
-    />
+    <UTextarea v-model="output" :rows="5" readonly placeholder="处理结果将在这里显示" />
     <div class="code-block">
       <div class="code-header" @click="showCode = !showCode">
         <span>Java 实现代码</span>
-        <el-button link size="small" @click.stop="copyCode">复制</el-button>
+        <UButton variant="link" color="neutral" size="sm" @click.stop="copyCode">复制</UButton>
       </div>
       <pre v-show="showCode" class="java-code"><code>{{ javaCode }}</code></pre>
     </div>
@@ -199,7 +193,7 @@ function copyCode() {
 }
 
 .code-block {
-  border: 1px solid var(--el-border-color-lighter, #ebeef5);
+  border: 1px solid var(--ui-border);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -209,25 +203,25 @@ function copyCode() {
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: var(--el-fill-color, #f0f2f5);
+  background: var(--ui-bg-accented);
   font-size: 13px;
-  color: var(--el-text-color-secondary, #909399);
+  color: var(--ui-text-muted);
   cursor: pointer;
   user-select: none;
 
   &:hover {
-    background: var(--el-fill-color-light, #f5f7fa);
+    background: color-mix(in srgb, var(--ui-bg-accented) 60%, var(--ui-bg-muted));
   }
 }
 
 .java-code {
   margin: 0;
   padding: 16px;
-  background: var(--el-bg-color, #fff);
+  background: var(--ui-bg-elevated);
   font-size: 13px;
   line-height: 1.7;
   overflow-x: auto;
   white-space: pre;
-  border-top: 1px solid var(--el-border-color-lighter, #ebeef5);
+  border-top: 1px solid var(--ui-border);
 }
 </style>
