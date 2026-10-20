@@ -105,17 +105,58 @@ function parseTs(raw: string) {
   return new Date(ms)
 }
 
+/**
+ * 解析 yyyy-MM-dd [HH:mm[:ss[.zzz]]] 形式的日期时间字符串,
+ * 兼容 / 分隔、T 分隔与 1~3 位毫秒(按 .5 = 500ms 补齐)
+ */
+function parseDateTimeStr(str: string): Date | null {
+  const m = str
+    .trim()
+    .match(
+      /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:[ T](\d{1,2}):(\d{1,2})(?::(\d{1,2})(?:\.(\d{1,3}))?)?)?$/,
+    )
+  if (!m) return null
+  const [, y, mo, d, h = '0', mi = '0', s = '0', ms = '0'] = m
+  const date = new Date(+y, +mo - 1, +d, +h, +mi, +s, Number(ms.padEnd(3, '0')))
+  return isNaN(date.getTime()) ? null : date
+}
+
+/**
+ * 将解析结果同步进日期选择器字段
+ */
+function syncPicker(d: Date) {
+  dateInput.value = new CalendarDateTime(
+    d.getFullYear(),
+    d.getMonth() + 1,
+    d.getDate(),
+    d.getHours(),
+    d.getMinutes(),
+    d.getSeconds(),
+  )
+}
+
 function tsToDate() {
-  if (!tsInput.value.trim()) {
-    message.warning('请输入时间戳')
+  const raw = tsInput.value.trim()
+  if (!raw) {
+    message.warning('请输入时间戳或日期时间')
     return
   }
-  const d = parseTs(tsInput.value)
-  if (!d || isNaN(d.getTime())) {
-    message.error('时间戳无效')
-    return
+  let d: Date | null
+  if (/^\d+$/.test(raw)) {
+    d = parseTs(raw)
+    if (!d || isNaN(d.getTime())) {
+      message.error('时间戳无效')
+      return
+    }
+  } else {
+    d = parseDateTimeStr(raw)
+    if (!d) {
+      message.error('无法解析，支持时间戳或 yyyy-MM-dd HH:mm:ss 格式')
+      return
+    }
   }
   tsResult.value = formatDate(d)
+  syncPicker(d)
 }
 
 function dateToTs() {
@@ -148,7 +189,7 @@ function copy(val: string) {
       <div class="ts-card-row">
         <UInput
           v-model="tsInput"
-          placeholder="输入时间戳（10位秒 / 13位毫秒，自动识别）"
+          placeholder="输入时间戳或日期时间（yyyy-MM-dd HH:mm:ss.zzz）"
           class="ts-card-input"
           @keyup.enter="tsToDate"
         />
