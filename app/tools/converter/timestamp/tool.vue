@@ -168,7 +168,8 @@ function copy(val: string) {
         <UInputDate
           v-model="dateInput"
           granularity="second"
-          @update:model-value="dateToTs"
+          readonly
+          class="ts-card-picker w-full"
         />
         <UPopover v-model:open="pickerOpen">
           <UButton
@@ -280,6 +281,12 @@ function copy(val: string) {
   :deep(input) {
     font-family: 'Consolas', 'Monaco', monospace;
   }
+}
+
+// 只读展示字段,与下方结果块同宽
+.ts-card-picker {
+  flex: 1;
+  min-width: 0;
 }
 
 .ts-card-output-group {
