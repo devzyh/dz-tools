@@ -51,7 +51,12 @@ const paragraphCount = computed(() => {
 
 <template>
   <div class="count-text-tool">
-    <UTextarea v-model="input" :rows="16" placeholder="请输入或粘贴文本，实时统计" />
+    <UTextarea
+      v-model="input"
+      :rows="16"
+      placeholder="请输入或粘贴文本，实时统计"
+      class="fs-grow"
+    />
 
     <div class="stats-card">
       <div class="stat-row">

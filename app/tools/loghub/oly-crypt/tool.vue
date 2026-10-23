@@ -152,18 +152,29 @@ function copyCode() {
 
 <template>
   <div class="tool-form">
-    <UTextarea v-model="input" :rows="5" placeholder="请输入需要加密或解密的内容" />
-    <div class="key-group">
-      <UInput v-model="key" placeholder="请输入加密/解密密钥" />
-      <UButton color="neutral" variant="outline" @click="generateKey">随机</UButton>
-    </div>
     <div class="tool-actions">
       <UButton color="success" @click="encrypt">加密</UButton>
       <UButton color="warning" @click="decrypt">解密</UButton>
       <UButton color="neutral" variant="outline" @click="swap">交换</UButton>
       <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
-    <UTextarea v-model="output" :rows="5" readonly placeholder="处理结果将在这里显示" />
+    <UTextarea
+      v-model="input"
+      :rows="5"
+      placeholder="请输入需要加密或解密的内容"
+      class="fs-grow"
+    />
+    <div class="key-group">
+      <UInput v-model="key" placeholder="请输入加密/解密密钥" />
+      <UButton color="neutral" variant="outline" @click="generateKey">随机</UButton>
+    </div>
+    <UTextarea
+      v-model="output"
+      :rows="5"
+      readonly
+      placeholder="处理结果将在这里显示"
+      class="fs-grow"
+    />
     <div class="code-block">
       <div class="code-header" @click="showCode = !showCode">
         <span>Java 实现代码</span>

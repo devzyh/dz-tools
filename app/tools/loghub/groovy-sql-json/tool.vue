@@ -315,13 +315,18 @@ function clear() {
 
 <template>
   <div class="tool-form">
-    <UTextarea v-model="input" :rows="12" placeholder="请粘贴 Groovy 实体类代码" />
     <div class="tool-actions">
       <UButton @click="convert">转换</UButton>
       <UButton color="neutral" variant="outline" @click="copySql">复制SQL</UButton>
       <UButton color="neutral" variant="outline" @click="copyJson">复制JSON</UButton>
       <UButton color="neutral" variant="outline" @click="clear">清空</UButton>
     </div>
+    <UTextarea
+      v-model="input"
+      :rows="12"
+      placeholder="请粘贴 Groovy 实体类代码"
+      class="fs-grow"
+    />
     <UTabs v-if="sqlOutput || jsonOutput" v-model="activeTab" :items="tabItems">
       <template #sql>
         <UTextarea v-model="sqlOutput" :rows="16" readonly />

@@ -221,6 +221,11 @@ function copy() {
   }
 }
 
+.tool-fullscreen .convert-tool {
+  height: 100%;
+  min-height: 0;
+}
+
 @media (max-width: 768px) {
   .convert-panels {
     grid-template-columns: 1fr;

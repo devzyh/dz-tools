@@ -28,13 +28,24 @@ function copy() {
 
 <template>
   <div class="tool-form">
-    <UTextarea v-model="input" :rows="5" placeholder="请输入需要编码或解码的内容" />
     <div class="tool-actions">
       <UButton color="success" @click="encode">Base64编码</UButton>
       <UButton color="warning" @click="decode">Base64解码</UButton>
       <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
-    <UTextarea v-model="output" :rows="5" readonly placeholder="处理结果将在这里显示" />
+    <UTextarea
+      v-model="input"
+      :rows="5"
+      placeholder="请输入需要编码或解码的内容"
+      class="fs-grow"
+    />
+    <UTextarea
+      v-model="output"
+      :rows="5"
+      readonly
+      placeholder="处理结果将在这里显示"
+      class="fs-grow"
+    />
   </div>
 </template>
 

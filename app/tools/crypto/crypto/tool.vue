@@ -120,13 +120,24 @@ generateKey()
         <UButton color="neutral" variant="outline" @click="generateKey">随机</UButton>
       </div>
     </div>
-    <UTextarea v-model="input" :rows="5" placeholder="请输入需要加密或解密的内容" />
+    <UTextarea
+      v-model="input"
+      :rows="5"
+      placeholder="请输入需要加密或解密的内容"
+      class="fs-grow"
+    />
     <div class="tool-actions">
       <UButton color="success" @click="encrypt">加密</UButton>
       <UButton color="warning" @click="decrypt">解密</UButton>
       <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
-    <UTextarea v-model="output" :rows="5" readonly placeholder="处理结果将在这里显示" />
+    <UTextarea
+      v-model="output"
+      :rows="5"
+      readonly
+      placeholder="处理结果将在这里显示"
+      class="fs-grow"
+    />
   </div>
 </template>
 

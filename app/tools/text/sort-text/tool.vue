@@ -71,7 +71,12 @@ function copy() {
       </div>
     </div>
 
-    <UTextarea v-model="input" :rows="10" placeholder="请输入多行文本，每行一个元素" />
+    <UTextarea
+      v-model="input"
+      :rows="10"
+      placeholder="请输入多行文本，每行一个元素"
+      class="fs-grow"
+    />
 
     <div class="action-bar">
       <UButton @click="sort">排序</UButton>

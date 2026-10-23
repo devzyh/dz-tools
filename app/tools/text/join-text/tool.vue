@@ -56,7 +56,12 @@ function copy() {
       <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
 
-    <UTextarea v-model="input" :rows="10" placeholder="请输入多行文本，每行将作为一个元素" />
+    <UTextarea
+      v-model="input"
+      :rows="10"
+      placeholder="请输入多行文本，每行将作为一个元素"
+      class="fs-grow"
+    />
 
     <div class="result-card">
       <div class="result-header">

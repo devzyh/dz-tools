@@ -81,12 +81,17 @@ function copy(value: string) {
 
 <template>
   <div class="hash-tool">
-    <UTextarea v-model="input" :rows="5" placeholder="请输入需要计算哈希的文本" />
     <div class="tool-actions">
       <USelect v-model="encoding" :items="encodingItems" class="w-45" />
       <UCheckbox v-model="uppercase" label="大写" />
       <UButton @click="compute">计算哈希</UButton>
     </div>
+    <UTextarea
+      v-model="input"
+      :rows="5"
+      placeholder="请输入需要计算哈希的文本"
+      class="fs-grow"
+    />
     <div v-if="results.length" class="hash-results">
       <div v-for="item in results" :key="item.label" class="hash-row">
         <span class="hash-label">{{ item.label }}</span>

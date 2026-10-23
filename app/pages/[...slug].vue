@@ -8,6 +8,7 @@ const { resolve: resolveEntry, findGroup, getToolComponent } = useToolRegistry()
 
 const entry = resolveEntry(slug)
 const { cacheEnabled } = useAppSettings()
+const { fullscreen } = useToolFullscreen()
 
 let ToolComponent: ReturnType<typeof defineAsyncComponent> | null = null
 if (entry && isTool(entry)) {
@@ -30,16 +31,21 @@ if (entry) {
 </script>
 
 <template>
-  <div class="slug-page">
+  <div class="slug-page" :class="{ 'tool-fullscreen': fullscreen }">
     <!-- Tool page -->
     <template v-if="entry && isTool(entry)">
-      <nav class="tool-breadcrumb">
-        <NuxtLink to="/">首页</NuxtLink>
-        <span class="separator">/</span>
-        <NuxtLink :to="`/${entry.group}`">{{ findGroup(entry.group)?.meta.title }}</NuxtLink>
-        <span class="separator">/</span>
-        <span class="current">{{ entry.meta.title }}</span>
-      </nav>
+      <div class="tool-topbar">
+        <nav class="tool-breadcrumb">
+          <NuxtLink to="/">首页</NuxtLink>
+          <span class="separator">/</span>
+          <NuxtLink :to="`/${entry.group}`">{{ findGroup(entry.group)?.meta.title }}</NuxtLink>
+          <span class="separator">/</span>
+          <span class="current">{{ entry.meta.title }}</span>
+        </nav>
+        <ClientOnly>
+          <FullscreenButton v-model:fullscreen="fullscreen" />
+        </ClientOnly>
+      </div>
       <template v-if="entry.meta.showHeader !== false">
         <h1 class="tool-title">{{ entry.meta.title }}</h1>
         <p class="tool-desc">{{ entry.meta.description }}</p>
@@ -85,14 +91,30 @@ if (entry) {
 </template>
 
 <style scoped lang="scss">
-.slug-page {
+// 全屏态由全局 .slug-page.tool-fullscreen 控制内边距,此处仅在普通态清零
+.slug-page:not(.tool-fullscreen) {
   padding-bottom: 0;
+}
+
+.tool-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tool-topbar .tool-breadcrumb {
+  flex: 1;
+  min-width: 0;
+  // 移动端面包屑过长时截断,保证右侧按钮始终可见
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .tool-breadcrumb {
   font-size: 13px;
   color: #909399;
-  margin-bottom: 16px;
 
   a {
     color: #909399;

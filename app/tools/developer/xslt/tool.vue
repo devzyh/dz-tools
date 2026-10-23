@@ -218,6 +218,27 @@ onBeforeUnmount(() => {
   gap: 8px;
 }
 
+.tool-fullscreen .xslt-tool {
+  .editor-loader {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: auto;
+    min-height: 0;
+  }
+
+  .editor-section {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .editor-panel {
+    height: auto;
+    flex: 1;
+    min-height: 200px;
+  }
+}
+
 @media (max-width: 768px) {
   .editor-row {
     grid-template-columns: 1fr;

@@ -67,8 +67,22 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .diff-tool {
+  display: flex;
+  flex-direction: column;
   height: 79vh;
   min-height: 400px;
+}
+
+// 编辑区占满剩余空间
+.diff-tool .editor-loader {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
+.tool-fullscreen .diff-tool {
+  height: 100%;
+  min-height: 0;
 }
 
 .diff-merge {

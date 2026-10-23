@@ -116,7 +116,7 @@ function escapeHtml(text: string) {
       v-model="testText"
       :rows="5"
       placeholder="输入要测试的文本..."
-      class="regex-textarea"
+      class="regex-textarea fs-grow"
       @keyup.enter.ctrl="runTest"
     />
 

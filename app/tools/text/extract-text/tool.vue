@@ -88,7 +88,12 @@ function copy() {
       </div>
     </div>
 
-    <UTextarea v-model="input" :rows="10" placeholder="请粘贴需要提取内容的文本" />
+    <UTextarea
+      v-model="input"
+      :rows="10"
+      placeholder="请粘贴需要提取内容的文本"
+      class="fs-grow"
+    />
 
     <div class="action-bar">
       <UButton @click="extract">提取</UButton>

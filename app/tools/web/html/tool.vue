@@ -37,13 +37,24 @@ function copy() {
 
 <template>
   <div class="tool-form">
-    <UTextarea v-model="input" :rows="6" placeholder="请输入需要转义或反转义的内容" />
     <div class="tool-actions">
       <UButton color="success" @click="convert">转义HTML实体</UButton>
       <UButton color="warning" @click="reverse">反转义HTML实体</UButton>
       <UButton color="neutral" variant="outline" @click="copy">复制</UButton>
     </div>
-    <UTextarea v-model="output" :rows="6" readonly placeholder="处理结果将在这里显示" />
+    <UTextarea
+      v-model="input"
+      :rows="6"
+      placeholder="请输入需要转义或反转义的内容"
+      class="fs-grow"
+    />
+    <UTextarea
+      v-model="output"
+      :rows="6"
+      readonly
+      placeholder="处理结果将在这里显示"
+      class="fs-grow"
+    />
   </div>
 </template>
 

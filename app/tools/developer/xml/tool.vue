@@ -145,4 +145,16 @@ onBeforeUnmount(() => {
   border-radius: 4px;
   overflow: hidden;
 }
+
+.tool-fullscreen .xml-editor-tool {
+  .editor-loader {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+  }
+
+  .xml-editor-container {
+    height: 100%;
+  }
+}
 </style>

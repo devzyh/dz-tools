@@ -13,3 +13,42 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+// 工具页全屏态(useToolFullscreen 由 [...slug].vue 挂在 .slug-page 上):
+// 面包屑行保留以承载退出按钮,标题/描述隐藏,内容区占满剩余空间
+.slug-page.tool-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: var(--ui-bg);
+  // 底部留白大于其余方向,避免内容区贴近视口底边
+  padding: 12px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  .tool-title,
+  .tool-desc,
+  .cache-tip {
+    display: none;
+  }
+
+  .tool-content {
+    flex: 1 0 auto;
+  }
+
+  .tool-content > * {
+    height: 100%;
+  }
+
+  // 全屏时纵向填充的文本域:父级为 flex column 时占满剩余高度
+  .fs-grow {
+    flex: 1 1 0;
+    min-height: 120px;
+
+    > textarea {
+      height: 100%;
+      resize: none;
+    }
+  }
+}
