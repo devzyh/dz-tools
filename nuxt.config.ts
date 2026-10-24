@@ -6,7 +6,11 @@ export default defineNuxtConfig({
     // dev 下与 @tailwindcss/vite 的虚拟 CSS 模块路径冲突,恢复默认 '_nuxt'
     // buildAssetsDir: 'assets',
     head: {
-      link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'manifest', href: '/manifest.webmanifest' },
+      ],
+      meta: [{ name: 'theme-color', content: '#409eff' }],
       script: [
         {
           src: 'https://www.googletagmanager.com/gtag/js?id=G-J80TRKBMB0',
