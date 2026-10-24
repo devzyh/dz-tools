@@ -10,7 +10,7 @@ dist
 # Node dependencies
 node_modules
 
-# Vditor runtime assets (copied by postinstall)
+# Vditor runtime assets (copied by dev/build scripts)
 public/vditor
 
 # Logs
