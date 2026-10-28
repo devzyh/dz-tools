@@ -28,6 +28,7 @@ const activeIndex = computed(() => {
   const path = route.path
   if (path === '/') return '/'
   if (path.startsWith('/links')) return '/links'
+  if (path.startsWith('/books')) return '/books'
   if (path.startsWith('/about')) return '/about'
   return ''
 })
@@ -75,6 +76,12 @@ function toggleMenu() {
       >
       <a
         class="nav-link"
+        :class="{ active: activeIndex === '/books' }"
+        @click="handleSelect('/books')"
+        >{{ $t('nav.excerpt') }}</a
+      >
+      <a
+        class="nav-link"
         :class="{ active: activeIndex === '/about' }"
         @click="handleSelect('/about')"
         >{{ $t('nav.about') }}</a
@@ -115,6 +122,12 @@ function toggleMenu() {
         :class="{ active: activeIndex === '/links' }"
         @click="handleSelect('/links')"
         >{{ $t('nav.links') }}</a
+      >
+      <a
+        class="nav-link"
+        :class="{ active: activeIndex === '/books' }"
+        @click="handleSelect('/books')"
+        >{{ $t('nav.excerpt') }}</a
       >
       <a
         class="nav-link"
