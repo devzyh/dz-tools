@@ -19,7 +19,7 @@ usePageSeo({
 
     <div class="about-sections">
       <div class="about-card">
-        <h2 class="section-title">关于项目</h2>
+        <h2 class="section-title">关于本站</h2>
         <p class="section-text">
           {{ title }} {{ description }}，提供编码转换、文本处理、格式化等常用功能。
           纯前端实现，数据不离开浏览器，安全高效。
@@ -27,7 +27,7 @@ usePageSeo({
       </div>
 
       <div class="about-card">
-        <h2 class="section-title">关于我</h2>
+        <h2 class="section-title">关于站长</h2>
         <p class="section-text">
           Yuhang || devzyh<br />
           ZGV2enloQG91dGxvb2suY29t<br />
@@ -36,7 +36,7 @@ usePageSeo({
       </div>
 
       <div class="about-card">
-        <h2 class="section-title">技术栈</h2>
+        <h2 class="section-title">涉及技术</h2>
         <div class="tech-tags">
           <span class="tech-tag">Java</span>
           <span class="tech-tag">MySQL</span>
