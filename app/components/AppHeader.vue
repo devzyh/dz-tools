@@ -78,7 +78,7 @@ function toggleMenu() {
         class="nav-link"
         :class="{ active: activeIndex === '/books' }"
         @click="handleSelect('/books')"
-        >{{ $t('nav.excerpt') }}</a
+        >{{ $t('nav.books') }}</a
       >
       <a
         class="nav-link"
@@ -127,7 +127,7 @@ function toggleMenu() {
         class="nav-link"
         :class="{ active: activeIndex === '/books' }"
         @click="handleSelect('/books')"
-        >{{ $t('nav.excerpt') }}</a
+        >{{ $t('nav.books') }}</a
       >
       <a
         class="nav-link"

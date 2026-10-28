@@ -4,48 +4,48 @@ const { title } = useAppConfig()
 const booksData = (await import('~/data/books.json')).default
 
 usePageSeo({
-  title: `书籍 - ${title}`,
-  description: '书籍与文章摘录收藏',
+  title: `阅读 - ${title}`,
+  description: '文章与书籍的摘录收藏',
   path: '/books',
 })
 
-interface ExcerptItem {
+interface BookItem {
   title: string
   url: string
   source?: string
   quotes: string[]
 }
 
-const excerpts = booksData as ExcerptItem[]
+const books = booksData as BookItem[]
 </script>
 
 <template>
-  <div class="excerpt-wrap">
+  <div class="books-wrap">
     <div class="books-hero">
-      <h1 class="hero-title">{{ $t('nav.excerpt') }}</h1>
+      <h1 class="hero-title">{{ $t('nav.books') }}</h1>
       <p class="hero-desc">阅读中摘下的句子，常读常新</p>
     </div>
 
-    <div class="excerpt-list">
-      <article v-for="item in excerpts" :key="item.url" class="excerpt-card">
-        <div class="excerpt-head">
-          <a :href="item.url" target="_blank" rel="noopener noreferrer" class="excerpt-title">
+    <div class="books-list">
+      <article v-for="item in books" :key="item.url" class="books-card">
+        <div class="books-head">
+          <a :href="item.url" target="_blank" rel="noopener noreferrer" class="books-title">
             {{ item.title }}
           </a>
-          <span v-if="item.source" class="excerpt-source">{{ item.source }}</span>
+          <span v-if="item.source" class="books-source">{{ item.source }}</span>
         </div>
-        <blockquote v-for="(quote, index) in item.quotes" :key="index" class="excerpt-quote">
+        <blockquote v-for="(quote, index) in item.quotes" :key="index" class="books-quote">
           {{ quote }}
         </blockquote>
       </article>
     </div>
 
-    <UEmpty v-if="excerpts.length === 0" icon="i-ep-box" description="暂无书籍" />
+    <UEmpty v-if="books.length === 0" icon="i-ep-box" description="暂无内容" />
   </div>
 </template>
 
 <style scoped lang="scss">
-.excerpt-wrap {
+.books-wrap {
   max-width: 800px;
   margin: 0 auto;
   padding-bottom: 24px;
@@ -69,27 +69,27 @@ const excerpts = booksData as ExcerptItem[]
   margin: 10px 0 0;
 }
 
-.excerpt-list {
+.books-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.excerpt-card {
+.books-card {
   padding: 16px 20px;
   border: 1px solid #e4e7ed;
   border-radius: 8px;
   background: #fff;
 }
 
-.excerpt-head {
+.books-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
 }
 
-.excerpt-title {
+.books-title {
   font-size: 16px;
   font-weight: 600;
   color: #303133;
@@ -102,13 +102,13 @@ const excerpts = booksData as ExcerptItem[]
   }
 }
 
-.excerpt-source {
+.books-source {
   font-size: 12px;
   color: #c0c4cc;
   flex-shrink: 0;
 }
 
-.excerpt-quote {
+.books-quote {
   margin: 12px 0 0;
   padding: 10px 14px;
   border-left: 3px solid #409eff;
@@ -128,7 +128,7 @@ const excerpts = booksData as ExcerptItem[]
     padding: 24px 16px 20px;
   }
 
-  .excerpt-card {
+  .books-card {
     padding: 14px 16px;
   }
 }
