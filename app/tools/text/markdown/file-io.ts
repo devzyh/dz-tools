@@ -4,7 +4,7 @@
  * 其余浏览器降级为 input 选文件、Blob 下载保存。
  */
 
-/** 可写回的文件句柄与启动队列类型未收录进 lib.dom，按需局部声明 */
+/** 可写回的文件句柄类型未收录进 lib.dom，按需局部声明 */
 export interface WritableFileHandle extends FileSystemFileHandle {
   createWritable(): Promise<FileSystemWritableFileStream>
 }
@@ -14,9 +14,6 @@ interface FsWindow extends Window {
   showOpenFilePicker?: (options?: {
     types?: { accept: Record<string, string[]> }[]
   }) => Promise<WritableFileHandle[]>
-  launchQueue?: {
-    setConsumer(consumer: (params: { files: WritableFileHandle[] }) => void): void
-  }
 }
 
 /** 打开结果：内容与文件名，handle 非空时保存将写回原文件 */
@@ -91,13 +88,4 @@ export function downloadAsFile(name: string, text: string): void {
   link.download = name
   link.click()
   URL.revokeObjectURL(url)
-}
-
-/** 注册 PWA 文件处理消费者：系统双击 .md 启动应用时接管文件 */
-export function consumeLaunchQueue(onFile: (file: OpenedFile) => void): void {
-  const launchQueue = (window as FsWindow).launchQueue
-  if (!launchQueue) return
-  launchQueue.setConsumer(async ({ files }) => {
-    if (files.length > 0) onFile(await readHandle(files[0]))
-  })
 }

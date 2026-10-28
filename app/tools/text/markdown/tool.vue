@@ -6,7 +6,6 @@ import {
   openViaInput,
   writeToHandle,
   downloadAsFile,
-  consumeLaunchQueue,
   supportsFsAccess,
   type OpenedFile,
   type WritableFileHandle,
@@ -18,10 +17,21 @@ const dirty = ref(false)
 const fileName = ref('')
 const message = useMessage()
 const colorMode = useColorMode()
+// 草稿经项目统一缓存持久化,刷新后自动恢复,避免编辑内容丢失
+const { read, write } = useToolCache()
+const { cacheEnabled } = useAppSettings()
+const STORAGE_KEY = 'dz-tools-markdown'
 // 与页面布局([...slug].vue)共享同一份全屏状态
 const { fullscreen } = useToolFullscreen()
 let editor: Vditor | null = null
 let fileHandle: WritableFileHandle | null = null
+/** 脏标记比较基线:最近一次打开/保存/恢复时的内容,vditor 的 setValue 也会触发 input,不能只靠事件置脏 */
+let savedValue = ''
+
+/** 按基线比较同步脏标记 */
+function syncDirty(value: string): void {
+  dirty.value = value !== savedValue
+}
 
 /** 提取错误的可读文案 */
 function errText(error: unknown): string {
@@ -33,10 +43,12 @@ function applyOpenedFile(file: OpenedFile): void {
   editor?.setValue(file.text, true)
   fileName.value = file.name
   fileHandle = file.handle
+  savedValue = file.text
   dirty.value = false
+  write(STORAGE_KEY, file.text)
 }
 
-/** 应用内容到编辑器（PWA 双击启动与手动打开共用入口） */
+/** 通过系统选择器或 input 打开本地文件并应用到编辑器 */
 async function openFile(): Promise<void> {
   if (!editor) return
   if (dirty.value && !window.confirm('当前内容尚未保存，确定要丢弃并打开新文件吗？')) return
@@ -59,6 +71,7 @@ async function saveFile(): Promise<void> {
       downloadAsFile(fileName.value || 'untitled.md', editor.getValue())
       message.success('已下载')
     }
+    savedValue = editor.getValue()
     dirty.value = false
   } catch (error) {
     message.error(`保存失败：${errText(error)}`)
@@ -73,9 +86,9 @@ function onKeydown(event: KeyboardEvent): void {
   }
 }
 
-/** 有未保存修改时拦截页面关闭与刷新 */
+/** 有未保存修改且草稿缓存关闭时拦截页面关闭与刷新;缓存开启时草稿已持久化,刷新不丢数据 */
 function onBeforeUnload(event: BeforeUnloadEvent): void {
-  if (dirty.value) {
+  if (dirty.value && !cacheEnabled.value) {
     event.preventDefault()
     event.returnValue = ''
   }
@@ -85,7 +98,6 @@ onMounted(async () => {
   if (!import.meta.client) return
   window.addEventListener('keydown', onKeydown, true)
   window.addEventListener('beforeunload', onBeforeUnload)
-  consumeLaunchQueue(applyOpenedFile)
   if (!editorContainer.value) return
 
   const [{ default: VditorCtor }] = await Promise.all([
@@ -120,10 +132,16 @@ onMounted(async () => {
       'redo',
       'outline',
     ],
-    input: () => {
-      dirty.value = true
+    input: (value) => {
+      syncDirty(value)
+      write(STORAGE_KEY, value)
     },
     after: () => {
+      // 恢复上次会话的草稿(vditor 的 setValue 会触发 input,须先定基线再恢复)
+      const cached = read(STORAGE_KEY)
+      if (editor && cached) editor.setValue(cached, true)
+      savedValue = cached || ''
+      dirty.value = false
       editorReady.value = true
     },
   })
